@@ -9,7 +9,6 @@ package xyzzyapi
 */
 import "C"
 import (
-  "fmt"
 )
 
 // Values updated via "go install -ldflags" parameters.
