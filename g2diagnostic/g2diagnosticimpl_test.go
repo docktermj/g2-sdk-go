@@ -2,29 +2,38 @@ package g2diagnostic
 
 import (
 	"context"
-	"fmt"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
+	//	"github.com/stretchr/testify/assert"
 )
 
 /*
- * The unit tests in this file simulate command line invocation.
+ * The unit tests in this file...
  */
 
-func TestGetPhysicalCores(test *testing.T) {
-	expected := 8
-
+func TestGetAvailableMemory(test *testing.T) {
+	g2diagnostic := G2diagnosticImpl{}
 	ctx := context.TODO()
+	actual, _ := g2diagnostic.GetAvailableMemory(ctx)
+	test.Log("Available memory:", actual)
+}
 
-	// Create expected file.
-	localG2diagnostic := G2diagnosticImpl{
-		Args: map[string]interface{}{},
-	}
+func TestGetLogicalCores(test *testing.T) {
+	g2diagnostic := G2diagnosticImpl{}
+	ctx := context.TODO()
+	actual, _ := g2diagnostic.GetLogicalCores(ctx)
+	test.Log(" Logical cores:", actual)
+}
 
-	actual, _ := localG2diagnostic.GetPhysicalCores(ctx)
+func TestGetPhysicalCores(test *testing.T) {
+	g2diagnostic := G2diagnosticImpl{}
+	ctx := context.TODO()
+	actual, _ := g2diagnostic.GetPhysicalCores(ctx)
+	test.Log("Physical cores:", actual)
+}
 
-	fmt.Println(">>> ", actual)
-	assert.Equal(test, expected, actual, "Not expected number of cores")
-
+func TestGetTotalSystemMemory(test *testing.T) {
+	g2diagnostic := G2diagnosticImpl{}
+	ctx := context.TODO()
+	actual, _ := g2diagnostic.GetTotalSystemMemory(ctx)
+	test.Log("Total system memory:", actual)
 }

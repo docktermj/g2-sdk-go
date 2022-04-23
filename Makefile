@@ -175,7 +175,7 @@ build-wip: target/darwin/go-hello-xyzzy-dynamic
 
 .PHONY: test
 test:
-	@go test $(GO_PACKAGE_NAME)/...
+	@go test -test.v $(GO_PACKAGE_NAME)/...
 
 # -----------------------------------------------------------------------------
 # docker-build

@@ -28,10 +28,7 @@ import (
 // Structure
 // ----------------------------------------------------------------------------
 
-type G2diagnosticImpl struct {
-	Args              map[string]interface{} `json:"args"`
-	configurationFile string
-}
+type G2diagnosticImpl struct{}
 
 // ----------------------------------------------------------------------------
 // Internal methods
@@ -41,9 +38,22 @@ type G2diagnosticImpl struct {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-func (g2diagnostic *G2diagnosticImpl) GetPhysicalCores(ctx context.Context) (int, error) {
+func (g2diagnostic *G2diagnosticImpl) GetAvailableMemory(ctx context.Context) (int64, error) {
+	result := C.G2Diagnostic_getAvailableMemory()
+	return int64(result), nil
+}
 
+func (g2diagnostic *G2diagnosticImpl) GetLogicalCores(ctx context.Context) (int, error) {
+	result := C.G2Diagnostic_getLogicalCores()
+	return int(result), nil
+}
+
+func (g2diagnostic *G2diagnosticImpl) GetPhysicalCores(ctx context.Context) (int, error) {
 	result := C.G2Diagnostic_getPhysicalCores()
 	return int(result), nil
+}
 
+func (g2diagnostic *G2diagnosticImpl) GetTotalSystemMemory(ctx context.Context) (int64, error) {
+	result := C.G2Diagnostic_getTotalSystemMemory()
+	return int64(result), nil
 }
