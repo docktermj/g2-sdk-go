@@ -21,7 +21,7 @@ The purpose of a Environment object is:
 */
 import "C"
 import (
-  "context"
+	"context"
 )
 
 // ----------------------------------------------------------------------------
@@ -29,9 +29,8 @@ import (
 // ----------------------------------------------------------------------------
 
 type G2diagnosticImpl struct {
-  Args              map[string]interface{} `json:"args"`
-  configuration     gonfig.Gonfig
-  configurationFile string
+	Args              map[string]interface{} `json:"args"`
+	configurationFile string
 }
 
 // ----------------------------------------------------------------------------
@@ -44,7 +43,7 @@ type G2diagnosticImpl struct {
 
 func (g2diagnostic *G2diagnosticImpl) GetPhysicalCores(ctx context.Context) (int, error) {
 
-    result := C.G2Diagnostic_getPhysicalCores()
-    return int(result), nil
+	result := C.G2Diagnostic_getPhysicalCores()
+	return int(result), nil
 
 }

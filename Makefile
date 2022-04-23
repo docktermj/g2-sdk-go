@@ -34,17 +34,18 @@ CGO_CFLAGS = \
 	-I/home/senzing/my-senzing/g2/sdk/c
 CGO_LDFLAGS = \
 	-L/home/senzing/my-senzing/g2/lib \
-	-L/home/senzing/my-senzing/g2/lib/debian \
 	-lanalytics \
 	-lboost_atomic \
 	-lboost_chrono \
 	-lboost_container \
 	-lboost_context \
+	-lboost_contract \
 	-lboost_coroutine \
 	-lboost_date_time \
 	-lboost_filesystem \
 	-lboost_graph \
 	-lboost_iostreams \
+	-lboost_json \
 	-lboost_locale \
 	-lboost_log \
 	-lboost_log_setup \
@@ -54,12 +55,13 @@ CGO_LDFLAGS = \
 	-lboost_math_tr1 \
 	-lboost_math_tr1f \
 	-lboost_math_tr1l \
+	-lboost_nowide \
 	-lboost_prg_exec_monitor \
 	-lboost_program_options \
+	-lboost_python39 \
 	-lboost_random \
 	-lboost_regex \
 	-lboost_serialization \
-	-lboost_signals \
 	-lboost_system \
 	-lboost_thread \
 	-lboost_timer \
@@ -121,13 +123,14 @@ CGO_LDFLAGS = \
 	-lmariadbplugin \
 	-lmssqlplugin \
 	-lNameDataObject \
+	-loracleplugin \
 	-lpostal \
 	-lpostgresqlplugin \
 	-lscoring \
 	-lSpaceTimeBoxStandardizer \
-	-lsqliteplugin \
-	/home/senzing/my-senzing/g2/lib/debian/libssl.so.10 \
-	/home/senzing/my-senzing/g2/lib/debian/libcrypto.so.10	
+	-lsqliteplugin
+
+LD_LIBRARY_PATH=/home/senzing/my-senzing/g2/lib
 
 # ---- Linux ------------------------------------------------------------------
 

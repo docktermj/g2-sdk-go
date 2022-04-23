@@ -1,8 +1,8 @@
 package g2diagnostic
 
 import (
-	"io/ioutil"
-	"os"
+	"context"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -15,16 +15,16 @@ import (
 func TestGetPhysicalCores(test *testing.T) {
 	expected := 8
 
+	ctx := context.TODO()
+
 	// Create expected file.
 	localG2diagnostic := G2diagnosticImpl{
-		Args: map[string]interface{}{
-			key.BIXAGENT_OPTION_CONFIGURATION: expected,
-		},
+		Args: map[string]interface{}{},
 	}
 
-	actual, _ := localG2diagnostic.GetPhysicalCores()
-	assert.NotEqual(test, "", actual, "No configuration filename found")
-	if _, err := os.Stat(actual); os.IsNotExist(err) {
-		assert.Falsef(test, true, "Could not find %s", actual)
-	}
+	actual, _ := localG2diagnostic.GetPhysicalCores(ctx)
+
+	fmt.Println(">>> ", actual)
+	assert.Equal(test, expected, actual, "Not expected number of cores")
+
 }
