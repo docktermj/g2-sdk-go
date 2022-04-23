@@ -17,6 +17,12 @@ func TestGetAvailableMemory(test *testing.T) {
 	test.Log("Available memory:", actual)
 }
 
+func TestClearLastException(test *testing.T) {
+	g2diagnostic := G2diagnosticImpl{}
+	ctx := context.TODO()
+	g2diagnostic.ClearLastException(ctx)
+}
+
 func TestGetLogicalCores(test *testing.T) {
 	g2diagnostic := G2diagnosticImpl{}
 	ctx := context.TODO()

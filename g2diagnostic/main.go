@@ -1,24 +1,23 @@
+// The Xyzzy G2Diagnostic Package is a Go wrapper over
+// Xyzzy's G2Diagnostic C binding.
+//
+// The purpose of a g2diagnostic object is:
+//   • ...
+//   • ...
+//   • ...
+// To use g2diagnostic, the LD_LIBRARY_PATH environment variable must include
+// a path to Xyzzy's libraries.  Example:
+//  export LD_LIBRARY_PATH=/opt/xyzzy/g2/lib
 package g2diagnostic
-
-/*
-g2diagnostic
-
-The purpose of a g2diagnostic object is:
-
- 1. ...
-*/
 
 import (
 	"context"
 )
 
-// ----------------------------------------------------------------------------
 // G2diagnostic Interface Definition
-// ----------------------------------------------------------------------------
-
 type G2diagnostic interface {
 	CheckDBPerf(ctx context.Context, secondsToRun int) (string, error)
-	ClearLastException(ctx context.Context)
+	ClearLastException(ctx context.Context) error
 	CloseEntityListBySize(ctx context.Context, entityListBySizeHandle int) error
 	Destroy(ctx context.Context) error
 	FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle int) (string, error)
@@ -40,7 +39,7 @@ type G2diagnostic interface {
 	GetRelationshipDetails(ctx context.Context, relationshipID int64, includeInternalFeatures int) (string, error)
 	GetResolutionStatistics(ctx context.Context) (string, error)
 	GetTotalSystemMemory(ctx context.Context) (int64, error)
-	Init(cctx context.Context, moduleName string, iniParams string, verboseLogging int) error
+	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error
 	Reinit(ctx context.Context, initConfigID int64) error
 }
