@@ -251,10 +251,6 @@ clean:
 	@rm -f $(GOPATH)/bin/$(PROGRAM_NAME) || true
 
 
-.PHONY: bob
-bob:
-	echo ${LD_LIBRARY_PATH}
-
 .PHONY: print-make-variables
 print-make-variables:
 	@$(foreach V,$(sort $(.VARIABLES)), \
