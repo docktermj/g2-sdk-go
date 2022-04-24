@@ -2,9 +2,62 @@ package g2diagnostic
 
 import (
 	"context"
+	"encoding/json"
 	"testing"
-	//	"github.com/stretchr/testify/assert"
+
+	"github.com/stretchr/testify/assert"
 )
+
+/*
+ * Internal methods.
+ */
+
+type XyzzyConfigurationPipeline struct {
+	ConfigPath   string `json:"CONFIGPATH"`
+	ResourcePath string `json:"RESOURCEPATH"`
+	SupportPath  string `json:"SUPPORTPATH"`
+}
+
+type XyzzyConfigurationSql struct {
+	Connection string `json:"CONNECTION"`
+}
+
+type XyzzyConfiguration struct {
+	Pipeline XyzzyConfigurationPipeline `json:"PIPELINE"`
+	Sql      XyzzyConfigurationSql      `json:"SQL"`
+}
+
+func getConfigurationJson() string {
+	resultStruct := XyzzyConfiguration{
+		Pipeline: XyzzyConfigurationPipeline{
+			ConfigPath:   "/home/senzing/senzing-3.0.0-22112/etc",
+			ResourcePath: "/home/senzing/senzing-3.0.0-22112/g2/resources",
+			SupportPath:  "/home/senzing/senzing-3.0.0-22112/data",
+		},
+		Sql: XyzzyConfigurationSql{
+			Connection: "postgresql://postgres:postgres@127.0.0.1:5432:G2/",
+		},
+	}
+
+	resultBytes, _ := json.Marshal(resultStruct)
+	return string(resultBytes)
+}
+
+func getConfigurationJsonDefault() string {
+	resultStruct := XyzzyConfiguration{
+		Pipeline: XyzzyConfigurationPipeline{
+			ConfigPath:   "/etc/opt/senzing",
+			ResourcePath: "/opt/senzing/g2/resources",
+			SupportPath:  "/opt/senzing/data",
+		},
+		Sql: XyzzyConfigurationSql{
+			Connection: "xyzzy",
+		},
+	}
+
+	resultBytes, _ := json.Marshal(resultStruct)
+	return string(resultBytes)
+}
 
 /*
  * The unit tests in this file...
@@ -42,4 +95,20 @@ func TestGetTotalSystemMemory(test *testing.T) {
 	ctx := context.TODO()
 	actual, _ := g2diagnostic.GetTotalSystemMemory(ctx)
 	test.Log("Total system memory:", actual)
+}
+
+func TestInit(test *testing.T) {
+	g2diagnostic := G2diagnosticImpl{}
+	ctx := context.TODO()
+
+	moduleName := "Test module name"
+	verboseLogging := 0
+	iniParams := getConfigurationJson()
+
+	err := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		test.Log("iniParams:", iniParams)
+		lastException, _ := g2diagnostic.GetLastException(ctx)
+		assert.FailNow(test, lastException)
+	}
 }

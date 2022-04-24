@@ -130,7 +130,7 @@ CGO_LDFLAGS = \
 	-lSpaceTimeBoxStandardizer \
 	-lsqliteplugin
 
-LD_LIBRARY_PATH=/home/senzing/my-senzing/g2/lib
+LD_LIBRARY_PATH = /home/senzing/my-senzing/g2/lib
 
 # ---- Linux ------------------------------------------------------------------
 
@@ -250,6 +250,10 @@ clean:
 	@find . -type f -name '*.so' -exec rm {} +   # Remove recursively *.so files
 	@rm -f $(GOPATH)/bin/$(PROGRAM_NAME) || true
 
+
+.PHONY: bob
+bob:
+	echo ${LD_LIBRARY_PATH}
 
 .PHONY: print-make-variables
 print-make-variables:
