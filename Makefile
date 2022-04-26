@@ -31,9 +31,9 @@ default: help
 # CGO_LDFLAGS = -L$(MAKEFILE_DIRECTORY)lib -llibg2diagnostic
 
 CGO_CFLAGS = \
-	-I/home/senzing/my-senzing/g2/sdk/c
+	-I${SENZING_G2_DIR}/sdk/c
 CGO_LDFLAGS = \
-	-L/home/senzing/my-senzing/g2/lib \
+	-L${SENZING_G2_DIR}/lib \
 	-lanalytics \
 	-lboost_atomic \
 	-lboost_chrono \
@@ -130,7 +130,7 @@ CGO_LDFLAGS = \
 	-lSpaceTimeBoxStandardizer \
 	-lsqliteplugin
 
-LD_LIBRARY_PATH = /home/senzing/my-senzing/g2/lib
+LD_LIBRARY_PATH = ${SENZING_G2_DIR}/lib
 
 # ---- Linux ------------------------------------------------------------------
 
