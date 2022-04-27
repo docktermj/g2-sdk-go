@@ -9,6 +9,8 @@ package g2diagnostic
 #include "libg2diagnostic.h"
 #cgo CFLAGS: -g -Wall
 #cgo LDFLAGS: -shared
+
+extern void resizeStringBuffer(void*, size_t);
 */
 import "C"
 import (
@@ -37,7 +39,8 @@ func (g2diagnostic *G2diagnosticImpl) getByteArray(size int) []byte {
 
 // Change the pointer to an array of bytes to a larger array of a given size.
 // FIXME: not sure this works.
-func (g2diagnostic *G2diagnosticImpl) resizeStringBuffer(stringBuffer *[]byte, size int) {
+// export resizeStringBuffer
+func (g2diagnostic *G2diagnosticImpl) resizeStringBuffer(stringBuffer unsafe.Pointer, size C.size_t) {
 	fmt.Println(">>> Requesting larger buffer of", size, "bytes")
 
 	newByteBuffer := make([]byte, size)
@@ -50,14 +53,14 @@ func (g2diagnostic *G2diagnosticImpl) resizeStringBuffer(stringBuffer *[]byte, s
 
 // CheckDBPerf returns the available memory, in bytes, on the host system.
 // TODO:
-func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, error) {
+func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (int64, error) {
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
 	cSecondsToRun := C.int(secondsToRun)
 	cStringBufferLength := C.ulong(initialByteArraySize)
 	cStringBufferPointer := (*C.char)(unsafe.Pointer(&stringBuffer[0]))
 	cStringBufferPointerPointer := (**C.char)(unsafe.Pointer(cStringBufferPointer))
 
-	result := C.G2Diagnostic_checkDBPerf(cSecondsToRun, cStringBufferPointerPointer, &cStringBufferLength)
+	result := C.G2Diagnostic_checkDBPerf(cSecondsToRun, cStringBufferPointerPointer, &cStringBufferLength, C.resizeStringBuffer)
 	return int64(result), nil
 }
 
