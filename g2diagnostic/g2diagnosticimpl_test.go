@@ -30,9 +30,9 @@ type XyzzyConfiguration struct {
 func getConfigurationJson() string {
 	resultStruct := XyzzyConfiguration{
 		Pipeline: XyzzyConfigurationPipeline{
-			ConfigPath:   "/home/senzing/senzing-3.0.0-22112/etc",
-			ResourcePath: "/home/senzing/senzing-3.0.0-22112/g2/resources",
-			SupportPath:  "/home/senzing/senzing-3.0.0-22112/data",
+			ConfigPath:   "/opt/senzing/etc",
+			ResourcePath: "/opt/senzing/g2/resources",
+			SupportPath:  "/opt/senzing/data/3.0.0",
 		},
 		Sql: XyzzyConfigurationSql{
 			Connection: "postgresql://postgres:postgres@127.0.0.1:5432:G2/",
@@ -62,6 +62,22 @@ func getConfigurationJsonDefault() string {
 /*
  * The unit tests in this file...
  */
+
+func TestGetLastException(test *testing.T) {
+	g2diagnostic := G2diagnosticImpl{}
+	ctx := context.TODO()
+	actual, _ := g2diagnostic.GetLastException(ctx)
+	test.Log("Last exception:", actual)
+
+}
+
+// func TestCheckDBPerf(test *testing.T) {
+// 	g2diagnostic := G2diagnosticImpl{}
+// 	ctx := context.TODO()
+// 	secondsToRun := 5
+// 	actual, _, _ := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
+// 	test.Log("Database performance:", actual)
+// }
 
 func TestGetAvailableMemory(test *testing.T) {
 	g2diagnostic := G2diagnosticImpl{}

@@ -56,7 +56,7 @@ func (g2diagnostic *G2diagnosticImpl) resizeStringBuffer(stringBuffer unsafe.Poi
 
 // CheckDBPerf returns the available memory, in bytes, on the host system.
 // TODO:
-func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (int64, error) {
+func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, int64, error) {
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
 	cSecondsToRun := C.int(secondsToRun)
 	cStringBufferLength := C.ulong(initialByteArraySize)
@@ -68,7 +68,7 @@ func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsTo
 
 	//_DLEXPORT int G2Diagnostic_checkDBPerf(int secondsToRun, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 
-	return int64(result), nil
+	return string(stringBuffer), int64(result), nil
 }
 
 // GetAvailableMemory returns the available memory, in bytes, on the host system.
