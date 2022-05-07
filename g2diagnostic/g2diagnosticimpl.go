@@ -22,6 +22,9 @@ import (
 
 const initialByteArraySize = 65535
 
+// FIXME: Figure out how to pass in a pointer to a function that has a "void*".
+//_DLEXPORT int G2Diagnostic_checkDBPerf(int secondsToRun, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+
 // ----------------------------------------------------------------------------
 // Structure
 // ----------------------------------------------------------------------------
@@ -44,7 +47,7 @@ func (g2diagnostic *G2diagnosticImpl) resizeStringBuffer(stringBuffer unsafe.Poi
 	fmt.Println(">>> Requesting larger buffer of", size, "bytes")
 
 	newByteBuffer := make([]byte, size)
-	stringBuffer = &newByteBuffer
+	stringBuffer = unsafe.Pointer(&newByteBuffer)
 }
 
 // ----------------------------------------------------------------------------
@@ -60,7 +63,11 @@ func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsTo
 	cStringBufferPointer := (*C.char)(unsafe.Pointer(&stringBuffer[0]))
 	cStringBufferPointerPointer := (**C.char)(unsafe.Pointer(cStringBufferPointer))
 
-	result := C.G2Diagnostic_checkDBPerf(cSecondsToRun, cStringBufferPointerPointer, &cStringBufferLength, C.resizeStringBuffer)
+	//	result := C.G2Diagnostic_checkDBPerf(cSecondsToRun, cStringBufferPointerPointer, &cStringBufferLength, unsafe.Pointer(C.resizeStringBuffer))
+	result := C.G2Diagnostic_checkDBPerf(cSecondsToRun, cStringBufferPointerPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
+
+	//_DLEXPORT int G2Diagnostic_checkDBPerf(int secondsToRun, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+
 	return int64(result), nil
 }
 
