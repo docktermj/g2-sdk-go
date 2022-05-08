@@ -55,6 +55,7 @@ func resizeStringBuffer(stringBuffer unsafe.Pointer, size C.size_t) {
 // ----------------------------------------------------------------------------
 
 func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, error) {
+	var err error = nil
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
 	cStringBufferLength := C.ulong(initialByteArraySize)
 	cStringBufferPointer := (*C.char)(unsafe.Pointer(&stringBuffer[0]))
@@ -68,11 +69,12 @@ func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, er
 	// Log: panic: runtime error: cgo argument has Go pointer to Go pointer
 	// C.G2Diagnostic_getDBInfo(&cStringBufferPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
 
-	return string(stringBuffer), nil
+	return string(stringBuffer), err
 }
 
 // CheckDBPerf returns the available memory, in bytes, on the host system.
 func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, error) {
+	var err error = nil
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
 	cSecondsToRun := C.int(secondsToRun)
 	cStringBufferLength := C.ulong(initialByteArraySize)
@@ -81,7 +83,7 @@ func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsTo
 
 	//	result := C.G2Diagnostic_checkDBPerf(cSecondsToRun, cStringBufferPointerPointer, &cStringBufferLength, unsafe.Pointer(C.resizeStringBuffer))
 	C.G2Diagnostic_checkDBPerf(cSecondsToRun, cStringBufferPointerPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
-	return string(stringBuffer), nil
+	return string(stringBuffer), err
 }
 
 // ----------------------------------------------------------------------------
@@ -91,21 +93,27 @@ func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsTo
 func (g2diagnostic *G2diagnosticImpl) CloseEntityListBySize(ctx context.Context, entityListBySizeHandle int) error {
 	return nil
 }
+
 func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
 	return nil
 }
+
 func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle int) (string, error) {
 	return "", nil
 }
+
 func (g2diagnostic *G2diagnosticImpl) FindEntitiesByFeatureIDs(ctx context.Context, features string) (string, error) {
 	return "", nil
 }
+
 func (g2diagnostic *G2diagnosticImpl) GetDataSourceCounts(ctx context.Context) (string, error) {
 	return "", nil
 }
+
 func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, entityID int64, includeInternalFeatures int) (string, error) {
 	return "", nil
 }
+
 func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context) (string, error) {
 	return "", nil
 }
@@ -113,15 +121,19 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context) (
 func (g2diagnostic *G2diagnosticImpl) GetEntityResume(ctx context.Context, entityID int64) (string, error) {
 	return "", nil
 }
+
 func (g2diagnostic *G2diagnosticImpl) GetEntitySizeBreakdown(ctx context.Context, minimumEntitySize int, includeInternalFeatures int) (string, error) {
 	return "", nil
 }
+
 func (g2diagnostic *G2diagnosticImpl) GetFeature(ctx context.Context, libFeatID int64) (string, error) {
 	return "", nil
 }
+
 func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount string) (string, error) {
 	return "", nil
 }
+
 func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
 	return 0, nil
 }
@@ -129,9 +141,11 @@ func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) 
 func (g2diagnostic *G2diagnosticImpl) GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error) {
 	return "", nil
 }
+
 func (g2diagnostic *G2diagnosticImpl) GetRelationshipDetails(ctx context.Context, relationshipID int64, includeInternalFeatures int) (string, error) {
 	return "", nil
 }
+
 func (g2diagnostic *G2diagnosticImpl) GetResolutionStatistics(ctx context.Context) (string, error) {
 	return "", nil
 }
@@ -139,6 +153,7 @@ func (g2diagnostic *G2diagnosticImpl) GetResolutionStatistics(ctx context.Contex
 func (g2diagnostic *G2diagnosticImpl) InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error {
 	return nil
 }
+
 func (g2diagnostic *G2diagnosticImpl) Reinit(ctx context.Context, initConfigID int64) error {
 	return nil
 }
@@ -149,39 +164,45 @@ func (g2diagnostic *G2diagnosticImpl) Reinit(ctx context.Context, initConfigID i
 
 // ClearLastException returns the available memory, in bytes, on the host system.
 func (g2diagnostic *G2diagnosticImpl) ClearLastException(ctx context.Context) error {
+	var err error = nil
 	C.G2Diagnostic_clearLastException()
-	return nil
+	return err
 }
 
 // GetAvailableMemory returns the available memory, in bytes, on the host system.
 func (g2diagnostic *G2diagnosticImpl) GetAvailableMemory(ctx context.Context) (int64, error) {
+	var err error = nil
 	result := C.G2Diagnostic_getAvailableMemory()
-	return int64(result), nil
+	return int64(result), err
 }
 
 // GetLastException returns the last exception encountered in the Xyzzy Engine.
 func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (string, error) {
+	var err error = nil
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
 	C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	return string(stringBuffer), nil
+	return string(stringBuffer), err
 }
 
 // GetLogicalCores returns the number of logical cores on the host system.
 func (g2diagnostic *G2diagnosticImpl) GetLogicalCores(ctx context.Context) (int, error) {
+	var err error = nil
 	result := C.G2Diagnostic_getLogicalCores()
-	return int(result), nil
+	return int(result), err
 }
 
 // GetPhysicalCores returns the number of physical cores on the host system.
 func (g2diagnostic *G2diagnosticImpl) GetPhysicalCores(ctx context.Context) (int, error) {
+	var err error = nil
 	result := C.G2Diagnostic_getPhysicalCores()
-	return int(result), nil
+	return int(result), err
 }
 
 // GetTotalSystemMemory returns the total memory, in bytes, on the host system.
 func (g2diagnostic *G2diagnosticImpl) GetTotalSystemMemory(ctx context.Context) (int64, error) {
+	var err error = nil
 	result := C.G2Diagnostic_getTotalSystemMemory()
-	return int64(result), nil
+	return int64(result), err
 }
 
 // Init initializes the Xyzzy G2diagnosis.
