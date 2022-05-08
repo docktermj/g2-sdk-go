@@ -76,9 +76,9 @@ func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, er
 	// C.G2Diagnostic_getDBInfo(cStringBufferPointerPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
 
 	// TRIAL:
-	cStringBufferPointer := (*C.char)(unsafe.Pointer(&stringBuffer[0]))
-	cStringBufferPointerPointer := (**C.char)(unsafe.Pointer(&cStringBufferPointer))
-	C.G2Diagnostic_getDBInfo(cStringBufferPointerPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
+	cStringBufferPointer := (*C.char)(&stringBuffer)
+	// cStringBufferPointerPointer := (**C.char)(unsafe.Pointer(&cStringBufferPointer))
+	C.G2Diagnostic_getDBInfo(&cStringBufferPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
 
 	return string(stringBuffer), err
 }
