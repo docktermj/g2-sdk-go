@@ -33,6 +33,11 @@ type G2diagnosticImpl struct{}
 // ----------------------------------------------------------------------------
 
 // Get space for an array of bytes of a given size.
+func (g2diagnostic *G2diagnosticImpl) getByteArrayC(size int) *C.char {
+	bytes := C.malloc(C.size_t(size))
+	return (*C.char)(bytes)
+}
+
 func (g2diagnostic *G2diagnosticImpl) getByteArray(size int) []byte {
 	return make([]byte, size)
 }
@@ -54,7 +59,7 @@ func resizeStringBuffer(stringBuffer unsafe.Pointer, size C.size_t) {
 //   _DLEXPORT int G2Diagnostic_getDBInfo(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, error) {
 	var err error = nil
-	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
+	stringBuffer := g2diagnostic.getByteArrayC(initialByteArraySize)
 	cStringBufferLength := C.ulong(initialByteArraySize)
 
 	// TRIAL: In this version, cStringBufferPointerPointer is pointing to "0x0"
@@ -76,11 +81,11 @@ func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, er
 	// C.G2Diagnostic_getDBInfo(cStringBufferPointerPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
 
 	// TRIAL:
-	cStringBufferPointer := (*C.char)(&stringBuffer)
-	// cStringBufferPointerPointer := (**C.char)(unsafe.Pointer(&cStringBufferPointer))
+	cStringBuffer := C.malloc(C.size_t(initialByteArraySize))
+	cStringBufferPointer := (*C.char)(unsafe.Pointer(&cStringBuffer))
 	C.G2Diagnostic_getDBInfo(&cStringBufferPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
 
-	return string(stringBuffer), err
+	return C.GoString(stringBuffer), err
 }
 
 // CheckDBPerf returns the available memory, in bytes, on the host system.
