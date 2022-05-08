@@ -13,8 +13,8 @@
 1. Identify git repository.
 
     ```console
-    export GIT_ACCOUNT=senzing
-    export GIT_REPOSITORY=docker-init-container
+    export GIT_ACCOUNT=docktermj
+    export GIT_REPOSITORY=xyzzygoapi
     export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
     export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
     ```

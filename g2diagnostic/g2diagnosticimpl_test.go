@@ -59,62 +59,98 @@ func getConfigurationJsonDefault() string {
 	return string(resultBytes)
 }
 
+func getTestObject() (G2diagnostic, error) {
+	g2diagnostic := G2diagnosticImpl{}
+	ctx := context.TODO()
+
+	moduleName := "Test module name"
+	verboseLogging := 1
+	iniParams := getConfigurationJson()
+
+	err := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
+	return &g2diagnostic, err
+}
+
 /*
  * The unit tests in this file...
  */
 
+// ----------------------------------------------------------------------------
+// Internal functions
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+// Work in progress
+// ----------------------------------------------------------------------------
+
+func TestGetDBInfo(test *testing.T) {
+	// g2diagnostic := G2diagnosticImpl{}
+
+	g2diagnostic, _ := getTestObject()
+
+	ctx := context.TODO()
+	actual, _ := g2diagnostic.GetDBInfo(ctx)
+	test.Log("Database info:", actual)
+}
+
+// func TestCheckDBPerf(test *testing.T) {
+// 	g2diagnostic := G2diagnosticImpl{}
+// 	ctx := context.TODO()
+// 	secondsToRun := 10
+// 	actual, _ := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
+// 	test.Log("Database performance:", actual)
+// }
+
+// ----------------------------------------------------------------------------
+// Interface methods
+// ----------------------------------------------------------------------------
+
+func TestClearLastException(test *testing.T) {
+	// g2diagnostic := G2diagnosticImpl{}
+	g2diagnostic, _ := getTestObject()
+
+	ctx := context.TODO()
+	g2diagnostic.ClearLastException(ctx)
+}
+
+func TestGetAvailableMemory(test *testing.T) {
+	g2diagnostic, _ := getTestObject()
+	ctx := context.TODO()
+	actual, _ := g2diagnostic.GetAvailableMemory(ctx)
+	test.Log("Available memory:", actual)
+}
+
 func TestGetLastException(test *testing.T) {
-	g2diagnostic := G2diagnosticImpl{}
+	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
 	actual, _ := g2diagnostic.GetLastException(ctx)
 	test.Log("Last exception:", actual)
 
 }
 
-func TestCheckDBPerf(test *testing.T) {
-	g2diagnostic := G2diagnosticImpl{}
-	ctx := context.TODO()
-	secondsToRun := 5
-	actual, _, _ := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
-	test.Log("Database performance:", actual)
-}
-
-func TestGetAvailableMemory(test *testing.T) {
-	g2diagnostic := G2diagnosticImpl{}
-	ctx := context.TODO()
-	actual, _ := g2diagnostic.GetAvailableMemory(ctx)
-	test.Log("Available memory:", actual)
-}
-
-func TestClearLastException(test *testing.T) {
-	g2diagnostic := G2diagnosticImpl{}
-	ctx := context.TODO()
-	g2diagnostic.ClearLastException(ctx)
-}
-
 func TestGetLogicalCores(test *testing.T) {
-	g2diagnostic := G2diagnosticImpl{}
+	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
 	actual, _ := g2diagnostic.GetLogicalCores(ctx)
 	test.Log(" Logical cores:", actual)
 }
 
 func TestGetPhysicalCores(test *testing.T) {
-	g2diagnostic := G2diagnosticImpl{}
+	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
 	actual, _ := g2diagnostic.GetPhysicalCores(ctx)
 	test.Log("Physical cores:", actual)
 }
 
 func TestGetTotalSystemMemory(test *testing.T) {
-	g2diagnostic := G2diagnosticImpl{}
+	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
 	actual, _ := g2diagnostic.GetTotalSystemMemory(ctx)
 	test.Log("Total system memory:", actual)
 }
 
 func TestInit(test *testing.T) {
-	g2diagnostic := G2diagnosticImpl{}
+	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
 
 	moduleName := "Test module name"
