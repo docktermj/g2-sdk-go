@@ -7,7 +7,7 @@
 1. Set environment variables.
 
     ```console
-    export SENZING_G2_DIR=~/senzing-3.0.0
+    export SENZING_G2_DIR=~/senzing-3.0.0/g2
     ```
 
 1. Identify git repository.
