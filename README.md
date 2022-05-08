@@ -28,7 +28,7 @@
     git checkout issue.1.dockter.2
     ```
 
-1. Set environment variables.
+1. Run tests.
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
