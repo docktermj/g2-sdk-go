@@ -54,6 +54,23 @@ func resizeStringBuffer(stringBuffer unsafe.Pointer, size C.size_t) {
 // Work in progress
 // ----------------------------------------------------------------------------
 
+func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, error) {
+	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
+	cStringBufferLength := C.ulong(initialByteArraySize)
+	cStringBufferPointer := (*C.char)(unsafe.Pointer(&stringBuffer[0]))
+
+	// TRIAL: In this version, cStringBufferPointerPointer is pointing to "0x0"
+	// Log: NOTE: TRACE: G2Diagnostic_getDBInfo([0x0],[65535],[0x58ffa5])
+	// cStringBufferPointerPointer := (**C.char)(unsafe.Pointer(cStringBufferPointer))
+	// C.G2Diagnostic_getDBInfo(cStringBufferPointerPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
+
+	// TRIAL: In this version the error is:
+	// Log: panic: runtime error: cgo argument has Go pointer to Go pointer
+	// C.G2Diagnostic_getDBInfo(&cStringBufferPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
+
+	return string(stringBuffer), nil
+}
+
 // CheckDBPerf returns the available memory, in bytes, on the host system.
 func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, error) {
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
@@ -64,20 +81,6 @@ func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsTo
 
 	//	result := C.G2Diagnostic_checkDBPerf(cSecondsToRun, cStringBufferPointerPointer, &cStringBufferLength, unsafe.Pointer(C.resizeStringBuffer))
 	C.G2Diagnostic_checkDBPerf(cSecondsToRun, cStringBufferPointerPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
-	return string(stringBuffer), nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, error) {
-	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
-	cStringBufferLength := C.ulong(initialByteArraySize)
-	cStringBufferPointer := (*C.char)(unsafe.Pointer(&stringBuffer[0]))
-	// cStringBufferPointerPointer := (**C.char)(unsafe.Pointer(cStringBufferPointer))
-
-	// FIXME: cStringBufferPointerPointer is pointing to "0x0"
-	// C.G2Diagnostic_getDBInfo(cStringBufferPointerPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
-
-	C.G2Diagnostic_getDBInfo(&cStringBufferPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
-
 	return string(stringBuffer), nil
 }
 

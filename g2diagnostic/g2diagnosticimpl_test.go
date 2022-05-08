@@ -84,10 +84,7 @@ func getTestObject() (G2diagnostic, error) {
 // ----------------------------------------------------------------------------
 
 func TestGetDBInfo(test *testing.T) {
-	// g2diagnostic := G2diagnosticImpl{}
-
 	g2diagnostic, _ := getTestObject()
-
 	ctx := context.TODO()
 	actual, _ := g2diagnostic.GetDBInfo(ctx)
 	test.Log("Database info:", actual)
