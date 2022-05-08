@@ -22,9 +22,6 @@ import (
 
 const initialByteArraySize = 65535
 
-// FIXME: Figure out how to pass in a pointer to a function that has a "void*".
-//_DLEXPORT int G2Diagnostic_checkDBPerf(int secondsToRun, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
-
 // ----------------------------------------------------------------------------
 // Structure
 // ----------------------------------------------------------------------------
@@ -41,7 +38,7 @@ func (g2diagnostic *G2diagnosticImpl) getByteArray(size int) []byte {
 }
 
 // Change the pointer to an array of bytes to a larger array of a given size.
-// FIXME: not sure this works.
+// TODO: not sure this works.
 //export resizeStringBuffer
 func resizeStringBuffer(stringBuffer unsafe.Pointer, size C.size_t) {
 	fmt.Println(">>> Requesting larger buffer of", size, "bytes")
@@ -54,20 +51,29 @@ func resizeStringBuffer(stringBuffer unsafe.Pointer, size C.size_t) {
 // Work in progress
 // ----------------------------------------------------------------------------
 
+//   _DLEXPORT int G2Diagnostic_getDBInfo(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, error) {
 	var err error = nil
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
 	cStringBufferLength := C.ulong(initialByteArraySize)
-	cStringBufferPointer := (*C.char)(unsafe.Pointer(&stringBuffer[0]))
 
 	// TRIAL: In this version, cStringBufferPointerPointer is pointing to "0x0"
 	// Log: NOTE: TRACE: G2Diagnostic_getDBInfo([0x0],[65535],[0x58ffa5])
+	// cStringBufferPointer := (*C.char)(unsafe.Pointer(&stringBuffer[0]))
 	// cStringBufferPointerPointer := (**C.char)(unsafe.Pointer(cStringBufferPointer))
 	// C.G2Diagnostic_getDBInfo(cStringBufferPointerPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
 
 	// TRIAL: In this version the error is:
 	// Log: panic: runtime error: cgo argument has Go pointer to Go pointer
+	// cStringBufferPointer := (*C.char)(unsafe.Pointer(&stringBuffer[0]))
 	// C.G2Diagnostic_getDBInfo(&cStringBufferPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
+
+	// TRIAL:
+	// Log: panic: runtime error: cgo argument has Go pointer to Go pointer
+	stringBufferPointer := &stringBuffer
+	stringBufferPointerPointer := &stringBufferPointer
+	cStringBufferPointerPointer := (**C.char)(unsafe.Pointer(stringBufferPointerPointer))
+	C.G2Diagnostic_getDBInfo(cStringBufferPointerPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
 
 	return string(stringBuffer), err
 }
