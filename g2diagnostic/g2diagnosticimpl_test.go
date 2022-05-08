@@ -71,13 +71,13 @@ func TestGetLastException(test *testing.T) {
 
 }
 
-// func TestCheckDBPerf(test *testing.T) {
-// 	g2diagnostic := G2diagnosticImpl{}
-// 	ctx := context.TODO()
-// 	secondsToRun := 5
-// 	actual, _, _ := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
-// 	test.Log("Database performance:", actual)
-// }
+func TestCheckDBPerf(test *testing.T) {
+	g2diagnostic := G2diagnosticImpl{}
+	ctx := context.TODO()
+	secondsToRun := 5
+	actual, _, _ := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
+	test.Log("Database performance:", actual)
+}
 
 func TestGetAvailableMemory(test *testing.T) {
 	g2diagnostic := G2diagnosticImpl{}
