@@ -30,7 +30,7 @@ type XyzzyConfiguration struct {
 func getConfigurationJson() string {
 	resultStruct := XyzzyConfiguration{
 		Pipeline: XyzzyConfigurationPipeline{
-			ConfigPath:   "/opt/senzing/etc",
+			ConfigPath:   "/etc/opt/senzing",
 			ResourcePath: "/opt/senzing/g2/resources",
 			SupportPath:  "/opt/senzing/data/3.0.0",
 		},
