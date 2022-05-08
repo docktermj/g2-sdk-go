@@ -25,7 +25,7 @@
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    git checkout issue.1.dockter.2
+    git checkout issue-1.dockter.2
     ```
 
 1. Run tests.
