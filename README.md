@@ -33,5 +33,4 @@
     ```console
     cd ${GIT_REPOSITORY_DIR}
     make -e test
-    git checkout issue-1.dockter.2
     ```
