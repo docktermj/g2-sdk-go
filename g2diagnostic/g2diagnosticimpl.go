@@ -10,7 +10,20 @@ package g2diagnostic
 #cgo CFLAGS: -g -Wall
 #cgo LDFLAGS: -shared
 
-extern void resizeStringBuffer(void*, size_t);
+void resizeStringBuffer(void *ptr, size_t size) {
+}
+
+char* G2Diagnostic_getDBInfo_local() {
+
+  bufferSize = 65525
+  charBuff = (char *)malloc(65535);
+  charBuffPtr = &charBuff
+
+  anInt := G2Diagnostic_getDBInfo(&charBuff, &bufferSize, &resizeStringBuffer);
+
+  return "MJD was here.";
+}
+
 */
 import "C"
 import (
@@ -44,7 +57,7 @@ func (g2diagnostic *G2diagnosticImpl) getByteArray(size int) []byte {
 
 // Change the pointer to an array of bytes to a larger array of a given size.
 // TODO: not sure this works.
-//export resizeStringBuffer
+//  FIXME: export resizeStringBuffer
 func resizeStringBuffer(stringBuffer unsafe.Pointer, size C.size_t) {
 	fmt.Println(">>> Requesting larger buffer of", size, "bytes")
 
@@ -59,8 +72,8 @@ func resizeStringBuffer(stringBuffer unsafe.Pointer, size C.size_t) {
 //   _DLEXPORT int G2Diagnostic_getDBInfo(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, error) {
 	var err error = nil
-	stringBuffer := g2diagnostic.getByteArrayC(initialByteArraySize)
-	cStringBufferLength := C.ulong(initialByteArraySize)
+	// stringBuffer := g2diagnostic.getByteArrayC(initialByteArraySize)
+	// cStringBufferLength := C.ulong(initialByteArraySize)
 
 	// TRIAL: In this version, cStringBufferPointerPointer is pointing to "0x0"
 	// Log: NOTE: TRACE: G2Diagnostic_getDBInfo([0x0],[65535],[0x58ffa5])
@@ -81,26 +94,34 @@ func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, er
 	// C.G2Diagnostic_getDBInfo(cStringBufferPointerPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
 
 	// TRIAL:
-	cStringBuffer := C.malloc(C.size_t(initialByteArraySize))
-	cStringBufferPointer := (*C.char)(unsafe.Pointer(&cStringBuffer))
-	C.G2Diagnostic_getDBInfo(&cStringBufferPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
+	// cStringBuffer := C.malloc(C.size_t(initialByteArraySize))
+	// cStringBufferPointer := (*C.char)(unsafe.Pointer(&cStringBuffer))
+	// C.G2Diagnostic_getDBInfo(&cStringBufferPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
 
-	return C.GoString(stringBuffer), err
+	// TRIAL:
+
+	stringBuffer := C.GoString(C.G2Diagnostic_getDBInfo_local())
+
+	return stringBuffer, err
+}
+
+func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, error) {
+	return "", nil
 }
 
 // CheckDBPerf returns the available memory, in bytes, on the host system.
-func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, error) {
-	var err error = nil
-	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
-	cSecondsToRun := C.int(secondsToRun)
-	cStringBufferLength := C.ulong(initialByteArraySize)
-	cStringBufferPointer := (*C.char)(unsafe.Pointer(&stringBuffer[0]))
-	cStringBufferPointerPointer := (**C.char)(unsafe.Pointer(cStringBufferPointer))
+// func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, error) {
+// 	var err error = nil
+// 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
+// 	cSecondsToRun := C.int(secondsToRun)
+// 	cStringBufferLength := C.ulong(initialByteArraySize)
+// 	cStringBufferPointer := (*C.char)(unsafe.Pointer(&stringBuffer[0]))
+// 	cStringBufferPointerPointer := (**C.char)(unsafe.Pointer(cStringBufferPointer))
 
-	//	result := C.G2Diagnostic_checkDBPerf(cSecondsToRun, cStringBufferPointerPointer, &cStringBufferLength, unsafe.Pointer(C.resizeStringBuffer))
-	C.G2Diagnostic_checkDBPerf(cSecondsToRun, cStringBufferPointerPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
-	return string(stringBuffer), err
-}
+// 	//	result := C.G2Diagnostic_checkDBPerf(cSecondsToRun, cStringBufferPointerPointer, &cStringBufferLength, unsafe.Pointer(C.resizeStringBuffer))
+// 	C.G2Diagnostic_checkDBPerf(cSecondsToRun, cStringBufferPointerPointer, &cStringBufferLength, (*[0]byte)(C.resizeStringBuffer))
+// 	return string(stringBuffer), err
+// }
 
 // ----------------------------------------------------------------------------
 // TODO:Interface methods
