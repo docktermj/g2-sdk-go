@@ -15,11 +15,11 @@ void resizeStringBuffer(void *ptr, size_t size) {
 
 char* G2Diagnostic_getDBInfo_local() {
 
-  bufferSize = 65525
-  charBuff = (char *)malloc(65535);
-  charBuffPtr = &charBuff
+  int bufferSize = 65525;
+  char *charBuff = (char *)malloc(65535);
+  char **charBuffPtr = &charBuff;
 
-  anInt := G2Diagnostic_getDBInfo(&charBuff, &bufferSize, &resizeStringBuffer);
+  int anInt = G2Diagnostic_getDBInfo(&charBuff, &bufferSize, &resizeStringBuffer);
 
   return "MJD was here.";
 }

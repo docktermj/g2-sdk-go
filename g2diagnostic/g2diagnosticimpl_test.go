@@ -32,7 +32,7 @@ func getConfigurationJson() string {
 		Pipeline: XyzzyConfigurationPipeline{
 			ConfigPath:   "/etc/opt/senzing",
 			ResourcePath: "/opt/senzing/g2/resources",
-			SupportPath:  "/opt/senzing/data/3.0.0",
+			SupportPath:  "/opt/senzing/data",
 		},
 		Sql: XyzzyConfigurationSql{
 			Connection: "postgresql://postgres:postgres@127.0.0.1:5432:G2/",
