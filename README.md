@@ -67,8 +67,8 @@
     sudo mkdir -p ${PGADMIN_DIR}
     sudo mkdir -p ${POSTGRES_DIR}
     sudo mkdir -p ${RABBITMQ_DIR}
-    sudo chown $(id -u):$(id -g) -R ${SENZING_VOLUME}
-    sudo chmod -R 770 ${SENZING_VOLUME}
+    sudo chown $(id -u):$(id -g) -R ${DOCKER_COMPOSE_VAR}
+    sudo chmod -R 770 ${DOCKER_COMPOSE_VAR}
     sudo chmod -R 777 ${PGADMIN_DIR}
 
     cd ${DOCKER_COMPOSE_VAR}
