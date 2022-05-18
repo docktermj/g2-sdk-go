@@ -65,7 +65,7 @@ func getTestObject() (G2diagnostic, error) {
 	ctx := context.TODO()
 
 	moduleName := "Test module name"
-	verboseLogging := 1 // 0 for no Senzing logging; 1 for logging
+	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
 	iniParams := getConfigurationJson()
 
 	err = g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)

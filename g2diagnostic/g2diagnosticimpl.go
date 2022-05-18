@@ -13,13 +13,17 @@ package g2diagnostic
 void resizeStringBuffer(void *ptr, size_t size) {
 }
 
+// Need: void * (*)(void *, size_t)
+// void (*)(void *, size_t)
+
 char* G2Diagnostic_getDBInfo_local() {
 
-  int bufferSize = 65525;
+  size_t bufferSize = 65525;
   char *charBuff = (char *)malloc(65535);
-  char **charBuffPtr = &charBuff;
+  void * (*resizeFunc)(void *ptr, size_t size) = &resizeStringBuffer;
 
-  int anInt = G2Diagnostic_getDBInfo(&charBuff, &bufferSize, &resizeStringBuffer);
+  G2Diagnostic_getDBInfo(&charBuff, &bufferSize, resizeFunc);
+
 
   return "MJD was here.";
 }
