@@ -18,7 +18,7 @@ import (
 type G2diagnostic interface {
 	CheckDBPerf(ctx context.Context, secondsToRun int) (string, error)
 	ClearLastException(ctx context.Context) error
-	CloseEntityListBySize(ctx context.Context, entityListBySizeHandle int) error
+	CloseEntityListBySize(ctx context.Context, entityListBySizeHandle interface{}) error
 	Destroy(ctx context.Context) error
 	FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle int) (string, error)
 	FindEntitiesByFeatureIDs(ctx context.Context, features string) (string, error)

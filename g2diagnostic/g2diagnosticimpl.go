@@ -19,6 +19,7 @@ void* resizeStringBuffer(void *ptr, size_t size) {
   return buffer;
 }
 
+typedef void* EntityListBySizeHandle;
 typedef void*(*resize_buffer_type)(void *, size_t);
 
 char* G2Diagnostic_checkDBPerf_local(int secondsToRun) {
@@ -68,124 +69,61 @@ func (g2diagnostic *G2diagnosticImpl) getByteArray(size int) []byte {
 	return make([]byte, size)
 }
 
-// Change the pointer to an array of bytes to a larger array of a given size.
-// TODO: not sure this works.
-//  FIXME: export resizeStringBuffer
-func xxxResizeStringBuffer(stringBuffer unsafe.Pointer, size C.size_t) {
-	fmt.Println(">>> Requesting larger buffer of", size, "bytes")
-
-	newByteBuffer := make([]byte, size)
-	stringBuffer = unsafe.Pointer(&newByteBuffer)
-}
-
-// ----------------------------------------------------------------------------
-// Work in progress
-// ----------------------------------------------------------------------------
-
-func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, error) {
-	var err error = nil
-	stringBuffer := C.GoString(C.G2Diagnostic_checkDBPerf_local(C.int(secondsToRun)))
-	return stringBuffer, err
-}
-
-// ----------------------------------------------------------------------------
-// TODO:Interface methods
-// ----------------------------------------------------------------------------
-
-func (g2diagnostic *G2diagnosticImpl) CloseEntityListBySize(ctx context.Context, entityListBySizeHandle int) error {
-	//  _DLEXPORT int G2Diagnostic_closeEntityListBySize(EntityListBySizeHandle entityListBySizeHandle);
-	return nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
-	//  _DLEXPORT int G2Diagnostic_destroy();
-	return nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle int) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_fetchNextEntityBySize(EntityListBySizeHandle entityListBySizeHandle, char *responseBuf, const size_t bufSize);
-	return "", nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) FindEntitiesByFeatureIDs(ctx context.Context, features string) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_findEntitiesByFeatureIDs(const char *features, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
-	return "", nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) GetDataSourceCounts(ctx context.Context) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_getDataSourceCounts(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
-	return "", nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, entityID int64, includeInternalFeatures int) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_getEntityDetails(const long long entityID, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
-	return "", nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_getEntityListBySize(const size_t entitySize,EntityListBySizeHandle* entityListBySizeHandle);
-	return "", nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) GetEntityResume(ctx context.Context, entityID int64) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_getEntityResume(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
-	return "", nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) GetEntitySizeBreakdown(ctx context.Context, minimumEntitySize int, includeInternalFeatures int) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_getEntitySizeBreakdown(const size_t minimumEntitySize, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
-	return "", nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) GetFeature(ctx context.Context, libFeatID int64) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_getFeature(const long long libFeatID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
-	return "", nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount string) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_getGenericFeatures(const char* featureType, const size_t maximumEstimatedCount, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
-	return "", nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
-	//  _DLEXPORT int G2Diagnostic_getLastException(char *buffer, const size_t bufSize);
-	return 0, nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_getMappingStatistics(const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
-	return "", nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) GetRelationshipDetails(ctx context.Context, relationshipID int64, includeInternalFeatures int) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_getRelationshipDetails(const long long relationshipID, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
-	return "", nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) GetResolutionStatistics(ctx context.Context) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_getResolutionStatistics(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
-	return "", nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error {
-	//  _DLEXPORT int G2Diagnostic_initWithConfigID(const char *moduleName, const char *iniParams, const long long initConfigID, const int verboseLogging);
-	return nil
-}
-
-func (g2diagnostic *G2diagnosticImpl) Reinit(ctx context.Context, initConfigID int64) error {
-	//  _DLEXPORT int G2Diagnostic_reinit(const long long initConfigID);
-	return nil
+func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber int) error {
+	lastException, _ := g2diagnostic.GetLastException(ctx)
+	defer g2diagnostic.ClearLastException(ctx)
+	errorMessage := fmt.Sprintf("xyzzy-6000%04d %s", errorNumber, lastException)
+	return errors.New(errorMessage)
 }
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
+// CheckDBPerf performs inserts to determine rate of insertion.
+func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, error) {
+	var err error = nil
+	stringBuffer := C.GoString(C.G2Diagnostic_checkDBPerf_local(C.int(secondsToRun)))
+	return stringBuffer, err
+}
+
 // ClearLastException returns the available memory, in bytes, on the host system.
 func (g2diagnostic *G2diagnosticImpl) ClearLastException(ctx context.Context) error {
 	var err error = nil
 	C.G2Diagnostic_clearLastException()
 	return err
+}
+
+func (g2diagnostic *G2diagnosticImpl) CloseEntityListBySize(ctx context.Context, entityListBySizeHandle interface{}) error {
+	//  _DLEXPORT int G2Diagnostic_closeEntityListBySize(EntityListBySizeHandle entityListBySizeHandle);
+	var err error = nil
+	result := C.G2Diagnostic_closeEntityListBySize(C.EntityListBySizeHandle(&entityListBySizeHandle))
+	if result != 0 {
+		err = g2diagnostic.getError(ctx, 1)
+	}
+	return err
+}
+
+func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
+	//  _DLEXPORT int G2Diagnostic_destroy();
+	var err error = nil
+	result := C.G2Diagnostic_destroy()
+	if result != 0 {
+		err = g2diagnostic.getError(ctx, 2)
+	}
+	return err
+}
+
+func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle int) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_fetchNextEntityBySize(EntityListBySizeHandle entityListBySizeHandle, char *responseBuf, const size_t bufSize);
+	var err error = nil
+	return "", err
+}
+
+func (g2diagnostic *G2diagnosticImpl) FindEntitiesByFeatureIDs(ctx context.Context, features string) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_findEntitiesByFeatureIDs(const char *features, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	var err error = nil
+	return "", err
 }
 
 // GetAvailableMemory returns the available memory, in bytes, on the host system.
@@ -195,11 +133,52 @@ func (g2diagnostic *G2diagnosticImpl) GetAvailableMemory(ctx context.Context) (i
 	return int64(result), err
 }
 
+func (g2diagnostic *G2diagnosticImpl) GetDataSourceCounts(ctx context.Context) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_getDataSourceCounts(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	var err error = nil
+	return "", err
+}
+
 // GetDBInfo returns information about the database connection.
 func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, error) {
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getDBInfo_local())
 	return stringBuffer, err
+}
+
+func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, entityID int64, includeInternalFeatures int) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_getEntityDetails(const long long entityID, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	var err error = nil
+	return "", err
+}
+
+func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_getEntityListBySize(const size_t entitySize,EntityListBySizeHandle* entityListBySizeHandle);
+	var err error = nil
+	return "", err
+}
+
+func (g2diagnostic *G2diagnosticImpl) GetEntityResume(ctx context.Context, entityID int64) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_getEntityResume(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	return "", nil
+}
+
+func (g2diagnostic *G2diagnosticImpl) GetEntitySizeBreakdown(ctx context.Context, minimumEntitySize int, includeInternalFeatures int) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_getEntitySizeBreakdown(const size_t minimumEntitySize, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	var err error = nil
+	return "", err
+}
+
+func (g2diagnostic *G2diagnosticImpl) GetFeature(ctx context.Context, libFeatID int64) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_getFeature(const long long libFeatID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	var err error = nil
+	return "", err
+}
+
+func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount string) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_getGenericFeatures(const char* featureType, const size_t maximumEstimatedCount, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	var err error = nil
+	return "", err
 }
 
 // GetLastException returns the last exception encountered in the Xyzzy Engine.
@@ -210,6 +189,12 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 	return string(stringBuffer), err
 }
 
+func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
+	//  _DLEXPORT int G2Diagnostic_getLastException(char *buffer, const size_t bufSize);
+	var err error = nil
+	return 0, err
+}
+
 // GetLogicalCores returns the number of logical cores on the host system.
 func (g2diagnostic *G2diagnosticImpl) GetLogicalCores(ctx context.Context) (int, error) {
 	var err error = nil
@@ -217,11 +202,29 @@ func (g2diagnostic *G2diagnosticImpl) GetLogicalCores(ctx context.Context) (int,
 	return int(result), err
 }
 
+func (g2diagnostic *G2diagnosticImpl) GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_getMappingStatistics(const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	var err error = nil
+	return "", err
+}
+
 // GetPhysicalCores returns the number of physical cores on the host system.
 func (g2diagnostic *G2diagnosticImpl) GetPhysicalCores(ctx context.Context) (int, error) {
 	var err error = nil
 	result := C.G2Diagnostic_getPhysicalCores()
 	return int(result), err
+}
+
+func (g2diagnostic *G2diagnosticImpl) GetRelationshipDetails(ctx context.Context, relationshipID int64, includeInternalFeatures int) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_getRelationshipDetails(const long long relationshipID, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	var err error = nil
+	return "", err
+}
+
+func (g2diagnostic *G2diagnosticImpl) GetResolutionStatistics(ctx context.Context) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_getResolutionStatistics(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	var err error = nil
+	return "", err
 }
 
 // GetTotalSystemMemory returns the total memory, in bytes, on the host system.
@@ -233,6 +236,7 @@ func (g2diagnostic *G2diagnosticImpl) GetTotalSystemMemory(ctx context.Context) 
 
 // Init initializes the Xyzzy G2diagnosis.
 func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
+	var err error = nil
 
 	// Transform Go datatypes to C datatypes.
 
@@ -248,15 +252,27 @@ func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName strin
 
 	// Handle result.
 
-	var err error = nil
 	if result != 0 {
 		err = errors.New("xyzzy-6000nnnn Unable to ...")
 	}
 	return err
 }
 
+func (g2diagnostic *G2diagnosticImpl) InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error {
+	//  _DLEXPORT int G2Diagnostic_initWithConfigID(const char *moduleName, const char *iniParams, const long long initConfigID, const int verboseLogging);
+	var err error = nil
+	return err
+}
+
 // Null shows how to report a BUG inline.
 func (g2diagnostic *G2diagnosticImpl) Null(ctx context.Context) (int64, error) {
 	// BUG(mjd): Just an example of how to show bugs in GoDoc.
-	return 1, nil
+	var err error = nil
+	return 1, err
+}
+
+func (g2diagnostic *G2diagnosticImpl) Reinit(ctx context.Context, initConfigID int64) error {
+	//  _DLEXPORT int G2Diagnostic_reinit(const long long initConfigID);
+	var err error = nil
+	return err
 }
