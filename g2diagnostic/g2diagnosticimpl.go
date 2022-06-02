@@ -10,23 +10,47 @@ package g2diagnostic
 #cgo CFLAGS: -g -Wall
 #cgo LDFLAGS: -shared
 
-void resizeStringBuffer(void *ptr, size_t size) {
+void* resizeStringBuffer(void *ptr, size_t size) {
+  //deallocate old buffer
+  if (ptr != 0)
+    free(ptr);
+  //allocate new buffer
+  void* buffer = malloc(size);
+  return buffer;
 }
 
 // Need: void * (*)(void *, size_t)
 // void (*)(void *, size_t)
+// typedef void *(*func_ptr_t)(void *ptr, size_t size);
+// typedef void(*func_ptr_type)(void *, size_t);
+
+typedef void*(*resize_buffer_type)(void *, size_t);
 
 char* G2Diagnostic_getDBInfo_local() {
 
-  size_t bufferSize = 65525;
-  char *charBuff = (char *)malloc(65535);
-  void * (*resizeFunc)(void *ptr, size_t size) = &resizeStringBuffer;
+  size_t bufferSize = 1;
+  char *charBuff = (char *)malloc(1);
 
-  G2Diagnostic_getDBInfo(&charBuff, &bufferSize, resizeFunc);
+//   void * (*resizeFunc)(void *ptr, size_t size) = &resizeStringBuffer;
+//   func_ptr_t resizeFuncTmp = &resizeStringBuffer;
+//   func_ptr_t (ptr_to_func_ptr) = &resizeFuncTmp;
+
+//  void (*funcPointer)(void *, size_t);
+//  void *(*funcPointerPointer)(void *, size_t);
+
+//  funcPointer = &resizeStringBuffer;
+//  funcPointerPointer = &funcPointer;
+
+  resize_buffer_type resizeFuncPointer = &resizeStringBuffer;
+
+  G2Diagnostic_getDBInfo(&charBuff, &bufferSize, resizeFuncPointer);
 
 
   return "MJD was here.";
 }
+
+//   _DLEXPORT int G2Diagnostic_getDBInfo(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+
 
 */
 import "C"
