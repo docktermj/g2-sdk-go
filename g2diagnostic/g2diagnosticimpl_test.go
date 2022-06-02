@@ -43,22 +43,6 @@ func getConfigurationJson() string {
 	return string(resultBytes)
 }
 
-func getConfigurationJsonDefault() string {
-	resultStruct := XyzzyConfiguration{
-		Pipeline: XyzzyConfigurationPipeline{
-			ConfigPath:   "/etc/opt/senzing",
-			ResourcePath: "/opt/senzing/g2/resources",
-			SupportPath:  "/opt/senzing/data",
-		},
-		Sql: XyzzyConfigurationSql{
-			Connection: "xyzzy",
-		},
-	}
-
-	resultBytes, _ := json.Marshal(resultStruct)
-	return string(resultBytes)
-}
-
 func getTestObject() (G2diagnostic, error) {
 	var err error = nil
 	g2diagnostic := G2diagnosticImpl{}
@@ -77,6 +61,10 @@ func getTestObject() (G2diagnostic, error) {
  */
 
 // ----------------------------------------------------------------------------
+// Initialization
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
 // Internal functions
 // ----------------------------------------------------------------------------
 
@@ -84,29 +72,37 @@ func getTestObject() (G2diagnostic, error) {
 // Work in progress
 // ----------------------------------------------------------------------------
 
-func TestGetDBInfo(test *testing.T) {
-	g2diagnostic, _ := getTestObject()
-	ctx := context.TODO()
-	actual, _ := g2diagnostic.GetDBInfo(ctx)
-	test.Log("Database info:", actual)
-}
+// ----------------------------------------------------------------------------
+// Test harness
+// ----------------------------------------------------------------------------
 
-// func TestCheckDBPerf(test *testing.T) {
-// 	g2diagnostic := G2diagnosticImpl{}
-// 	ctx := context.TODO()
-// 	secondsToRun := 10
-// 	actual, _ := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
-// 	test.Log("Database performance:", actual)
-// }
+// Reference: https://medium.com/nerd-for-tech/setup-and-teardown-unit-test-in-go-bd6fa1b785cd
+func setupSuite(test testing.TB) func(test testing.TB) {
+	test.Log("setup suite")
+
+	// Return a function to teardown the test
+	return func(test testing.TB) {
+		test.Log("teardown suite")
+	}
+}
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
-func TestClearLastException(test *testing.T) {
-	// g2diagnostic := G2diagnosticImpl{}
-	g2diagnostic, _ := getTestObject()
+func TestCheckDBPerf(test *testing.T) {
+	teardownSuite := setupSuite(test)
+	defer teardownSuite(test)
 
+	g2diagnostic, _ := getTestObject()
+	ctx := context.TODO()
+	secondsToRun := 10
+	actual, _ := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
+	test.Log("Database performance:", actual)
+}
+
+func TestClearLastException(test *testing.T) {
+	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
 	g2diagnostic.ClearLastException(ctx)
 }
@@ -115,7 +111,15 @@ func TestGetAvailableMemory(test *testing.T) {
 	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
 	actual, _ := g2diagnostic.GetAvailableMemory(ctx)
+	assert.Greater(test, actual, int64(0))
 	test.Log("Available memory:", actual)
+}
+
+func TestGetDBInfo(test *testing.T) {
+	g2diagnostic, _ := getTestObject()
+	ctx := context.TODO()
+	actual, _ := g2diagnostic.GetDBInfo(ctx)
+	test.Log("Database info:", actual)
 }
 
 func TestGetLastException(test *testing.T) {
@@ -123,13 +127,13 @@ func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
 	actual, _ := g2diagnostic.GetLastException(ctx)
 	test.Log("Last exception:", actual)
-
 }
 
 func TestGetLogicalCores(test *testing.T) {
 	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
 	actual, _ := g2diagnostic.GetLogicalCores(ctx)
+	assert.Greater(test, actual, 0)
 	test.Log(" Logical cores:", actual)
 }
 
@@ -137,6 +141,7 @@ func TestGetPhysicalCores(test *testing.T) {
 	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
 	actual, _ := g2diagnostic.GetPhysicalCores(ctx)
+	assert.Greater(test, actual, 0)
 	test.Log("Physical cores:", actual)
 }
 
@@ -144,11 +149,12 @@ func TestGetTotalSystemMemory(test *testing.T) {
 	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
 	actual, _ := g2diagnostic.GetTotalSystemMemory(ctx)
+	assert.Greater(test, actual, int64(0))
 	test.Log("Total system memory:", actual)
 }
 
 func TestInit(test *testing.T) {
-	g2diagnostic, _ := getTestObject()
+	g2diagnostic := G2diagnosticImpl{}
 	ctx := context.TODO()
 
 	moduleName := "Test module name"
