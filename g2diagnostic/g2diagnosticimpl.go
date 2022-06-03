@@ -10,6 +10,9 @@ package g2diagnostic
 #cgo CFLAGS: -g -Wall
 #cgo LDFLAGS: -shared
 
+typedef void* EntityListBySizeHandle;
+typedef void*(*resize_buffer_type)(void *, size_t);
+
 void* resizeStringBuffer(void *ptr, size_t size) {
   //deallocate old buffer
   if (ptr != 0)
@@ -19,9 +22,6 @@ void* resizeStringBuffer(void *ptr, size_t size) {
   return buffer;
 }
 
-typedef void* EntityListBySizeHandle;
-typedef void*(*resize_buffer_type)(void *, size_t);
-
 char* G2Diagnostic_checkDBPerf_local(int secondsToRun) {
   size_t bufferSize = 1;
   char *charBuff = (char *)malloc(1);
@@ -30,11 +30,75 @@ char* G2Diagnostic_checkDBPerf_local(int secondsToRun) {
   return charBuff;
 }
 
+char* G2Diagnostic_findEntitiesByFeatureIDs_local(const char *features) {
+  size_t bufferSize = 1;
+  char *charBuff = (char *)malloc(1);
+  resize_buffer_type resizeFuncPointer = &resizeStringBuffer;
+  G2Diagnostic_findEntitiesByFeatureIDs(features, &charBuff, &bufferSize, resizeFuncPointer);
+  return charBuff;
+}
+
+char* G2Diagnostic_getDataSourceCounts_local() {
+  size_t bufferSize = 1;
+  char *charBuff = (char *)malloc(1);
+  resize_buffer_type resizeFuncPointer = &resizeStringBuffer;
+  G2Diagnostic_getDataSourceCounts(&charBuff, &bufferSize, resizeFuncPointer);
+  return charBuff;
+}
+
 char* G2Diagnostic_getDBInfo_local() {
   size_t bufferSize = 1;
   char *charBuff = (char *)malloc(1);
   resize_buffer_type resizeFuncPointer = &resizeStringBuffer;
   G2Diagnostic_getDBInfo(&charBuff, &bufferSize, resizeFuncPointer);
+  return charBuff;
+}
+
+char* G2Diagnostic_getEntityDetails_local(const long long entityID, const int includeInternalFeatures) {
+  size_t bufferSize = 1;
+  char *charBuff = (char *)malloc(1);
+  resize_buffer_type resizeFuncPointer = &resizeStringBuffer;
+  G2Diagnostic_getEntityDetails(entityID, includeInternalFeatures, &charBuff, &bufferSize, resizeFuncPointer);
+  return charBuff;
+}
+
+char* G2Diagnostic_getEntityResume_local(const long long entityID) {
+  size_t bufferSize = 1;
+  char *charBuff = (char *)malloc(1);
+  resize_buffer_type resizeFuncPointer = &resizeStringBuffer;
+  G2Diagnostic_getEntityResume(entityID, &charBuff, &bufferSize, resizeFuncPointer);
+  return charBuff;
+}
+
+char* G2Diagnostic_getEntitySizeBreakdown_local(const size_t minimumEntitySize, const int includeInternalFeatures) {
+  size_t bufferSize = 1;
+  char *charBuff = (char *)malloc(1);
+  resize_buffer_type resizeFuncPointer = &resizeStringBuffer;
+  G2Diagnostic_getEntitySizeBreakdown(minimumEntitySize, includeInternalFeatures, &charBuff, &bufferSize, resizeFuncPointer);
+  return charBuff;
+}
+
+char* G2Diagnostic_getFeature_local(const long long libFeatID) {
+  size_t bufferSize = 1;
+  char *charBuff = (char *)malloc(1);
+  resize_buffer_type resizeFuncPointer = &resizeStringBuffer;
+  G2Diagnostic_getFeature(libFeatID, &charBuff, &bufferSize, resizeFuncPointer);
+  return charBuff;
+}
+
+char* G2Diagnostic_getGenericFeatures_local(const char *featureType, const size_t maximumEstimatedCount) {
+  size_t bufferSize = 1;
+  char *charBuff = (char *)malloc(1);
+  resize_buffer_type resizeFuncPointer = &resizeStringBuffer;
+  G2Diagnostic_getGenericFeatures(featureType, maximumEstimatedCount, &charBuff, &bufferSize, resizeFuncPointer);
+  return charBuff;
+}
+
+char* G2Diagnostic_getMappingStatistics_local(const int includeInternalFeatures) {
+  size_t bufferSize = 1;
+  char *charBuff = (char *)malloc(1);
+  resize_buffer_type resizeFuncPointer = &resizeStringBuffer;
+  G2Diagnostic_getMappingStatistics(includeInternalFeatures, &charBuff, &bufferSize, resizeFuncPointer);
   return charBuff;
 }
 
@@ -82,6 +146,7 @@ func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber 
 
 // CheckDBPerf performs inserts to determine rate of insertion.
 func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, error) {
+	// _DLEXPORT int G2Diagnostic_checkDBPerf(int secondsToRun, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_checkDBPerf_local(C.int(secondsToRun)))
 	return stringBuffer, err
@@ -89,6 +154,7 @@ func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsTo
 
 // ClearLastException returns the available memory, in bytes, on the host system.
 func (g2diagnostic *G2diagnosticImpl) ClearLastException(ctx context.Context) error {
+	// _DLEXPORT void G2Diagnostic_clearLastException();
 	var err error = nil
 	C.G2Diagnostic_clearLastException()
 	return err
@@ -117,17 +183,26 @@ func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
 func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_fetchNextEntityBySize(EntityListBySizeHandle entityListBySizeHandle, char *responseBuf, const size_t bufSize);
 	var err error = nil
-	return "", err
+	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
+	result := C.G2Diagnostic_fetchNextEntityBySize(C.EntityListBySizeHandle(&entityListBySizeHandle), (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	if result != 0 {
+		err = g2diagnostic.getError(ctx, 3)
+	}
+	return string(stringBuffer), err
 }
 
 func (g2diagnostic *G2diagnosticImpl) FindEntitiesByFeatureIDs(ctx context.Context, features string) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_findEntitiesByFeatureIDs(const char *features, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	featuresForC := C.CString(features)
+	defer C.free(unsafe.Pointer(featuresForC))
+	stringBuffer := C.GoString(C.G2Diagnostic_findEntitiesByFeatureIDs_local(featuresForC))
+	return stringBuffer, err
 }
 
 // GetAvailableMemory returns the available memory, in bytes, on the host system.
 func (g2diagnostic *G2diagnosticImpl) GetAvailableMemory(ctx context.Context) (int64, error) {
+	// _DLEXPORT long long G2Diagnostic_getAvailableMemory();
 	var err error = nil
 	result := C.G2Diagnostic_getAvailableMemory()
 	return int64(result), err
@@ -136,11 +211,13 @@ func (g2diagnostic *G2diagnosticImpl) GetAvailableMemory(ctx context.Context) (i
 func (g2diagnostic *G2diagnosticImpl) GetDataSourceCounts(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getDataSourceCounts(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2Diagnostic_getDataSourceCounts_local())
+	return stringBuffer, err
 }
 
 // GetDBInfo returns information about the database connection.
 func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, error) {
+	// _DLEXPORT int G2Diagnostic_getDBInfo(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getDBInfo_local())
 	return stringBuffer, err
@@ -149,67 +226,91 @@ func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, er
 func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, entityID int64, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntityDetails(const long long entityID, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2Diagnostic_getEntityDetails_local(C.longlong(entityID), C.int(includeInternalFeatures)))
+	return stringBuffer, err
 }
 
-func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_getEntityListBySize(const size_t entitySize,EntityListBySizeHandle* entityListBySizeHandle);
+func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context, entitySize int) (interface{}, error) {
+	//  _DLEXPORT int G2Diagnostic_getEntityListBySize(const size_t entitySize, EntityListBySizeHandle* entityListBySizeHandle);
 	var err error = nil
-	return "", err
+	var entityListBySizeHandle interface{} = nil
+	entityListBySizeHandleForC := C.EntityListBySizeHandle(&entityListBySizeHandle)
+	result := C.G2Diagnostic_getEntityListBySize(C.size_t(entitySize), &entityListBySizeHandleForC)
+	if result != 0 {
+		err = g2diagnostic.getError(ctx, 4)
+	}
+	return entityListBySizeHandle, err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetEntityResume(ctx context.Context, entityID int64) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntityResume(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
-	return "", nil
+	var err error = nil
+	stringBuffer := C.GoString(C.G2Diagnostic_getEntityResume_local(C.longlong(entityID)))
+	return stringBuffer, err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetEntitySizeBreakdown(ctx context.Context, minimumEntitySize int, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntitySizeBreakdown(const size_t minimumEntitySize, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2Diagnostic_getEntitySizeBreakdown_local(C.size_t(minimumEntitySize), C.int(includeInternalFeatures)))
+	return stringBuffer, err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetFeature(ctx context.Context, libFeatID int64) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getFeature(const long long libFeatID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2Diagnostic_getFeature_local(C.longlong(libFeatID)))
+	return stringBuffer, err
 }
 
-func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount string) (string, error) {
+func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getGenericFeatures(const char* featureType, const size_t maximumEstimatedCount, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-	return "", err
+	featureTypeForC := C.CString(featureType)
+	defer C.free(unsafe.Pointer(featureTypeForC))
+	stringBuffer := C.GoString(C.G2Diagnostic_getGenericFeatures_local(featureTypeForC, C.size_t(maximumEstimatedCount)))
+	return stringBuffer, err
 }
 
 // GetLastException returns the last exception encountered in the Xyzzy Engine.
 func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_getLastException(char *buffer, const size_t bufSize);
 	var err error = nil
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
 	C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	return string(stringBuffer), err
 }
 
-func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
+func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getLastException(char *buffer, const size_t bufSize);
 	var err error = nil
-	return 0, err
+	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
+	result := C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	if result != 0 {
+		err = g2diagnostic.getError(ctx, 3)
+	}
+	return string(stringBuffer), err
 }
 
 // GetLogicalCores returns the number of logical cores on the host system.
 func (g2diagnostic *G2diagnosticImpl) GetLogicalCores(ctx context.Context) (int, error) {
+	// _DLEXPORT int G2Diagnostic_getLogicalCores();
 	var err error = nil
 	result := C.G2Diagnostic_getLogicalCores()
 	return int(result), err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error) {
+	// FIXME:
 	//  _DLEXPORT int G2Diagnostic_getMappingStatistics(const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2Diagnostic_getMappingStatistics_local(C.int(includeInternalFeatures)))
+	return stringBuffer, err
 }
 
 // GetPhysicalCores returns the number of physical cores on the host system.
 func (g2diagnostic *G2diagnosticImpl) GetPhysicalCores(ctx context.Context) (int, error) {
+	// _DLEXPORT int G2Diagnostic_getPhysicalCores();
 	var err error = nil
 	result := C.G2Diagnostic_getPhysicalCores()
 	return int(result), err
@@ -229,6 +330,7 @@ func (g2diagnostic *G2diagnosticImpl) GetResolutionStatistics(ctx context.Contex
 
 // GetTotalSystemMemory returns the total memory, in bytes, on the host system.
 func (g2diagnostic *G2diagnosticImpl) GetTotalSystemMemory(ctx context.Context) (int64, error) {
+	// _DLEXPORT long long G2Diagnostic_getTotalSystemMemory();
 	var err error = nil
 	result := C.G2Diagnostic_getTotalSystemMemory()
 	return int64(result), err
@@ -236,6 +338,7 @@ func (g2diagnostic *G2diagnosticImpl) GetTotalSystemMemory(ctx context.Context) 
 
 // Init initializes the Xyzzy G2diagnosis.
 func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
+	// _DLEXPORT int G2Diagnostic_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	var err error = nil
 
 	// Transform Go datatypes to C datatypes.
