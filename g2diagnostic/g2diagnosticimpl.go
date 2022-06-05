@@ -197,7 +197,7 @@ func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
 	return err
 }
 
-func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle int) (string, error) {
+func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle interface{}) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_fetchNextEntityBySize(EntityListBySizeHandle entityListBySizeHandle, char *responseBuf, const size_t bufSize);
 	var err error = nil
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
@@ -250,9 +250,8 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, enti
 func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context, entitySize int) (interface{}, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntityListBySize(const size_t entitySize, EntityListBySizeHandle* entityListBySizeHandle);
 	var err error = nil
-	var entityListBySizeHandle interface{} = nil
-	entityListBySizeHandleForC := C.EntityListBySizeHandle(&entityListBySizeHandle)
-	result := C.G2Diagnostic_getEntityListBySize(C.size_t(entitySize), &entityListBySizeHandleForC)
+	var entityListBySizeHandle unsafe.Pointer
+	result := C.G2Diagnostic_getEntityListBySize(C.size_t(entitySize), (*C.EntityListBySizeHandle)(&entityListBySizeHandle))
 	if result != 0 {
 		err = g2diagnostic.getError(ctx, 4, strconv.Itoa(entitySize))
 	}

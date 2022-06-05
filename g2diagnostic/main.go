@@ -20,7 +20,7 @@ type G2diagnostic interface {
 	ClearLastException(ctx context.Context) error
 	CloseEntityListBySize(ctx context.Context, entityListBySizeHandle interface{}) error
 	Destroy(ctx context.Context) error
-	FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle int) (string, error)
+	FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle interface{}) (string, error)
 	FindEntitiesByFeatureIDs(ctx context.Context, features string) (string, error)
 	GetAvailableMemory(ctx context.Context) (int64, error)
 	GetDataSourceCounts(ctx context.Context) (string, error)

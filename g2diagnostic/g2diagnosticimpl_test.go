@@ -56,6 +56,14 @@ func getTestObject() (G2diagnostic, error) {
 	return &g2diagnostic, err
 }
 
+func testError(test *testing.T, ctx context.Context, g2diagnostic G2diagnostic, err error) {
+	if err != nil {
+		test.Log("Error:", err.Error())
+		lastException, _ := g2diagnostic.GetLastException(ctx)
+		assert.FailNow(test, lastException)
+	}
+}
+
 /*
  * The unit tests in this file...
  */
@@ -96,8 +104,9 @@ func TestCheckDBPerf(test *testing.T) {
 
 	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
-	secondsToRun := 10
-	actual, _ := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
+	secondsToRun := 1
+	actual, err := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
+	testError(test, ctx, g2diagnostic, err)
 	test.Log("Database performance:", actual)
 }
 
@@ -107,10 +116,43 @@ func TestClearLastException(test *testing.T) {
 	g2diagnostic.ClearLastException(ctx)
 }
 
+func TestEntityListBySize(test *testing.T) {
+	g2diagnostic, _ := getTestObject()
+	ctx := context.TODO()
+	aSize := 10
+
+	aHandle, err := g2diagnostic.GetEntityListBySize(ctx, aSize)
+	testError(test, ctx, g2diagnostic, err)
+
+	anEntity, err := g2diagnostic.FetchNextEntityBySize(ctx, aHandle)
+	testError(test, ctx, g2diagnostic, err)
+	test.Log("Entity:", anEntity)
+
+	err = g2diagnostic.CloseEntityListBySize(ctx, aHandle)
+	testError(test, ctx, g2diagnostic, err)
+}
+
+func TestDestroy(test *testing.T) {
+	g2diagnostic, _ := getTestObject()
+	ctx := context.TODO()
+	err := g2diagnostic.Destroy(ctx)
+	testError(test, ctx, g2diagnostic, err)
+}
+
+func TestFindEntitiesByFeatureIDs(test *testing.T) {
+	g2diagnostic, _ := getTestObject()
+	ctx := context.TODO()
+	features := "{\"ENTITY_ID\":1}"
+	actual, err := g2diagnostic.FindEntitiesByFeatureIDs(ctx, features)
+	testError(test, ctx, g2diagnostic, err)
+	test.Log("Entities:", actual)
+}
+
 func TestGetAvailableMemory(test *testing.T) {
 	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
-	actual, _ := g2diagnostic.GetAvailableMemory(ctx)
+	actual, err := g2diagnostic.GetAvailableMemory(ctx)
+	testError(test, ctx, g2diagnostic, err)
 	assert.Greater(test, actual, int64(0))
 	test.Log("Available memory:", actual)
 }
@@ -118,21 +160,24 @@ func TestGetAvailableMemory(test *testing.T) {
 func TestGetDBInfo(test *testing.T) {
 	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
-	actual, _ := g2diagnostic.GetDBInfo(ctx)
+	actual, err := g2diagnostic.GetDBInfo(ctx)
+	testError(test, ctx, g2diagnostic, err)
 	test.Log("Database info:", actual)
 }
 
 func TestGetLastException(test *testing.T) {
 	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
-	actual, _ := g2diagnostic.GetLastException(ctx)
+	actual, err := g2diagnostic.GetLastException(ctx)
+	testError(test, ctx, g2diagnostic, err)
 	test.Log("Last exception:", actual)
 }
 
 func TestGetLogicalCores(test *testing.T) {
 	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
-	actual, _ := g2diagnostic.GetLogicalCores(ctx)
+	actual, err := g2diagnostic.GetLogicalCores(ctx)
+	testError(test, ctx, g2diagnostic, err)
 	assert.Greater(test, actual, 0)
 	test.Log(" Logical cores:", actual)
 }
@@ -140,7 +185,8 @@ func TestGetLogicalCores(test *testing.T) {
 func TestGetPhysicalCores(test *testing.T) {
 	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
-	actual, _ := g2diagnostic.GetPhysicalCores(ctx)
+	actual, err := g2diagnostic.GetPhysicalCores(ctx)
+	testError(test, ctx, g2diagnostic, err)
 	assert.Greater(test, actual, 0)
 	test.Log("Physical cores:", actual)
 }
@@ -148,23 +194,18 @@ func TestGetPhysicalCores(test *testing.T) {
 func TestGetTotalSystemMemory(test *testing.T) {
 	g2diagnostic, _ := getTestObject()
 	ctx := context.TODO()
-	actual, _ := g2diagnostic.GetTotalSystemMemory(ctx)
+	actual, err := g2diagnostic.GetTotalSystemMemory(ctx)
+	testError(test, ctx, g2diagnostic, err)
 	assert.Greater(test, actual, int64(0))
 	test.Log("Total system memory:", actual)
 }
 
 func TestInit(test *testing.T) {
-	g2diagnostic := G2diagnosticImpl{}
+	g2diagnostic := &G2diagnosticImpl{}
 	ctx := context.TODO()
-
 	moduleName := "Test module name"
 	verboseLogging := 0
 	iniParams := getConfigurationJson()
-
 	err := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
-	if err != nil {
-		test.Log("iniParams:", iniParams)
-		lastException, _ := g2diagnostic.GetLastException(ctx)
-		assert.FailNow(test, lastException)
-	}
+	testError(test, ctx, g2diagnostic, err)
 }
