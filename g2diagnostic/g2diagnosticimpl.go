@@ -187,10 +187,15 @@ func (g2diagnostic *G2diagnosticImpl) getByteArray(size int) []byte {
 }
 
 func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber int, details ...string) error {
-    lastException, _ := g2diagnostic.GetLastException(ctx)
+    lastException, err := g2diagnostic.GetLastException(ctx)
     defer g2diagnostic.ClearLastException(ctx)
-    errorMessage := fmt.Sprintf("xyzzy-6000%04d %s - %v", errorNumber, lastException, details)
-    return errors.New(errorMessage)
+    var result error = nil
+    if err != nil {
+        result = fmt.Errorf("xyzzy-60119999: %w", err)
+    } else {
+        result = errors.New(fmt.Sprintf("xyzzy-6011%04d %s - %v", errorNumber, lastException, details))
+    }
+    return result
 }
 
 // ----------------------------------------------------------------------------

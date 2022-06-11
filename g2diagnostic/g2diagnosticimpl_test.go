@@ -116,6 +116,7 @@ func TestClearLastException(test *testing.T) {
     g2diagnostic.ClearLastException(ctx)
 }
 
+// FAIL:
 func TestEntityListBySize(test *testing.T) {
     g2diagnostic, _ := getTestObject()
     ctx := context.TODO()
@@ -139,6 +140,7 @@ func TestDestroy(test *testing.T) {
     testError(test, ctx, g2diagnostic, err)
 }
 
+// FAIL:
 func TestFindEntitiesByFeatureIDs(test *testing.T) {
     g2diagnostic, _ := getTestObject()
     ctx := context.TODO()
@@ -211,10 +213,11 @@ func TestGetFeature(test *testing.T) {
     test.Log("Actual:", actual)
 }
 
+// FAIL:
 func TestGetGenericFeatures(test *testing.T) {
     g2diagnostic, _ := getTestObject()
     ctx := context.TODO()
-    featureType := "{}"
+    featureType := "{\"FTYPE_CODE\":\"NAME\"}"
     maximumEstimatedCount := 10
     actual, err := g2diagnostic.GetGenericFeatures(ctx, featureType, maximumEstimatedCount)
     testError(test, ctx, g2diagnostic, err)
@@ -279,7 +282,6 @@ func TestGetResolutionStatistics(test *testing.T) {
     ctx := context.TODO()
     actual, err := g2diagnostic.GetResolutionStatistics(ctx)
     testError(test, ctx, g2diagnostic, err)
-    assert.Greater(test, actual, 0)
     test.Log("Actual:", actual)
 }
 
@@ -316,7 +318,7 @@ func TestInitWithConfigID(test *testing.T) {
 func TestReinit(test *testing.T) {
     g2diagnostic := &G2diagnosticImpl{}
     ctx := context.TODO()
-    initConfigID := int64(1)
+    initConfigID := int64(4019066234)
     err := g2diagnostic.Reinit(ctx, initConfigID)
     testError(test, ctx, g2diagnostic, err)
 }
