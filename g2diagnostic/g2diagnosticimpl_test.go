@@ -144,7 +144,7 @@ func TestDestroy(test *testing.T) {
 func TestFindEntitiesByFeatureIDs(test *testing.T) {
     g2diagnostic, _ := getTestObject()
     ctx := context.TODO()
-    features := "{\"ENTITY_ID\":1}"
+    features := "{\"FEATURE_ID\":1}"
     actual, err := g2diagnostic.FindEntitiesByFeatureIDs(ctx, features)
     testError(test, ctx, g2diagnostic, err)
     test.Log("Actual:", actual)
