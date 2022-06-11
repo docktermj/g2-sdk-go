@@ -13,6 +13,7 @@ BUILD_TAG := $(shell git describe --always --tags --abbrev=0)
 BUILD_ITERATION := $(shell git log $(BUILD_TAG)..HEAD --oneline | wc -l | sed 's/^ *//')
 GIT_REMOTE_URL := $(shell git config --get remote.origin.url)
 GO_PACKAGE_NAME := $(shell echo $(GIT_REMOTE_URL) | sed -e 's|^git@github.com:|github.com/|' -e 's|\.git$$||')
+SENZING_G2_DIR = /opt/senzing/g2
 
 CC=gcc
 
@@ -31,9 +32,9 @@ default: help
 # CGO_LDFLAGS = -L$(MAKEFILE_DIRECTORY)lib -llibg2diagnostic
 
 CGO_CFLAGS = \
-	-I/home/senzing/my-senzing/g2/sdk/c
+	-I${SENZING_G2_DIR}/sdk/c
 CGO_LDFLAGS = \
-	-L/home/senzing/my-senzing/g2/lib \
+	-L${SENZING_G2_DIR}/lib \
 	-lanalytics \
 	-lboost_atomic \
 	-lboost_chrono \
@@ -130,11 +131,11 @@ CGO_LDFLAGS = \
 	-lSpaceTimeBoxStandardizer \
 	-lsqliteplugin
 
-LD_LIBRARY_PATH=/home/senzing/my-senzing/g2/lib
+LD_LIBRARY_PATH = ${SENZING_G2_DIR}/lib
 
 # ---- Linux ------------------------------------------------------------------
 
-target/linux/go-hello-xyzzy-dynamic: 
+target/linux/go-hello-xyzzy-dynamic:
 	GOOS=linux GOARCH=amd64 \
 		go build \
 			-a \
@@ -146,7 +147,7 @@ target/linux/go-hello-xyzzy-dynamic:
 			${GO_PACKAGE_NAME}
 	@mkdir -p $(TARGET_DIRECTORY)/linux || true
 	@mv $(PROGRAM_NAME) $(TARGET_DIRECTORY)/linux/go-hello-xyzzy-dynamic
-	
+
 # -----------------------------------------------------------------------------
 # Build
 #   Notes:
@@ -225,7 +226,7 @@ package: docker-build-package
 .PHONY: run-linux-dynamic
 run-linux-dynamic:
 	@target/linux/go-hello-xyzzy-dynamic
-	
+
 # -----------------------------------------------------------------------------
 # Utility targets
 # -----------------------------------------------------------------------------
@@ -243,7 +244,7 @@ docker-run:
 clean:
 	@go clean -cache
 	@docker rm --force $(DOCKER_CONTAINER_NAME) || true
-	@docker rmi --force $(DOCKER_IMAGE_NAME) $(DOCKER_BUILD_IMAGE_NAME) || true	
+	@docker rmi --force $(DOCKER_IMAGE_NAME) $(DOCKER_BUILD_IMAGE_NAME) || true
 	@rm -rf $(TARGET_DIRECTORY) || true
 	@find . -type f -name '*.a' -exec rm {} +    # Remove recursively *.o files
 	@find . -type f -name '*.o' -exec rm {} +    # Remove recursively *.o files
