@@ -176,19 +176,18 @@ func TestGetDBInfo(test *testing.T) {
 func TestGetEntityDetails(test *testing.T) {
     g2diagnostic, _ := getTestObject()
     ctx := context.TODO()
-    entityID := 1
-    actual, err := g2diagnostic.GetEntityDetails(ctx, entityID)
+    entityID := int64(1)
+    includeInternalFeatures := 1
+    actual, err := g2diagnostic.GetEntityDetails(ctx, entityID, includeInternalFeatures)
     testError(test, ctx, g2diagnostic, err)
     test.Log("Actual:", actual)
 }
 
-
 func TestGetEntityResume(test *testing.T) {
     g2diagnostic, _ := getTestObject()
     ctx := context.TODO()
-    entityID := 1
-    includeInternalFeatures := 1
-    actual, err := g2diagnostic.GetEntityResume(ctx, entityID, includeInternalFeatures)
+    entityID := int64(1)
+    actual, err := g2diagnostic.GetEntityResume(ctx, entityID)
     testError(test, ctx, g2diagnostic, err)
     test.Log("Actual:", actual)
 }
@@ -196,9 +195,9 @@ func TestGetEntityResume(test *testing.T) {
 func TestGetEntitySizeBreakdown(test *testing.T) {
     g2diagnostic, _ := getTestObject()
     ctx := context.TODO()
-    entityID := 1
+    minimumEntitySize := 1
     includeInternalFeatures := 1
-    actual, err := g2diagnostic.GetEntitySizeBreakdown(ctx, entityID, includeInternalFeatures)
+    actual, err := g2diagnostic.GetEntitySizeBreakdown(ctx, minimumEntitySize, includeInternalFeatures)
     testError(test, ctx, g2diagnostic, err)
     test.Log("Actual:", actual)
 }
@@ -206,7 +205,7 @@ func TestGetEntitySizeBreakdown(test *testing.T) {
 func TestGetFeature(test *testing.T) {
     g2diagnostic, _ := getTestObject()
     ctx := context.TODO()
-    libFeatID := 1
+    libFeatID := int64(1)
     actual, err := g2diagnostic.GetFeature(ctx, libFeatID)
     testError(test, ctx, g2diagnostic, err)
     test.Log("Actual:", actual)
@@ -222,7 +221,6 @@ func TestGetGenericFeatures(test *testing.T) {
     test.Log("Actual:", actual)
 }
 
-
 func TestGetLastException(test *testing.T) {
     g2diagnostic, _ := getTestObject()
     ctx := context.TODO()
@@ -231,7 +229,7 @@ func TestGetLastException(test *testing.T) {
     test.Log("Actual:", actual)
 }
 
-func GetLastExceptionCode(test *testing.T) {
+func TestGetLastExceptionCode(test *testing.T) {
     g2diagnostic, _ := getTestObject()
     ctx := context.TODO()
     actual, err := g2diagnostic.GetLastExceptionCode(ctx)
@@ -252,7 +250,7 @@ func TestGetMappingStatistics(test *testing.T) {
     g2diagnostic, _ := getTestObject()
     ctx := context.TODO()
     includeInternalFeatures := 1
-    actual, err := g2diagnostic.GetMappingStatistics(ctx, entityID, includeInternalFeatures)
+    actual, err := g2diagnostic.GetMappingStatistics(ctx, includeInternalFeatures)
     testError(test, ctx, g2diagnostic, err)
     test.Log("Actual:", actual)
 }
@@ -261,6 +259,25 @@ func TestGetPhysicalCores(test *testing.T) {
     g2diagnostic, _ := getTestObject()
     ctx := context.TODO()
     actual, err := g2diagnostic.GetPhysicalCores(ctx)
+    testError(test, ctx, g2diagnostic, err)
+    assert.Greater(test, actual, 0)
+    test.Log("Actual:", actual)
+}
+
+func TestGetRelationshipDetails(test *testing.T) {
+    g2diagnostic, _ := getTestObject()
+    ctx := context.TODO()
+    relationshipID := int64(1)
+    includeInternalFeatures := 1
+    actual, err := g2diagnostic.GetRelationshipDetails(ctx, relationshipID, includeInternalFeatures)
+    testError(test, ctx, g2diagnostic, err)
+    test.Log("Actual:", actual)
+}
+
+func TestGetResolutionStatistics(test *testing.T) {
+    g2diagnostic, _ := getTestObject()
+    ctx := context.TODO()
+    actual, err := g2diagnostic.GetResolutionStatistics(ctx)
     testError(test, ctx, g2diagnostic, err)
     assert.Greater(test, actual, 0)
     test.Log("Actual:", actual)
@@ -282,5 +299,24 @@ func TestInit(test *testing.T) {
     verboseLogging := 0
     iniParams := getConfigurationJson()
     err := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
+    testError(test, ctx, g2diagnostic, err)
+}
+
+func TestInitWithConfigID(test *testing.T) {
+    g2diagnostic := &G2diagnosticImpl{}
+    ctx := context.TODO()
+    moduleName := "Test module name"
+    initConfigID := int64(1)
+    verboseLogging := 0
+    iniParams := getConfigurationJson()
+    err := g2diagnostic.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
+    testError(test, ctx, g2diagnostic, err)
+}
+
+func TestReinit(test *testing.T) {
+    g2diagnostic := &G2diagnosticImpl{}
+    ctx := context.TODO()
+    initConfigID := int64(1)
+    err := g2diagnostic.Reinit(ctx, initConfigID)
     testError(test, ctx, g2diagnostic, err)
 }
