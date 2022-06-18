@@ -155,7 +155,6 @@ target/scratch:
 target/linux/go-hello-xyzzy-dynamic: target/linux
 	GOOS=linux \
 	GOARCH=amd64 \
-	CGO_LDFLAGS=$(CGO_LDFLAGSx) \
 	go build \
 		-a \
 		-ldflags " \
