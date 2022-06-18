@@ -18,7 +18,10 @@ func getTestObject(ctx context.Context) (G2diagnostic, error) {
 
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, _ := g2helper.GetSimpleSystemConfigurationJson(ctx)
+	iniParams, jsonErr := g2helper.GetSimpleSystemConfigurationJson(ctx)
+	if jsonErr != nil {
+		return &g2diagnostic, jsonErr
+	}
 
 	err = g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
 	return &g2diagnostic, err
@@ -250,7 +253,8 @@ func TestInit(test *testing.T) {
 	g2diagnostic := &G2diagnosticImpl{}
 	moduleName := "Test module name"
 	verboseLogging := 0
-	iniParams, _ := g2helper.GetSimpleSystemConfigurationJson(ctx)
+	iniParams, jsonErr := g2helper.GetSimpleSystemConfigurationJson(ctx)
+	testError(test, ctx, g2diagnostic, jsonErr)
 	err := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
 	testError(test, ctx, g2diagnostic, err)
 }
@@ -261,7 +265,8 @@ func TestInitWithConfigID(test *testing.T) {
 	moduleName := "Test module name"
 	initConfigID := int64(1)
 	verboseLogging := 0
-	iniParams, _ := g2helper.GetSimpleSystemConfigurationJson(ctx)
+	iniParams, jsonErr := g2helper.GetSimpleSystemConfigurationJson(ctx)
+	testError(test, ctx, g2diagnostic, jsonErr)
 	err := g2diagnostic.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
 	testError(test, ctx, g2diagnostic, err)
 }

@@ -21,8 +21,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sort"
 	"strconv"
 	"unsafe"
+
+	errormsg "github.com/docktermj/go-json-log-message/message"
 )
 
 const initialByteArraySize = 65535
@@ -41,14 +44,64 @@ func (g2engine *G2engineImpl) getByteArray(size int) []byte {
 	return make([]byte, size)
 }
 
+func (g2engine *G2engineImpl) getErrorLevel(errorNumber int) string {
+
+	// Create a map of the different levels. Map will be unsorted.
+
+	errorLevelsMap := map[int]string{
+		1000:  "I", // Informational
+		2000:  "W", // Warning
+		3000:  "E", // Error
+		4000:  "D", // Debug
+		5000:  "T", // Trace
+		9000:  "R", // Reserved
+		10000: "F", // Fatal
+	}
+
+	// Create a list of sorted keys.
+
+	errorLevelsKeys := make([]int, 0, len(errorLevelsMap))
+	for key := range errorLevelsMap {
+		errorLevelsKeys = append(errorLevelsKeys, key)
+	}
+	sort.Ints(errorLevelsKeys)
+
+	// Using the sorted key, find the level.
+
+	for _, errorLevelsKey := range errorLevelsKeys {
+		if errorNumber < errorLevelsKey {
+			return errorLevelsMap[errorLevelsKey]
+		}
+	}
+	return "" // Unknown
+}
+
+func (g2engine *G2engineImpl) getMessageId(errorNumber int) string {
+	return fmt.Sprintf(
+		"%s%s",
+		fmt.Sprintf(MessageIdFormat, errorNumber),
+		g2engine.getErrorLevel(errorNumber))
+}
+
 func (g2engine *G2engineImpl) getError(ctx context.Context, errorNumber int, details ...string) error {
 	lastException, err := g2engine.GetLastException(ctx)
 	defer g2engine.ClearLastException(ctx)
-	var result error = nil
+
+	var result error
+
 	if err != nil {
-		result = fmt.Errorf("xyzzy-60109999: %w", err)
+		errorMessage := errormsg.BuildMessage(
+			g2engine.getMessageId(9999),
+			err.Error(),
+		)
+		result = fmt.Errorf(errorMessage)
 	} else {
-		result = errors.New(fmt.Sprintf("xyzzy-6010%04d %s - %v", errorNumber, lastException, details))
+		errorMessage := errormsg.BuildMessage(
+			g2engine.getMessageId(errorNumber),
+			lastException,
+			details...,
+		)
+		result = errors.New(errorMessage)
 	}
 	return result
 }
@@ -72,7 +125,9 @@ func (g2engine *G2engineImpl) GetLastException(ctx context.Context) (string, err
 	stringBuffer := g2engine.getByteArray(initialByteArraySize)
 	C.G2_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	if len(stringBuffer) == 0 {
-		errorMessage := "xyzzy-60100001 Cannot retrieve last error message."
+		errorMessage := fmt.Sprintf(
+			"%s - Cannot retrieve last error message.",
+			g2engine.getMessageId(1))
 		err = errors.New(errorMessage)
 	}
 	return string(stringBuffer), err

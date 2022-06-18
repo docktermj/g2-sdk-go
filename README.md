@@ -101,3 +101,14 @@
     cd ${GIT_REPOSITORY_DIR}
     make -e test
     ```
+
+
+## Error prefixes
+
+1. `6010` - g2config
+1. `6011` - g2configmgr
+1. `6012` - g2engine
+1. `6013` - g2diagnostic
+1. `6014` - g2hasher
+1. `6015` - g2product
+1. `6015` - g2helper

@@ -6,6 +6,7 @@ package g2helper
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/url"
 	"os"
@@ -15,9 +16,25 @@ import (
 // Internal methods
 // ----------------------------------------------------------------------------
 
+func getOsEnv(variableName string) (string, error) {
+	var err error = nil
+	result, isSet := os.LookupEnv(variableName)
+	if !isSet {
+		err = errors.New(fmt.Sprintf(
+			"%s - %s environment variable not set",
+			fmt.Sprintf(MessageIdFormat, 1111),
+			variableName))
+	}
+	return result, err
+}
+
 func getDatabaseUrl() (string, error) {
 	result := ""
-	databaseUrl := os.Getenv("XYZZY_DATABASE_URL")
+	databaseUrl, err := getOsEnv("XYZZY_DATABASE_URL")
+	if err != nil {
+		return result, err
+	}
+
 	parsedUrl, err := url.Parse(databaseUrl)
 
 	switch parsedUrl.Scheme {

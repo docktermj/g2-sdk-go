@@ -18,7 +18,10 @@ func getTestObject(ctx context.Context) (G2engine, error) {
 
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, _ := g2helper.GetSimpleSystemConfigurationJson(ctx)
+	iniParams, jsonErr := g2helper.GetSimpleSystemConfigurationJson(ctx)
+	if jsonErr != nil {
+		return &g2engine, jsonErr
+	}
 
 	err = g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
 	return &g2engine, err

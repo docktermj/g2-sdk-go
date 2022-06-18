@@ -25,7 +25,10 @@ func getG2diagnostic() (g2diagnostic.G2diagnostic, error) {
 
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, _ := g2helper.GetSimpleSystemConfigurationJson(ctx)
+	iniParams, jsonErr := g2helper.GetSimpleSystemConfigurationJson(ctx)
+	if jsonErr != nil {
+		return &g2diagnostic, jsonErr
+	}
 
 	err = g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
 	return &g2diagnostic, err
@@ -36,8 +39,8 @@ func getG2diagnostic() (g2diagnostic.G2diagnostic, error) {
 // ----------------------------------------------------------------------------
 
 func main() {
-	g2diagnostic, _ := getG2diagnostic()
 	ctx := context.TODO()
+	g2diagnostic, _ := getG2diagnostic()
 	secondsToRun := 1
 	actual, err := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
 	if err != nil {

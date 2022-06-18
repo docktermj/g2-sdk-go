@@ -159,11 +159,15 @@ char* G2Diagnostic_getResolutionStatistics_local() {
 */
 import "C"
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
+	"sort"
 	"strconv"
 	"unsafe"
+
+	errormsg "github.com/docktermj/go-json-log-message/message"
 )
 
 const initialByteArraySize = 65535
@@ -182,14 +186,64 @@ func (g2diagnostic *G2diagnosticImpl) getByteArray(size int) []byte {
 	return make([]byte, size)
 }
 
+func (g2diagnostic *G2diagnosticImpl) getErrorLevel(errorNumber int) string {
+
+	// Create a map of the different levels. Map will be unsorted.
+
+	errorLevelsMap := map[int]string{
+		1000:  "I", // Informational
+		2000:  "W", // Warning
+		3000:  "E", // Error
+		4000:  "D", // Debug
+		5000:  "T", // Trace
+		9000:  "R", // Reserved
+		10000: "F", // Fatal
+	}
+
+	// Create a list of sorted keys.
+
+	errorLevelsKeys := make([]int, 0, len(errorLevelsMap))
+	for key := range errorLevelsMap {
+		errorLevelsKeys = append(errorLevelsKeys, key)
+	}
+	sort.Ints(errorLevelsKeys)
+
+	// Using the sorted key, find the level.
+
+	for _, errorLevelsKey := range errorLevelsKeys {
+		if errorNumber < errorLevelsKey {
+			return errorLevelsMap[errorLevelsKey]
+		}
+	}
+	return "" // Unknown
+}
+
+func (g2diagnostic *G2diagnosticImpl) getMessageId(errorNumber int) string {
+	return fmt.Sprintf(
+		"%s%s",
+		fmt.Sprintf(MessageIdFormat, errorNumber),
+		g2diagnostic.getErrorLevel(errorNumber))
+}
+
 func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber int, details ...string) error {
 	lastException, err := g2diagnostic.GetLastException(ctx)
 	defer g2diagnostic.ClearLastException(ctx)
-	var result error = nil
+
+	var result error
+
 	if err != nil {
-		result = fmt.Errorf("xyzzy-60119999: %w", err)
+		errorMessage := errormsg.BuildMessage(
+			g2diagnostic.getMessageId(9999),
+			err.Error(),
+		)
+		result = fmt.Errorf(errorMessage)
 	} else {
-		result = errors.New(fmt.Sprintf("xyzzy-6011%04d %s - %v", errorNumber, lastException, details))
+		errorMessage := errormsg.BuildMessage(
+			g2diagnostic.getMessageId(errorNumber),
+			lastException,
+			details...,
+		)
+		result = errors.New(errorMessage)
 	}
 	return result
 }
@@ -245,6 +299,7 @@ func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context,
 	if result != 0 {
 		err = g2diagnostic.getError(ctx, 4)
 	}
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	return string(stringBuffer), err
 }
 
@@ -358,10 +413,14 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 	var err error = nil
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
 	C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		errorMessage := "xyzzy-60000001 Cannot retrieve last error message."
+		errorMessage := fmt.Sprintf(
+			"%s - Cannot retrieve last error message.",
+			g2diagnostic.getMessageId(1))
 		err = errors.New(errorMessage)
 	}
+
 	return string(stringBuffer), err
 }
 
@@ -373,6 +432,7 @@ func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) 
 	if result != 0 {
 		err = g2diagnostic.getError(ctx, 14)
 	}
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	return string(stringBuffer), err
 }
 
