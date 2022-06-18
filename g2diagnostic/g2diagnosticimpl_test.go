@@ -2,46 +2,15 @@ package g2diagnostic
 
 import (
 	"context"
-	"encoding/json"
 	"testing"
 
+	"github.com/docktermj/xyzzygoapi/g2helper"
 	"github.com/stretchr/testify/assert"
 )
 
-/*
- * Internal methods.
- */
-
-type XyzzyConfigurationPipeline struct {
-	ConfigPath   string `json:"CONFIGPATH"`
-	ResourcePath string `json:"RESOURCEPATH"`
-	SupportPath  string `json:"SUPPORTPATH"`
-}
-
-type XyzzyConfigurationSql struct {
-	Connection string `json:"CONNECTION"`
-}
-
-type XyzzyConfiguration struct {
-	Pipeline XyzzyConfigurationPipeline `json:"PIPELINE"`
-	Sql      XyzzyConfigurationSql      `json:"SQL"`
-}
-
-func getConfigurationJson() string {
-	resultStruct := XyzzyConfiguration{
-		Pipeline: XyzzyConfigurationPipeline{
-			ConfigPath:   "/etc/opt/senzing",
-			ResourcePath: "/opt/senzing/g2/resources",
-			SupportPath:  "/opt/senzing/data",
-		},
-		Sql: XyzzyConfigurationSql{
-			Connection: "postgresql://postgres:postgres@127.0.0.1:5432:G2/",
-		},
-	}
-
-	resultBytes, _ := json.Marshal(resultStruct)
-	return string(resultBytes)
-}
+// ----------------------------------------------------------------------------
+// Internal functions - names begin with lowercase letter
+// ----------------------------------------------------------------------------
 
 func getTestObject() (G2diagnostic, error) {
 	var err error = nil
@@ -50,7 +19,7 @@ func getTestObject() (G2diagnostic, error) {
 
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams := getConfigurationJson()
+	iniParams, _ := g2helper.GetSimpleSystemConfigurationJson(ctx)
 
 	err = g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
 	return &g2diagnostic, err
@@ -63,22 +32,6 @@ func testError(test *testing.T, ctx context.Context, g2diagnostic G2diagnostic, 
 		assert.FailNow(test, lastException)
 	}
 }
-
-/*
- * The unit tests in this file...
- */
-
-// ----------------------------------------------------------------------------
-// Initialization
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-// Internal functions
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-// Work in progress
-// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 // Test harness
@@ -95,7 +48,7 @@ func setupSuite(test testing.TB) func(test testing.TB) {
 }
 
 // ----------------------------------------------------------------------------
-// Interface methods
+// Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
 func TestCheckDBPerf(test *testing.T) {
@@ -297,7 +250,7 @@ func TestInit(test *testing.T) {
 	ctx := context.TODO()
 	moduleName := "Test module name"
 	verboseLogging := 0
-	iniParams := getConfigurationJson()
+	iniParams, _ := g2helper.GetSimpleSystemConfigurationJson(ctx)
 	err := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
 	testError(test, ctx, g2diagnostic, err)
 }
@@ -308,7 +261,7 @@ func TestInitWithConfigID(test *testing.T) {
 	moduleName := "Test module name"
 	initConfigID := int64(1)
 	verboseLogging := 0
-	iniParams := getConfigurationJson()
+	iniParams, _ := g2helper.GetSimpleSystemConfigurationJson(ctx)
 	err := g2diagnostic.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
 	testError(test, ctx, g2diagnostic, err)
 }

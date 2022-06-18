@@ -86,11 +86,13 @@
 
 1. Using the environment variables values just set, follow steps in
    [clone-repository](https://github.com/Senzing/knowledge-base/blob/main/HOWTO/clone-repository.md) to install the Git repository.
-1. Checkout branch.
+
+1. :pencil2: Set environment variables.
+   Identify Database URL of database in docker-compose stack.
+   Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}
-    git checkout issue-1.dockter.2
+    export XYZZY_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/G2
     ```
 
 1. Run tests.
