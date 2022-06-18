@@ -56,7 +56,7 @@
     source /tmp/docker-versions-latest.sh
 
     export SENZING_DATA_VERSION_DIR=/opt/senzing/data
-    export SENZING_ETC_DIR=/etc/opt/senzing$
+    export SENZING_ETC_DIR=/etc/opt/senzing
     export SENZING_G2_DIR=/opt/senzing/g2
     export SENZING_VAR_DIR=/var/opt/senzing
 

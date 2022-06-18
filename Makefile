@@ -24,7 +24,6 @@ CC = gcc
 
 SENZING_G2_DIR ?= /opt/senzing/g2
 
-
 # The first "make" target runs as default.
 
 .PHONY: default
@@ -35,9 +34,6 @@ default: help
 # -----------------------------------------------------------------------------
 
 .EXPORT_ALL_VARIABLES:
-
-# CGO_CFLAGS = -I$(MAKEFILE_DIRECTORY)lib
-# CGO_LDFLAGS = -L$(MAKEFILE_DIRECTORY)lib -llibg2diagnostic
 
 # Flags for the C compiler
 
@@ -148,7 +144,6 @@ LD_LIBRARY_PATH = ${SENZING_G2_DIR}/lib
 
 # ---- Linux ------------------------------------------------------------------
 
-
 target/linux:
 	@mkdir -p $(TARGET_DIRECTORY)/linux || true
 
@@ -201,6 +196,7 @@ target/scratch/xyzzy: target/scratch dependencies
 			-X main.buildIteration=${BUILD_ITERATION} \
 			" \
 		-o $(TARGET_DIRECTORY)/scratch/xyzzy
+
 
 target/linux/go-hello-xyzzy-dynamicXX:
 	GOOS=linux GOARCH=amd64 \
