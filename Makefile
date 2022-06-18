@@ -227,8 +227,8 @@ dependencies:
 
 .PHONY: build
 build: dependencies \
-	target/linux/go-hello-xyzzy-dynamic \
-	target/linux/go-hello-xyzzy-static \	
+	target/linux/go-hello-xyzzy-dynamic
+#	target/linux/go-hello-xyzzy-static \	
 #	target/scratch/xyzzy	
 #	target/linux/go-hello-xyzzy-static
 #	build-macos \
