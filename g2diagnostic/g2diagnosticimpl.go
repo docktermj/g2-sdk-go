@@ -233,8 +233,9 @@ func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber 
 
 	if err != nil {
 		errorMessage := errormsg.BuildMessage(
-			g2diagnostic.getMessageId(9999),
+			g2diagnostic.getMessageId(errorNumber),
 			err.Error(),
+			details...,
 		)
 		result = fmt.Errorf(errorMessage)
 	} else {
@@ -415,12 +416,12 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 	C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		errorMessage := fmt.Sprintf(
-			"%s - Cannot retrieve last error message.",
-			g2diagnostic.getMessageId(1))
+		errorMessage := errormsg.BuildMessage(
+			g2diagnostic.getMessageId(2999),
+			"Cannot retrieve last error message",
+		)
 		err = errors.New(errorMessage)
 	}
-
 	return string(stringBuffer), err
 }
 

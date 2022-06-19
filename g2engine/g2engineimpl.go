@@ -18,6 +18,7 @@ typedef void*(*resize_buffer_type)(void *, size_t);
 */
 import "C"
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -91,8 +92,9 @@ func (g2engine *G2engineImpl) getError(ctx context.Context, errorNumber int, det
 
 	if err != nil {
 		errorMessage := errormsg.BuildMessage(
-			g2engine.getMessageId(9999),
+			g2engine.getMessageId(errorNumber),
 			err.Error(),
+			details...,
 		)
 		result = fmt.Errorf(errorMessage)
 	} else {
@@ -124,10 +126,12 @@ func (g2engine *G2engineImpl) GetLastException(ctx context.Context) (string, err
 	var err error = nil
 	stringBuffer := g2engine.getByteArray(initialByteArraySize)
 	C.G2_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		errorMessage := fmt.Sprintf(
-			"%s - Cannot retrieve last error message.",
-			g2engine.getMessageId(1))
+		errorMessage := errormsg.BuildMessage(
+			g2engine.getMessageId(2999),
+			"Cannot retrieve last error message",
+		)
 		err = errors.New(errorMessage)
 	}
 	return string(stringBuffer), err
