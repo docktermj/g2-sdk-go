@@ -56,7 +56,7 @@
     source /tmp/docker-versions-latest.sh
 
     export SENZING_DATA_VERSION_DIR=/opt/senzing/data
-    export SENZING_ETC_DIR=/etc/opt/senzing$
+    export SENZING_ETC_DIR=/etc/opt/senzing
     export SENZING_G2_DIR=/opt/senzing/g2
     export SENZING_VAR_DIR=/var/opt/senzing
 
@@ -86,11 +86,13 @@
 
 1. Using the environment variables values just set, follow steps in
    [clone-repository](https://github.com/Senzing/knowledge-base/blob/main/HOWTO/clone-repository.md) to install the Git repository.
-1. Checkout branch.
+
+1. :pencil2: Set environment variables.
+   Identify Database URL of database in docker-compose stack.
+   Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}
-    git checkout issue-1.dockter.2
+    export XYZZY_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/G2
     ```
 
 1. Run tests.
@@ -99,3 +101,14 @@
     cd ${GIT_REPOSITORY_DIR}
     make -e test
     ```
+
+
+## Error prefixes
+
+1. `6010` - g2config
+1. `6011` - g2configmgr
+1. `6012` - g2engine
+1. `6013` - g2diagnostic
+1. `6014` - g2hasher
+1. `6015` - g2product
+1. `6015` - g2helper

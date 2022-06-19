@@ -14,7 +14,22 @@ import (
 	"context"
 )
 
-// G2diagnostic Interface Definition
+// ----------------------------------------------------------------------------
+// Constants
+// ----------------------------------------------------------------------------
+
+const MessageIdFormat = "xyzzy-6013%04d"
+
+// ----------------------------------------------------------------------------
+// Types
+// ----------------------------------------------------------------------------
+
+type G2diagnosticImpl struct{}
+
+// ----------------------------------------------------------------------------
+// Interfaces
+// ----------------------------------------------------------------------------
+
 type G2diagnostic interface {
 	CheckDBPerf(ctx context.Context, secondsToRun int) (string, error)
 	ClearLastException(ctx context.Context) error
