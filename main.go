@@ -72,6 +72,8 @@ func main() {
 		logger.Info(g2diagnosticErr)
 	}
 
+	// g2diagnostic.CheckDBPerf
+
 	secondsToRun := 1
 	actual, err := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
 	if err != nil {
@@ -85,6 +87,8 @@ func main() {
 	if g2engineErr != nil {
 		logger.Info(g2engineErr)
 	}
+
+	// g2engine.AddRecord
 
 	dataSourceCode := "TEST"
 	recordID := strconv.Itoa(rand.Intn(1000000000))

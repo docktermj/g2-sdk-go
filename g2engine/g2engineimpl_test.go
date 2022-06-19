@@ -35,27 +35,59 @@ func testError(test *testing.T, ctx context.Context, g2engine G2engine, err erro
 	}
 }
 
+func TestGetObject(test *testing.T) {
+	ctx := context.TODO()
+	g2engine, err := getTestObject(ctx)
+	testError(test, ctx, g2engine, err)
+}
+
 // ----------------------------------------------------------------------------
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
 func TestAddRecord(test *testing.T) {
-	//    func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error {
-
 	ctx := context.TODO()
-	g2engine, err := getTestObject(ctx)
+	g2engine, _ := getTestObject(ctx)
 
 	dataSourceCode := "TEST"
 	recordID := "987654321"
 	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "987654321", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
 	loadID := "TEST"
 
-	err = g2engine.AddRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
+	err := g2engine.AddRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
 	testError(test, ctx, g2engine, err)
 }
 
-func TestNoop(test *testing.T) {
+func TestAddRecordWithInfo(test *testing.T) {
 	ctx := context.TODO()
-	g2engine, err := getTestObject(ctx)
+	g2engine, _ := getTestObject(ctx)
+
+	dataSourceCode := "TEST"
+	recordID := "987654321"
+	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "987654321", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID := "TEST"
+	var flags int64 = 0
+
+	actual, err := g2engine.AddRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestDeleteRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine, _ := getTestObject(ctx)
+
+	dataSourceCode := "TEST"
+	recordID := "987654321"
+	loadID := "TEST"
+
+	err := g2engine.DeleteRecord(ctx, dataSourceCode, recordID, loadID)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestDestroy(test *testing.T) {
+	ctx := context.TODO()
+	g2engine, _ := getTestObject(ctx)
+	err := g2engine.Destroy(ctx)
 	testError(test, ctx, g2engine, err)
 }

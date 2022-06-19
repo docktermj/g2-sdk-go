@@ -49,6 +49,12 @@ func setupSuite(test testing.TB) func(test testing.TB) {
 	}
 }
 
+func TestGetObject(test *testing.T) {
+	ctx := context.TODO()
+	g2engine, err := getTestObject(ctx)
+	testError(test, ctx, g2engine, err)
+}
+
 // ----------------------------------------------------------------------------
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------

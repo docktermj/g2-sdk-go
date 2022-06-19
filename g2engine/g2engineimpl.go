@@ -15,6 +15,26 @@ package g2engine
 typedef void* EntityListBySizeHandle;
 typedef void*(*resize_buffer_type)(void *, size_t);
 
+void* G2_resizeStringBuffer(void *ptr, size_t size) {
+    //deallocate old buffer
+    if (ptr != 0)
+        free(ptr);
+    //allocate new buffer
+    void* buffer = malloc(size);
+    return buffer;
+}
+
+char* G2_addRecordWithInfo_local(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_addRecordWithInfo(dataSourceCode, recordID, jsonData, loadID, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
 */
 import "C"
 import (
@@ -81,10 +101,30 @@ func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode stri
 	return err
 }
 
-func (g2engine *G2engineImpl) AddRecordWithInfo() error {
+func (g2engine *G2engineImpl) AddRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_addRecordWithInfo(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return err
+	dataSourceCodeForC := C.CString(dataSourceCode)
+	defer C.free(unsafe.Pointer(dataSourceCodeForC))
+
+	recordIDForC := C.CString(recordID)
+	defer C.free(unsafe.Pointer(recordIDForC))
+
+	jsonDataForC := C.CString(jsonData)
+	defer C.free(unsafe.Pointer(jsonDataForC))
+
+	loadIDForC := C.CString(loadID)
+	defer C.free(unsafe.Pointer(loadIDForC))
+
+	stringBuffer := C.GoString(C.G2_addRecordWithInfo_local(dataSourceCodeForC, recordIDForC, jsonDataForC, loadIDForC, C.longlong(flags)))
+
+	// Handle result.
+
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 9999, dataSourceCode, recordID, jsonData, loadID, strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
+
 }
 
 func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID() error {
@@ -125,9 +165,27 @@ func (g2engine *G2engineImpl) CountRedoRecords() error {
 	return err
 }
 
-func (g2engine *G2engineImpl) DeleteRecord() error {
+func (g2engine *G2engineImpl) DeleteRecord(ctx context.Context, dataSourceCode string, recordID string, loadID string) error {
 	//  _DLEXPORT int G2_deleteRecord(const char* dataSourceCode, const char* recordID, const char* loadID);
 	var err error = nil
+
+	dataSourceCodeForC := C.CString(dataSourceCode)
+	defer C.free(unsafe.Pointer(dataSourceCodeForC))
+
+	recordIDForC := C.CString(recordID)
+	defer C.free(unsafe.Pointer(recordIDForC))
+
+	loadIDForC := C.CString(loadID)
+	defer C.free(unsafe.Pointer(loadIDForC))
+
+	result := C.G2_deleteRecord(dataSourceCodeForC, recordIDForC, loadIDForC)
+
+	// Handle result.
+
+	if result != 0 {
+		err = g2engine.getError(ctx, 5555, dataSourceCode, recordID, loadID)
+	}
+
 	return err
 }
 
@@ -137,9 +195,13 @@ func (g2engine *G2engineImpl) DeleteRecordWithInfo() error {
 	return err
 }
 
-func (g2engine *G2engineImpl) Destroy() error {
+func (g2engine *G2engineImpl) Destroy(ctx context.Context) error {
 	//  _DLEXPORT int G2_destroy();
 	var err error = nil
+	result := C.G2_destroy()
+	if result != 0 {
+		err = g2engine.getError(ctx, 3)
+	}
 	return err
 }
 
