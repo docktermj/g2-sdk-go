@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	errormsg "github.com/docktermj/go-json-log-message/message"
+	//	"github.com/docktermj/go-logger/logger"
 )
 
 // ----------------------------------------------------------------------------
@@ -186,4 +187,23 @@ func GetMessageLevel(errorNumber int, message string) string {
 	// Determine if message has error code.
 
 	return result
+}
+
+// Based on the errorNumber and Senzing error code, get the message level.
+func GetMessageLevelFromError(err error) string {
+
+	// FIXME:
+
+	return ""
+
+}
+
+// Inspect the error to see what the level is and log based on the level.
+func LogMessageBasedOnLevel(err error) error {
+	var result error = nil
+
+	// FIXME:
+
+	return result
+
 }
