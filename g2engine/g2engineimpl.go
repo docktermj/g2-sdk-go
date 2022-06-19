@@ -35,6 +35,28 @@ char* G2_addRecordWithInfo_local(const char* dataSourceCode, const char* recordI
     return charBuff;
 }
 
+char* G2_deleteRecordWithInfo_local(const char* dataSourceCode, const char* recordID, const char *loadID, const long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_deleteRecordWithInfo(dataSourceCode, recordID, loadID, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+char* G2_stats_local() {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_stats(&charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
 */
 import "C"
 import (
@@ -96,7 +118,7 @@ func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode stri
 	// Handle result.
 
 	if result != 0 {
-		err = g2engine.getError(ctx, 5555, dataSourceCode, recordID, jsonData, loadID)
+		err = g2engine.getError(ctx, 1, dataSourceCode, recordID, jsonData, loadID)
 	}
 	return err
 }
@@ -121,10 +143,9 @@ func (g2engine *G2engineImpl) AddRecordWithInfo(ctx context.Context, dataSourceC
 	// Handle result.
 
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 9999, dataSourceCode, recordID, jsonData, loadID, strconv.FormatInt(flags, 2))
+		err = g2engine.getError(ctx, 2, dataSourceCode, recordID, jsonData, loadID, strconv.FormatInt(flags, 2))
 	}
 	return stringBuffer, err
-
 }
 
 func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID() error {
@@ -183,16 +204,32 @@ func (g2engine *G2engineImpl) DeleteRecord(ctx context.Context, dataSourceCode s
 	// Handle result.
 
 	if result != 0 {
-		err = g2engine.getError(ctx, 5555, dataSourceCode, recordID, loadID)
+		err = g2engine.getError(ctx, 3, dataSourceCode, recordID, loadID)
 	}
 
 	return err
 }
 
-func (g2engine *G2engineImpl) DeleteRecordWithInfo() error {
+func (g2engine *G2engineImpl) DeleteRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, loadID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_deleteRecordWithInfo(const char* dataSourceCode, const char* recordID, const char* loadID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return err
+	dataSourceCodeForC := C.CString(dataSourceCode)
+	defer C.free(unsafe.Pointer(dataSourceCodeForC))
+
+	recordIDForC := C.CString(recordID)
+	defer C.free(unsafe.Pointer(recordIDForC))
+
+	loadIDForC := C.CString(loadID)
+	defer C.free(unsafe.Pointer(loadIDForC))
+
+	stringBuffer := C.GoString(C.G2_deleteRecordWithInfo_local(dataSourceCodeForC, recordIDForC, loadIDForC, C.longlong(flags)))
+
+	// Handle result.
+
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 4, dataSourceCode, recordID, loadID, strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
 }
 
 func (g2engine *G2engineImpl) Destroy(ctx context.Context) error {
@@ -200,7 +237,7 @@ func (g2engine *G2engineImpl) Destroy(ctx context.Context) error {
 	var err error = nil
 	result := C.G2_destroy()
 	if result != 0 {
-		err = g2engine.getError(ctx, 3)
+		err = g2engine.getError(ctx, 5)
 	}
 	return err
 }
@@ -460,7 +497,7 @@ func (g2engine *G2engineImpl) Init(ctx context.Context, moduleName string, iniPa
 	// Handle result.
 
 	if result != 0 {
-		err = g2engine.getError(ctx, 18, moduleName, iniParams, strconv.Itoa(verboseLogging))
+		err = g2engine.getError(ctx, 6, moduleName, iniParams, strconv.Itoa(verboseLogging))
 	}
 	return err
 }
@@ -573,10 +610,14 @@ func (g2engine *G2engineImpl) SearchByAttributes_V2() error {
 	return err
 }
 
-func (g2engine *G2engineImpl) Stats() error {
+func (g2engine *G2engineImpl) Stats(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_stats(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-	return err
+	stringBuffer := C.GoString(C.G2_stats_local())
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 7)
+	}
+	return stringBuffer, err
 }
 
 func (g2engine *G2engineImpl) WhyEntities() error {

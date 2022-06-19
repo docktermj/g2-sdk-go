@@ -85,9 +85,31 @@ func TestDeleteRecord(test *testing.T) {
 	testError(test, ctx, g2engine, err)
 }
 
+func TestDeleteRecordWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine, _ := getTestObject(ctx)
+
+	dataSourceCode := "TEST"
+	recordID := "987654321"
+	loadID := "TEST"
+	var flags int64 = 0
+
+	actual, err := g2engine.DeleteRecordWithInfo(ctx, dataSourceCode, recordID, loadID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 func TestDestroy(test *testing.T) {
 	ctx := context.TODO()
 	g2engine, _ := getTestObject(ctx)
 	err := g2engine.Destroy(ctx)
 	testError(test, ctx, g2engine, err)
+}
+
+func TestStats(test *testing.T) {
+	ctx := context.TODO()
+	g2engine, _ := getTestObject(ctx)
+	actual, err := g2engine.Stats(ctx)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
 }

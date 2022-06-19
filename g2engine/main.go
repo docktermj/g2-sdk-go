@@ -35,7 +35,9 @@ type G2engine interface {
 	AddRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error)
 	ClearLastException(ctx context.Context) error
 	DeleteRecord(ctx context.Context, dataSourceCode string, recordID string, loadID string) error
+	DeleteRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, loadID string, flags int64) (string, error)
 	Destroy(ctx context.Context) error
 	GetLastException(ctx context.Context) (string, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
+	Stats(ctx context.Context) (string, error)
 }
