@@ -40,7 +40,11 @@ func getG2diagnostic() (g2diagnostic.G2diagnostic, error) {
 
 func main() {
 	ctx := context.TODO()
-	g2diagnostic, _ := getG2diagnostic()
+	g2diagnostic, g2diagnosticErr := getG2diagnostic()
+	if g2diagnosticErr != nil {
+		fmt.Println(g2diagnosticErr)
+	}
+
 	secondsToRun := 1
 	actual, err := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
 	if err != nil {
