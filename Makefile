@@ -218,8 +218,8 @@ target/linux/go-hello-xyzzy-dynamicXX:
 
 .PHONY: dependencies
 dependencies:
-	@go get -u
-	@go get ./...
+	@go get -u ./...
+	@go get -t -u ./...
 	@go mod tidy
 	@go get -u github.com/jstemmer/go-junit-report
 

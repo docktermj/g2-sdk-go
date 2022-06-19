@@ -1,7 +1,6 @@
 package g2helper
 
 import (
-	"context"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -10,7 +9,7 @@ import (
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
 
-func testError(test *testing.T, ctx context.Context, err error) {
+func testError(test *testing.T, err error) {
 	if err != nil {
 		assert.FailNow(test, err.Error())
 	}
@@ -20,10 +19,9 @@ func testError(test *testing.T, ctx context.Context, err error) {
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestGetSimpleSystemConfigurationJson(test *testing.T) {
+func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
 
-	ctx := context.TODO()
-	actual, err := GetSimpleSystemConfigurationJson(ctx)
-	testError(test, ctx, err)
+	actual, err := BuildSimpleSystemConfigurationJson()
+	testError(test, err)
 	test.Log("Actual:", actual)
 }

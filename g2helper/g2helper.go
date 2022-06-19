@@ -4,14 +4,61 @@ Package helper ...
 package g2helper
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/url"
 	"os"
 	"sort"
+	"strings"
+
+	errormsg "github.com/docktermj/go-json-log-message/message"
 )
+
+// ----------------------------------------------------------------------------
+// Constants
+// ----------------------------------------------------------------------------
+
+var MessageLevelMap = map[int]string{
+	1000:  "info",
+	2000:  "warning",
+	3000:  "error",
+	4000:  "debug",
+	5000:  "trace",
+	6000:  "retryable",
+	9000:  "reserved",
+	10000: "fatal",
+}
+
+var SenzingErrorsMap = map[string]string{
+	"0002E":  "error",
+	"0007E":  "error",
+	"0023E":  "error",
+	"0024E":  "error",
+	"0025E":  "error",
+	"0026E":  "error",
+	"0027E":  "error",
+	"0032E":  "error",
+	"0034E":  "error",
+	"0035E":  "error",
+	"0036E":  "error",
+	"0051E":  "error",
+	"0054E":  "error",
+	"0061E":  "error",
+	"0062E":  "error",
+	"0064E":  "error",
+	"1007E":  "error",
+	"2134E":  "error",
+	"9000E":  "error",
+	"30020":  "error",
+	"30103E": "error",
+	"30110E": "error",
+	"30111E": "error",
+	"30112E": "error",
+	"30121E": "error",
+	"30122E": "error",
+	"30123E": "error",
+}
 
 // ----------------------------------------------------------------------------
 // Internal methods
@@ -21,10 +68,7 @@ func getOsEnv(variableName string) (string, error) {
 	var err error = nil
 	result, isSet := os.LookupEnv(variableName)
 	if !isSet {
-		err = errors.New(fmt.Sprintf(
-			"%s - %s environment variable not set",
-			fmt.Sprintf(MessageIdFormat, 1111),
-			variableName))
+		err = BuildError(MessageIdFormat, 2990, "Environment variable not set.", variableName)
 	}
 	return result, err
 }
@@ -66,46 +110,24 @@ func getDatabaseUrl() (string, error) {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-func GetErrorLevel(errorNumber int) string {
-
-	// Create a map of the different levels. Map will be unsorted.
-
-	errorLevelsMap := map[int]string{
-		1000:  "I", // Informational
-		2000:  "W", // Warning
-		3000:  "E", // Error
-		4000:  "D", // Debug
-		5000:  "T", // Trace
-		9000:  "R", // Reserved
-		10000: "F", // Fatal
-	}
-
-	// Create a list of sorted keys.
-
-	errorLevelsKeys := make([]int, 0, len(errorLevelsMap))
-	for key := range errorLevelsMap {
-		errorLevelsKeys = append(errorLevelsKeys, key)
-	}
-	sort.Ints(errorLevelsKeys)
-
-	// Using the sorted key, find the level.
-
-	for _, errorLevelsKey := range errorLevelsKeys {
-		if errorNumber < errorLevelsKey {
-			return errorLevelsMap[errorLevelsKey]
-		}
-	}
-	return "" // Unknown
+// Build an error.
+func BuildError(idTemplate string, errorNumber int, message string, details ...string) error {
+	errorMessage := errormsg.BuildMessage(
+		BuildMessageId(idTemplate, errorNumber),
+		GetMessageLevel(errorNumber, message),
+		message,
+		details...,
+	)
+	return errors.New(errorMessage)
 }
 
-func GetMessageId(errorNumber int) string {
-	return fmt.Sprintf(
-		"%s%s",
-		fmt.Sprintf(MessageIdFormat, errorNumber),
-		GetErrorLevel(errorNumber))
+// Construct a unique message id.
+func BuildMessageId(idTemplate string, errorNumber int) string {
+	return fmt.Sprintf(idTemplate, errorNumber)
 }
 
-func GetSimpleSystemConfigurationJson(ctx context.Context) (string, error) {
+// Get a Senzing configuration for a "system install" with single database.
+func BuildSimpleSystemConfigurationJson() (string, error) {
 	var err error = nil
 
 	databaseUrl, databaseUrlErr := getDatabaseUrl()
@@ -126,4 +148,41 @@ func GetSimpleSystemConfigurationJson(ctx context.Context) (string, error) {
 
 	resultBytes, _ := json.Marshal(resultStruct)
 	return string(resultBytes), err
+}
+
+// Based on the errorNumber and Senzing error code, get the message level.
+func GetMessageLevel(errorNumber int, message string) string {
+
+	var result = "unknown"
+
+	// Create a list of sorted keys.
+
+	messageLevelKeys := make([]int, 0, len(MessageLevelMap))
+	for key := range MessageLevelMap {
+		messageLevelKeys = append(messageLevelKeys, key)
+	}
+	sort.Ints(messageLevelKeys)
+
+	// Using the sorted message number, find the level.
+
+	for _, messageLevelKey := range messageLevelKeys {
+		if errorNumber < messageLevelKey {
+			result = MessageLevelMap[messageLevelKey]
+			break
+		}
+	}
+
+	// Determine the level of a specific Senzing error.
+
+	messageSplits := strings.Split(message, "|")
+	for key, value := range SenzingErrorsMap {
+		if messageSplits[0] == key {
+			result = value
+			break
+		}
+	}
+
+	// Determine if message has error code.
+
+	return result
 }

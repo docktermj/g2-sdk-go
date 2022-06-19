@@ -1,7 +1,8 @@
-github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/docktermj/go-json-log-message v0.0.0-20220618200027-48809ea97461 h1:XiAZRhAvsec58FOjlaDB0NazI+UeJb4jQWIjE9Peyek=
-github.com/docktermj/go-json-log-message v0.0.0-20220618200027-48809ea97461/go.mod h1:gdXcuyLQRwMLeRFBXdtprtwDxaLpVgxaTTqqQ6XD6bs=
+github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
+github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/docktermj/go-json-log-message v0.0.0-20220619011214-a5b452091468 h1:ohxE4skp5Sn7RElferNkswyx7tF9HpsH1oDa8yRpncU=
+github.com/docktermj/go-json-log-message v0.0.0-20220619011214-a5b452091468/go.mod h1:gdXcuyLQRwMLeRFBXdtprtwDxaLpVgxaTTqqQ6XD6bs=
 github.com/jstemmer/go-junit-report v1.0.0 h1:8X1gzZpR+nVQLAht+L/foqOeX2l9DTZoaIPbEQHxsds=
 github.com/jstemmer/go-junit-report v1.0.0/go.mod h1:Brl9GWCQeLvo8nXZwPNNblvFj/XSXhF0NWZEnDohbsk=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

@@ -20,12 +20,9 @@ import "C"
 import (
 	"bytes"
 	"context"
-	"errors"
-	"fmt"
 	"strconv"
 	"unsafe"
 
-	errormsg "github.com/docktermj/go-json-log-message/message"
 	"github.com/docktermj/xyzzygoapi/g2helper"
 )
 
@@ -48,25 +45,11 @@ func (g2engine *G2engineImpl) getByteArray(size int) []byte {
 func (g2engine *G2engineImpl) getError(ctx context.Context, errorNumber int, details ...string) error {
 	lastException, err := g2engine.GetLastException(ctx)
 	defer g2engine.ClearLastException(ctx)
-
-	var result error
-
+	message := lastException
 	if err != nil {
-		errorMessage := errormsg.BuildMessage(
-			g2helper.GetMessageId(errorNumber),
-			err.Error(),
-			details...,
-		)
-		result = fmt.Errorf(errorMessage)
-	} else {
-		errorMessage := errormsg.BuildMessage(
-			g2helper.GetMessageId(errorNumber),
-			lastException,
-			details...,
-		)
-		result = errors.New(errorMessage)
+		message = err.Error()
 	}
-	return result
+	return g2helper.BuildError(MessageIdFormat, errorNumber, message, details...)
 }
 
 // ----------------------------------------------------------------------------
@@ -89,11 +72,7 @@ func (g2engine *G2engineImpl) GetLastException(ctx context.Context) (string, err
 	C.G2_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		errorMessage := errormsg.BuildMessage(
-			g2helper.GetMessageId(2999),
-			"Cannot retrieve last error message",
-		)
-		err = errors.New(errorMessage)
+		err = g2helper.BuildError(MessageIdFormat, 2999, "Cannot retrieve last error message.")
 	}
 	return string(stringBuffer), err
 }

@@ -18,7 +18,7 @@ func getTestObject(ctx context.Context) (G2diagnostic, error) {
 
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2helper.GetSimpleSystemConfigurationJson(ctx)
+	iniParams, jsonErr := g2helper.BuildSimpleSystemConfigurationJson()
 	if jsonErr != nil {
 		return &g2diagnostic, jsonErr
 	}
@@ -102,7 +102,7 @@ func TestFindEntitiesByFeatureIDs(test *testing.T) {
 	features := "{\"ENTITY_ID\":1,\"LIB_FEAT_IDS\":[1,3,4]}"
 	actual, err := g2diagnostic.FindEntitiesByFeatureIDs(ctx, features)
 	testError(test, ctx, g2diagnostic, err)
-	test.Log("Actual:", actual)
+	test.Log("len(Actual):", len(actual))
 }
 
 func TestGetAvailableMemory(test *testing.T) {
@@ -253,7 +253,7 @@ func TestInit(test *testing.T) {
 	g2diagnostic := &G2diagnosticImpl{}
 	moduleName := "Test module name"
 	verboseLogging := 0
-	iniParams, jsonErr := g2helper.GetSimpleSystemConfigurationJson(ctx)
+	iniParams, jsonErr := g2helper.BuildSimpleSystemConfigurationJson()
 	testError(test, ctx, g2diagnostic, jsonErr)
 	err := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
 	testError(test, ctx, g2diagnostic, err)
@@ -265,7 +265,7 @@ func TestInitWithConfigID(test *testing.T) {
 	moduleName := "Test module name"
 	initConfigID := int64(1)
 	verboseLogging := 0
-	iniParams, jsonErr := g2helper.GetSimpleSystemConfigurationJson(ctx)
+	iniParams, jsonErr := g2helper.BuildSimpleSystemConfigurationJson()
 	testError(test, ctx, g2diagnostic, jsonErr)
 	err := g2diagnostic.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
 	testError(test, ctx, g2diagnostic, err)
