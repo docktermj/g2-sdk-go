@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"sort"
 )
 
 // ----------------------------------------------------------------------------
@@ -64,6 +65,45 @@ func getDatabaseUrl() (string, error) {
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
+
+func GetErrorLevel(errorNumber int) string {
+
+	// Create a map of the different levels. Map will be unsorted.
+
+	errorLevelsMap := map[int]string{
+		1000:  "I", // Informational
+		2000:  "W", // Warning
+		3000:  "E", // Error
+		4000:  "D", // Debug
+		5000:  "T", // Trace
+		9000:  "R", // Reserved
+		10000: "F", // Fatal
+	}
+
+	// Create a list of sorted keys.
+
+	errorLevelsKeys := make([]int, 0, len(errorLevelsMap))
+	for key := range errorLevelsMap {
+		errorLevelsKeys = append(errorLevelsKeys, key)
+	}
+	sort.Ints(errorLevelsKeys)
+
+	// Using the sorted key, find the level.
+
+	for _, errorLevelsKey := range errorLevelsKeys {
+		if errorNumber < errorLevelsKey {
+			return errorLevelsMap[errorLevelsKey]
+		}
+	}
+	return "" // Unknown
+}
+
+func GetMessageId(errorNumber int) string {
+	return fmt.Sprintf(
+		"%s%s",
+		fmt.Sprintf(MessageIdFormat, errorNumber),
+		GetErrorLevel(errorNumber))
+}
 
 func GetSimpleSystemConfigurationJson(ctx context.Context) (string, error) {
 	var err error = nil
