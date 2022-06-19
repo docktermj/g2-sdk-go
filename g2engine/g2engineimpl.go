@@ -56,9 +56,28 @@ func (g2engine *G2engineImpl) getError(ctx context.Context, errorNumber int, det
 // Interface methods
 // ----------------------------------------------------------------------------
 
-func (g2engine *G2engineImpl) AddRecord() error {
+func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error {
 	//  _DLEXPORT int G2_addRecord(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID);
 	var err error = nil
+	dataSourceCodeForC := C.CString(dataSourceCode)
+	defer C.free(unsafe.Pointer(dataSourceCodeForC))
+
+	recordIDForC := C.CString(recordID)
+	defer C.free(unsafe.Pointer(recordIDForC))
+
+	jsonDataForC := C.CString(jsonData)
+	defer C.free(unsafe.Pointer(jsonDataForC))
+
+	loadIDForC := C.CString(loadID)
+	defer C.free(unsafe.Pointer(loadIDForC))
+
+	result := C.G2_addRecord(dataSourceCodeForC, recordIDForC, jsonDataForC, loadIDForC)
+
+	// Handle result.
+
+	if result != 0 {
+		err = g2engine.getError(ctx, 5555, dataSourceCode, recordID, jsonData, loadID)
+	}
 	return err
 }
 

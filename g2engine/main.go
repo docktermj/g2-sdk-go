@@ -31,6 +31,7 @@ type G2engineImpl struct{}
 // ----------------------------------------------------------------------------
 
 type G2engine interface {
+	AddRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error
 	ClearLastException(ctx context.Context) error
 	GetLastException(ctx context.Context) (string, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
