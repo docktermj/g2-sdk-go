@@ -11,7 +11,7 @@ ARG IMAGE_FINAL=gcr.io/distroless/base
 
 FROM ${IMAGE_GO_BUILDER} as go_builder
 ENV REFRESHED_AT 2022-06-11
-LABEL Name="dockter/hello-xyzzy" \
+LABEL Name="dockter/hello-senzing" \
       Maintainer="nemo@dockter.com" \
       Version="0.0.1"
 
@@ -33,7 +33,7 @@ COPY --from=senzing/installer:3.1.0  "/opt/local-senzing" "/opt/senzing"
 # Build go program.
 
 WORKDIR ${GOPATH}/src/${GO_PACKAGE_NAME}
-RUN make target/scratch/xyzzy
+RUN make target/scratch/senzing
 
 # --- Test go program ---------------------------------------------------------
 
@@ -58,7 +58,7 @@ RUN mkdir -p /output \
 
 FROM ${IMAGE_FINAL} as final
 ENV REFRESHED_AT 2022-06-11a
-LABEL Name="dockter/hello-xyzzy" \
+LABEL Name="dockter/hello-senzing" \
       Maintainer="nemo@dockter.com" \
       Version="0.0.1"
 
@@ -68,6 +68,6 @@ ENV LD_LIBRARY_PATH=/opt/senzing/g2/lib
 
 # Copy files from prior step.
 
-COPY --from=go_builder /output/scratch/xyzzy /xyzzy
+COPY --from=go_builder /output/scratch/senzing /senzing
 
-ENTRYPOINT ["/xyzzy"]
+ENTRYPOINT ["/senzing"]

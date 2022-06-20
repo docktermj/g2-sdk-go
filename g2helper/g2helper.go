@@ -43,6 +43,7 @@ var SenzingErrorsMap = map[string]string{
 	"0034E":  "error",
 	"0035E":  "error",
 	"0036E":  "error",
+	"0048E":  "fatal",
 	"0051E":  "error",
 	"0053E":  "fatal",
 	"0054E":  "error",
@@ -77,7 +78,7 @@ func getOsEnv(variableName string) (string, error) {
 
 func getDatabaseUrl() (string, error) {
 	result := ""
-	databaseUrl, err := getOsEnv("XYZZY_DATABASE_URL")
+	databaseUrl, err := getOsEnv("SENZING_DATABASE_URL")
 	if err != nil {
 		return result, err
 	}
@@ -137,13 +138,13 @@ func BuildSimpleSystemConfigurationJson() (string, error) {
 		return "", databaseUrlErr
 	}
 
-	resultStruct := XyzzyConfiguration{
-		Pipeline: XyzzyConfigurationPipeline{
+	resultStruct := SenzingConfiguration{
+		Pipeline: SenzingConfigurationPipeline{
 			ConfigPath:   "/etc/opt/senzing",
 			ResourcePath: "/opt/senzing/g2/resources",
 			SupportPath:  "/opt/senzing/data",
 		},
-		Sql: XyzzyConfigurationSql{
+		Sql: SenzingConfigurationSql{
 			Connection: databaseUrl,
 		},
 	}

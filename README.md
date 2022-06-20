@@ -1,4 +1,4 @@
-# xyzzyapi
+# g2-sdk-go
 
 ## Testable stack
 
@@ -79,7 +79,7 @@
 
     ```console
     export GIT_ACCOUNT=docktermj
-    export GIT_REPOSITORY=xyzzygoapi
+    export GIT_REPOSITORY=g2-sdk-go
     export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
     export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
     ```
@@ -92,7 +92,7 @@
    Example:
 
     ```console
-    export XYZZY_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/G2
+    export SENZING_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/G2
     ```
 
 1. Run tests.

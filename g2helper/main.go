@@ -12,25 +12,25 @@ import ()
 // Constants
 // ----------------------------------------------------------------------------
 
-const MessageIdFormat = "xyzzy-6015%04d"
+const MessageIdFormat = "senzing-6015%04d"
 
 // ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
 
-type XyzzyConfigurationPipeline struct {
+type SenzingConfigurationPipeline struct {
 	ConfigPath   string `json:"CONFIGPATH"`
 	ResourcePath string `json:"RESOURCEPATH"`
 	SupportPath  string `json:"SUPPORTPATH"`
 }
 
-type XyzzyConfigurationSql struct {
+type SenzingConfigurationSql struct {
 	Connection string `json:"CONNECTION"`
 }
 
-type XyzzyConfiguration struct {
-	Pipeline XyzzyConfigurationPipeline `json:"PIPELINE"`
-	Sql      XyzzyConfigurationSql      `json:"SQL"`
+type SenzingConfiguration struct {
+	Pipeline SenzingConfigurationPipeline `json:"PIPELINE"`
+	Sql      SenzingConfigurationSql      `json:"SQL"`
 }
 
 type G2helperImpl struct{}
