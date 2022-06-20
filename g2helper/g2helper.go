@@ -43,6 +43,7 @@ var SenzingErrorsMap = map[string]string{
 	"0034E":  "error",
 	"0035E":  "error",
 	"0036E":  "error",
+	"0048E":  "fatal",
 	"0051E":  "error",
 	"0053E":  "fatal",
 	"0054E":  "error",
