@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/docktermj/xyzzygoapi/g2helper"
+	"github.com/docktermj/g2-sdk-go/g2helper"
 	"github.com/stretchr/testify/assert"
 )
 

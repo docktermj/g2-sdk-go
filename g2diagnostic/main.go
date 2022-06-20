@@ -1,13 +1,13 @@
-// The Xyzzy G2Diagnostic Package is a Go wrapper over
-// Xyzzy's G2Diagnostic C binding.
+// The Senzing G2Diagnostic Package is a Go wrapper over
+// Senzing's G2Diagnostic C binding.
 //
 // The purpose of a g2diagnostic object is:
 //   • ...
 //   • ...
 //   • ...
 // To use g2diagnostic, the LD_LIBRARY_PATH environment variable must include
-// a path to Xyzzy's libraries.  Example:
-//  export LD_LIBRARY_PATH=/opt/xyzzy/g2/lib
+// a path to Senzing's libraries.  Example:
+//  export LD_LIBRARY_PATH=/opt/senzing/g2/lib
 package g2diagnostic
 
 import (
@@ -18,7 +18,7 @@ import (
 // Constants
 // ----------------------------------------------------------------------------
 
-const MessageIdFormat = "xyzzy-6013%04d"
+const MessageIdFormat = "senzing-6013%04d"
 
 // ----------------------------------------------------------------------------
 // Types

@@ -8,9 +8,9 @@ import (
 	"strconv"
 
 	"github.com/docktermj/go-logger/logger"
-	"github.com/docktermj/xyzzygoapi/g2diagnostic"
-	"github.com/docktermj/xyzzygoapi/g2engine"
-	"github.com/docktermj/xyzzygoapi/g2helper"
+	"github.com/docktermj/g2-sdk-go/g2diagnostic"
+	"github.com/docktermj/g2-sdk-go/g2engine"
+	"github.com/docktermj/g2-sdk-go/g2helper"
 )
 
 // Values updated via "go install -ldflags" parameters.

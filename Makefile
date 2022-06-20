@@ -23,6 +23,7 @@ CC = gcc
 # Conditional assignment. ('?=')
 
 SENZING_G2_DIR ?= /opt/senzing/g2
+SENZING_DATABASE_URL ?= postgresql://postgres:postgres@127.0.0.1:5432/G2
 
 # The first "make" target runs as default.
 
@@ -148,11 +149,7 @@ target/linux:
 	@mkdir -p $(TARGET_DIRECTORY)/linux || true
 
 
-target/scratch:
-	@mkdir -p $(TARGET_DIRECTORY)/scratch || true
-
-
-target/linux/go-hello-xyzzy-dynamic: target/linux
+target/linux/$(PROGRAM_NAME): target/linux
 	GOOS=linux \
 	GOARCH=amd64 \
 	go build \
@@ -162,10 +159,26 @@ target/linux/go-hello-xyzzy-dynamic: target/linux
 			-X main.buildVersion=${BUILD_VERSION} \
 			-X main.buildIteration=${BUILD_ITERATION} \
 			" \
-		-o $(TARGET_DIRECTORY)/linux/go-hello-xyzzy-dynamic
+		-o $(TARGET_DIRECTORY)/linux/$(PROGRAM_NAME)
+
+target/scratch:
+	@mkdir -p $(TARGET_DIRECTORY)/scratch || true
 
 
-target/linux/go-hello-xyzzy-static: target/linux
+target/linux/go-hello-senzing-dynamic: target/linux
+	GOOS=linux \
+	GOARCH=amd64 \
+	go build \
+		-a \
+		-ldflags " \
+			-X main.programName=${PROGRAM_NAME} \
+			-X main.buildVersion=${BUILD_VERSION} \
+			-X main.buildIteration=${BUILD_ITERATION} \
+			" \
+		-o $(TARGET_DIRECTORY)/linux/go-hello-senzing-dynamic
+
+
+target/linux/go-hello-senzing-static: target/linux
 	GOOS=linux \
 	GOARCH=amd64 \
 	go build \
@@ -176,11 +189,11 @@ target/linux/go-hello-xyzzy-static: target/linux
 			-X main.buildIteration=${BUILD_ITERATION} \
 			-extldflags \"-static\" \
 			" \
-		-o $(TARGET_DIRECTORY)/linux/go-hello-xyzzy-static
+		-o $(TARGET_DIRECTORY)/linux/go-hello-senzing-static
 
 
 # Can't use -extldflags \"-static\" because .a files are needed.
-target/scratch/xyzzy: target/scratch dependencies
+target/scratch/senzing: target/scratch dependencies
 	GOOS=linux \
 	GOARCH=amd64 \
 	CGO_ENABLED=1 \
@@ -194,10 +207,10 @@ target/scratch/xyzzy: target/scratch dependencies
 			-X main.buildVersion=${BUILD_VERSION} \
 			-X main.buildIteration=${BUILD_ITERATION} \
 			" \
-		-o $(TARGET_DIRECTORY)/scratch/xyzzy
+		-o $(TARGET_DIRECTORY)/scratch/senzing
 
 
-target/linux/go-hello-xyzzy-dynamicXX:
+target/linux/go-hello-senzing-dynamicXX:
 	GOOS=linux GOARCH=amd64 \
 		go build \
 			-a \
@@ -208,7 +221,7 @@ target/linux/go-hello-xyzzy-dynamicXX:
 	    	" \
 			${GO_PACKAGE_NAME}
 	@mkdir -p $(TARGET_DIRECTORY)/linux || true
-	@mv $(PROGRAM_NAME) $(TARGET_DIRECTORY)/linux/go-hello-xyzzy-dynamic
+	@mv $(PROGRAM_NAME) $(TARGET_DIRECTORY)/linux/go-hello-senzing-dynamic
 
 # -----------------------------------------------------------------------------
 # Build
@@ -226,10 +239,11 @@ dependencies:
 
 .PHONY: build
 build: dependencies \
-	target/linux/go-hello-xyzzy-dynamic
-#	target/linux/go-hello-xyzzy-static \	
-#	target/scratch/xyzzy	
-#	target/linux/go-hello-xyzzy-static
+	target/linux/$(PROGRAM_NAME)
+#	target/linux/go-hello-senzing-dynamic
+#	target/linux/go-hello-senzing-static \	
+#	target/scratch/senzing	
+#	target/linux/go-hello-senzing-static
 #	build-macos \
 #	build-scratch \
 #	build-windows
@@ -275,6 +289,14 @@ test:
 	@go test -v $(GO_PACKAGE_NAME)/...
 
 # -----------------------------------------------------------------------------
+# Run
+# -----------------------------------------------------------------------------
+
+.PHONY: run
+run:
+	@target/linux/$(PROGRAM_NAME)
+	
+# -----------------------------------------------------------------------------
 # docker-build
 #  - https://docs.docker.com/engine/reference/commandline/build/
 # -----------------------------------------------------------------------------
@@ -317,6 +339,15 @@ docker-build-package:
 		--tag $(DOCKER_BUILD_IMAGE_NAME) \
 		.
 
+
+.PHONY: docker-run
+docker-run:
+	@docker run \
+	    --interactive \
+	    --tty \
+	    --name $(DOCKER_CONTAINER_NAME) \
+	    $(DOCKER_IMAGE_NAME)
+
 # -----------------------------------------------------------------------------
 # Package
 # -----------------------------------------------------------------------------
@@ -334,30 +365,18 @@ package: docker-build-package
 
 .PHONY: run-linux-dynamic
 run-linux-dynamic:
-	@target/linux/go-hello-xyzzy-dynamic
+	@target/linux/go-hello-senzing-dynamic
 
 # -----------------------------------------------------------------------------
 # Utility targets
 # -----------------------------------------------------------------------------
 
-.PHONY: docker-run
-docker-run:
-	@docker run \
-	    --interactive \
-	    --tty \
-	    --name $(DOCKER_CONTAINER_NAME) \
-	    $(DOCKER_IMAGE_NAME)
-
-
 .PHONY: clean
 clean:
 	@go clean -cache
-	@docker rm --force $(DOCKER_CONTAINER_NAME) 2> /dev/null || true 
-	@docker rmi --force $(DOCKER_IMAGE_NAME) $(DOCKER_BUILD_IMAGE_NAME) 2> /dev/null || true 
+	@docker rm --force $(DOCKER_CONTAINER_NAME) 2> /dev/null || true
+	@docker rmi --force $(DOCKER_IMAGE_NAME) $(DOCKER_BUILD_IMAGE_NAME) 2> /dev/null || true
 	@rm -rf $(TARGET_DIRECTORY) || true
-	@find . -type f -name '*.a' -exec rm {} +    # Remove recursively *.o files
-	@find . -type f -name '*.o' -exec rm {} +    # Remove recursively *.o files
-	@find . -type f -name '*.so' -exec rm {} +   # Remove recursively *.so files
 	@rm -f $(GOPATH)/bin/$(PROGRAM_NAME) || true
 
 
