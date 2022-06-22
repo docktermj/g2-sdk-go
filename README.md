@@ -111,4 +111,6 @@
 1. `6013` - g2diagnostic
 1. `6014` - g2hasher
 1. `6015` - g2product
-1. `6015` - g2helper
+1. `6510` - go-helpers/g2configuration
+1. `6511` - go-helpers/logger
+1. `6512` - go-helpers/logmessage

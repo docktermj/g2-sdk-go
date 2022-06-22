@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/docktermj/g2-sdk-go/g2helper"
+	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,7 +18,7 @@ func getTestObject(ctx context.Context) (G2engine, error) {
 
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2helper.BuildSimpleSystemConfigurationJson()
+	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
 	if jsonErr != nil {
 		return &g2engine, jsonErr
 	}

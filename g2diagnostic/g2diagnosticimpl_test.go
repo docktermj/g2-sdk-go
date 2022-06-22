@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/docktermj/g2-sdk-go/g2helper"
+	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,7 +18,7 @@ func getTestObject(ctx context.Context) (G2diagnostic, error) {
 
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2helper.BuildSimpleSystemConfigurationJson()
+	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
 	if jsonErr != nil {
 		return &g2diagnostic, jsonErr
 	}
@@ -259,7 +259,7 @@ func TestInit(test *testing.T) {
 	g2diagnostic := &G2diagnosticImpl{}
 	moduleName := "Test module name"
 	verboseLogging := 0
-	iniParams, jsonErr := g2helper.BuildSimpleSystemConfigurationJson()
+	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
 	testError(test, ctx, g2diagnostic, jsonErr)
 	err := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
 	testError(test, ctx, g2diagnostic, err)
@@ -271,7 +271,7 @@ func TestInitWithConfigID(test *testing.T) {
 	moduleName := "Test module name"
 	initConfigID := int64(1)
 	verboseLogging := 0
-	iniParams, jsonErr := g2helper.BuildSimpleSystemConfigurationJson()
+	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
 	testError(test, ctx, g2diagnostic, jsonErr)
 	err := g2diagnostic.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
 	testError(test, ctx, g2diagnostic, err)

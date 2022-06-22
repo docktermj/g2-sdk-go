@@ -3,9 +3,8 @@ module github.com/docktermj/g2-sdk-go
 go 1.18
 
 require (
-	github.com/docktermj/go-json-log-message v0.0.0-20220619011214-a5b452091468
-	github.com/docktermj/go-logger v0.0.0-20180222005940-453860557ae2
-	github.com/stretchr/testify v1.7.3
+	github.com/docktermj/go-xyzzy-helpers v0.0.0-20220622000406-7892f514a1e9
+	github.com/stretchr/testify v1.7.4
 )
 
 require (
