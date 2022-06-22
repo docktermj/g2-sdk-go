@@ -164,7 +164,7 @@ import (
 	"strconv"
 	"unsafe"
 
-	"github.com/docktermj/g2-sdk-go/g2helper"
+	"github.com/docktermj/go-xyzzy-helpers/logger"
 )
 
 const initialByteArraySize = 65535
@@ -192,7 +192,7 @@ func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber 
 	if err != nil {
 		message = err.Error()
 	}
-	return g2helper.BuildError(MessageIdFormat, errorNumber, message, details...)
+	return logger.BuildError(MessageIdFormat, errorNumber, message, details...)
 }
 
 // ----------------------------------------------------------------------------
@@ -373,7 +373,7 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 	C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		err = g2helper.BuildError(MessageIdFormat, 2999, "Cannot retrieve last error message.")
+		err = logger.BuildError(MessageIdFormat, 2999, "Cannot retrieve last error message.")
 	}
 	return string(stringBuffer), err
 }
