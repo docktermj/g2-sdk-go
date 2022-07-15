@@ -2,7 +2,6 @@ package g2diagnostic
 
 import (
 	"context"
-	"fmt"
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
 	"github.com/docktermj/go-xyzzy-helpers/logger"
 	"github.com/stretchr/testify/assert"
