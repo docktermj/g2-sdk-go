@@ -2,11 +2,15 @@ package g2diagnostic
 
 import (
 	"context"
-	"testing"
-
+	"fmt"
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
 	"github.com/docktermj/go-xyzzy-helpers/logger"
 	"github.com/stretchr/testify/assert"
+	"testing"
+)
+
+var (
+	g2diagnostic G2diagnostic
 )
 
 // ----------------------------------------------------------------------------
@@ -14,21 +18,22 @@ import (
 // ----------------------------------------------------------------------------
 
 func getTestObject(ctx context.Context) G2diagnostic {
-	g2diagnostic := G2diagnosticImpl{}
+	if g2diagnostic == nil {
+		g2diagnostic = &G2diagnosticImpl{}
 
-	moduleName := "Test module name"
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
-	if jsonErr != nil {
-		logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
+		moduleName := "Test module name"
+		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+		iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
+		if jsonErr != nil {
+			logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
+		}
+
+		initErr := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
+		if initErr != nil {
+			logger.Fatalf("Cannot Init: %v", initErr)
+		}
 	}
-
-	initErr := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
-	if initErr != nil {
-		logger.Fatalf("Cannot Init: %v", initErr)
-	}
-
-	return &g2diagnostic
+	return g2diagnostic
 }
 
 func testError(test *testing.T, ctx context.Context, g2diagnostic G2diagnostic, err error) {
