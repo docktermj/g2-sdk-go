@@ -87,12 +87,13 @@
 1. Using the environment variables values just set, follow steps in
    [clone-repository](https://github.com/Senzing/knowledge-base/blob/main/HOWTO/clone-repository.md) to install the Git repository.
 
-1. :pencil2: Set environment variables.
+1. Set environment variables.
    Identify Database URL of database in docker-compose stack.
    Example:
 
     ```console
-    export SENZING_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/G2
+    export LOCAL_IP_ADDRESS=$(curl --silent https://raw.githubusercontent.com/Senzing/knowledge-base/main/gists/find-local-ip-address/find-local-ip-address.py | python3 -)
+    export SENZING_TOOLS_DATABASE_URL=postgresql://postgres:postgres@${LOCAL_IP_ADDRESS}:5432/G2
     ```
 
 1. Run tests.
