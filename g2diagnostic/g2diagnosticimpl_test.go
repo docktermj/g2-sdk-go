@@ -58,10 +58,8 @@ func setupSuite(test testing.TB) func(test testing.TB) {
 }
 
 func TestGetObject(test *testing.T) {
-	var err error
 	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	testError(test, ctx, g2engine, err)
+	getTestObject(ctx)
 }
 
 // ----------------------------------------------------------------------------
