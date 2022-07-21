@@ -286,7 +286,8 @@ build-windows:
 
 .PHONY: test
 test:
-	@go test -v $(GO_PACKAGE_NAME)/...
+#	@go test -v $(GO_PACKAGE_NAME)/...
+	@go test -v $(GO_PACKAGE_NAME)/g2engine
 
 # -----------------------------------------------------------------------------
 # Run

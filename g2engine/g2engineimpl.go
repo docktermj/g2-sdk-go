@@ -35,6 +35,20 @@ char* G2_addRecordWithInfo_local(const char* dataSourceCode, const char* recordI
     return charBuff;
 }
 
+char* G2_addRecordWithInfoWithReturnedRecordID_local(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_addRecordWithInfoWithReturnedRecordID(dataSourceCode, jsonData, loadID, flags, &charBuff, &bufferSize, resizeFuncPointer);
+
+    //  _DLEXPORT int G2_addRecordWithInfoWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags, char *recordIDBuf, const size_t recordIDBufSize, char **responseBuf, size_t *responseBufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
 char* G2_deleteRecordWithInfo_local(const char* dataSourceCode, const char* recordID, const char *loadID, const long long flags) {
     size_t bufferSize = 1;
     char *charBuff = (char *)malloc(1);
@@ -45,6 +59,7 @@ char* G2_deleteRecordWithInfo_local(const char* dataSourceCode, const char* reco
     }
     return charBuff;
 }
+
 
 char* G2_stats_local() {
     size_t bufferSize = 1;
@@ -104,6 +119,7 @@ func (g2engine *G2engineImpl) getError(ctx context.Context, errorNumber int, det
 func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error {
 	//  _DLEXPORT int G2_addRecord(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID);
 	var err error = nil
+
 	dataSourceCodeForC := C.CString(dataSourceCode)
 	defer C.free(unsafe.Pointer(dataSourceCodeForC))
 
@@ -130,6 +146,7 @@ func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode stri
 func (g2engine *G2engineImpl) AddRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_addRecordWithInfo(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
+
 	dataSourceCodeForC := C.CString(dataSourceCode)
 	defer C.free(unsafe.Pointer(dataSourceCodeForC))
 
@@ -153,10 +170,41 @@ func (g2engine *G2engineImpl) AddRecordWithInfo(ctx context.Context, dataSourceC
 }
 
 // TODO: Document.
-func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID() error {
+func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string, flags int64) (string, string, error) {
 	//  _DLEXPORT int G2_addRecordWithInfoWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags, char *recordIDBuf, const size_t recordIDBufSize, char **responseBuf, size_t *responseBufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+
 	var err error = nil
-	return err
+
+	dataSourceCodeForC := C.CString(dataSourceCode)
+	defer C.free(unsafe.Pointer(dataSourceCodeForC))
+
+	jsonDataForC := C.CString(jsonData)
+	defer C.free(unsafe.Pointer(jsonDataForC))
+
+	loadIDForC := C.CString(loadID)
+	defer C.free(unsafe.Pointer(loadIDForC))
+
+	stringIdBuffer, stringBuffer := C.GoString(C.G2_addRecordWithInfoWithReturnedRecordID_local(dataSourceCodeForC, jsonDataForC, loadIDForC, C.longlong(flags)))
+
+	// Handle result.
+
+	if len(stringIdBuffer) == 0 || len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 2, dataSourceCode, recordID, jsonData, loadID, strconv.FormatInt(flags, 2))
+	}
+
+	return stringIdBuffer, stringBuffer, err
+}
+
+func (g2diagnostic *G2diagnosticImpl) XXXXXFetchNextEntityBySize(ctx context.Context, entityListBySizeHandle interface{}) (string, error) {
+	//  _DLEXPORT int G2Diagnostic_fetchNextEntityBySize(EntityListBySizeHandle entityListBySizeHandle, char *responseBuf, const size_t bufSize);
+	var err error = nil
+	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
+	result := C.G2Diagnostic_fetchNextEntityBySize(C.EntityListBySizeHandle(&entityListBySizeHandle), (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	if result != 0 {
+		err = g2diagnostic.getError(ctx, 4)
+	}
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
+	return string(stringBuffer), err
 }
 
 // TODO: Document.
