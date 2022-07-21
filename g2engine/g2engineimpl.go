@@ -184,6 +184,7 @@ func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID(ctx context.
 	loadIDForC := C.CString(loadID)
 	defer C.free(unsafe.Pointer(loadIDForC))
 
+	// FIXME: figure out how to get 2 strings from a C function.
 	stringIdBuffer, stringBuffer := C.GoString(C.G2_addRecordWithInfoWithReturnedRecordID_local(dataSourceCodeForC, jsonDataForC, loadIDForC, C.longlong(flags)))
 
 	// Handle result.
