@@ -2,29 +2,38 @@ package g2engine
 
 import (
 	"context"
-	"testing"
-
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
+	"github.com/docktermj/go-xyzzy-helpers/logger"
 	"github.com/stretchr/testify/assert"
+	"testing"
+)
+
+var (
+	g2engine G2engine
 )
 
 // ----------------------------------------------------------------------------
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
 
-func getTestObject(ctx context.Context) (G2engine, error) {
-	var err error = nil
-	g2engine := G2engineImpl{}
+func getTestObject(ctx context.Context) G2engine {
 
-	moduleName := "Test module name"
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
-	if jsonErr != nil {
-		return &g2engine, jsonErr
+	if g2engine == nil {
+		g2engine = &G2engineImpl{}
+
+		moduleName := "Test module name"
+		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+		iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
+		if jsonErr != nil {
+			logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
+		}
+
+		initErr := g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+		if initErr != nil {
+			logger.Fatalf("Cannot Init: %v", initErr)
+		}
 	}
-
-	err = g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
-	return &g2engine, err
+	return g2engine
 }
 
 func testError(test *testing.T, ctx context.Context, g2engine G2engine, err error) {
@@ -35,10 +44,13 @@ func testError(test *testing.T, ctx context.Context, g2engine G2engine, err erro
 	}
 }
 
+// ----------------------------------------------------------------------------
+// Test harness
+// ----------------------------------------------------------------------------
+
 func TestGetObject(test *testing.T) {
 	ctx := context.TODO()
-	g2engine, err := getTestObject(ctx)
-	testError(test, ctx, g2engine, err)
+	getTestObject(ctx)
 }
 
 // ----------------------------------------------------------------------------
@@ -47,7 +59,7 @@ func TestGetObject(test *testing.T) {
 
 func TestAddRecord(test *testing.T) {
 	ctx := context.TODO()
-	g2engine, _ := getTestObject(ctx)
+	g2engine := getTestObject(ctx)
 
 	dataSourceCode := "TEST"
 	recordID := "987654321"
@@ -60,7 +72,7 @@ func TestAddRecord(test *testing.T) {
 
 func TestAddRecordWithInfo(test *testing.T) {
 	ctx := context.TODO()
-	g2engine, _ := getTestObject(ctx)
+	g2engine := getTestObject(ctx)
 
 	dataSourceCode := "TEST"
 	recordID := "987654321"
@@ -75,7 +87,7 @@ func TestAddRecordWithInfo(test *testing.T) {
 
 func TestDeleteRecord(test *testing.T) {
 	ctx := context.TODO()
-	g2engine, _ := getTestObject(ctx)
+	g2engine := getTestObject(ctx)
 
 	dataSourceCode := "TEST"
 	recordID := "987654321"
@@ -87,7 +99,7 @@ func TestDeleteRecord(test *testing.T) {
 
 func TestDeleteRecordWithInfo(test *testing.T) {
 	ctx := context.TODO()
-	g2engine, _ := getTestObject(ctx)
+	g2engine := getTestObject(ctx)
 
 	dataSourceCode := "TEST"
 	recordID := "987654321"
@@ -101,14 +113,14 @@ func TestDeleteRecordWithInfo(test *testing.T) {
 
 func TestDestroy(test *testing.T) {
 	ctx := context.TODO()
-	g2engine, _ := getTestObject(ctx)
+	g2engine := getTestObject(ctx)
 	err := g2engine.Destroy(ctx)
 	testError(test, ctx, g2engine, err)
 }
 
 func TestStats(test *testing.T) {
 	ctx := context.TODO()
-	g2engine, _ := getTestObject(ctx)
+	g2engine := getTestObject(ctx)
 	actual, err := g2engine.Stats(ctx)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)

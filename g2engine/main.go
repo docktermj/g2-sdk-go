@@ -109,7 +109,7 @@ const (
 type G2engine interface {
 	AddRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error
 	AddRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error)
-	AddRecordWithInfoWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string, flags int64, recordIDBuf string) (string, error)
+	AddRecordWithInfoWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string, flags int64) (string, string, error)
 	AddRecordWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string) (string, error)
 	CheckRecord(ctx context.Context, record string, recordQueryList string) (string, error)
 	ClearLastException(ctx context.Context) error
@@ -118,9 +118,9 @@ type G2engine interface {
 	DeleteRecord(ctx context.Context, dataSourceCode string, recordID string, loadID string) error
 	DeleteRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, loadID string, flags int64) (string, error)
 	Destroy(ctx context.Context) error
-	ExportCSVEntityReport(ctx context.Context, csvColumnList string, flags int64) (interface{}, error)
 	ExportConfig(ctx context.Context) (string, error)
 	ExportConfigAndConfigID(ctx context.Context) (string, int64, error)
+	ExportCSVEntityReport(ctx context.Context, csvColumnList string, flags int64) (interface{}, error)
 	ExportJSONEntityReport(ctx context.Context, flags int64) (interface{}, error)
 	FetchNext(ctx context.Context, responseHandle interface{}) (string, error)
 	FindInterestingEntitiesByEntityID(ctx context.Context, entityID int64, flags int64) (string, error)
@@ -152,7 +152,7 @@ type G2engine interface {
 	GetRecord_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
 	GetRedoRecord(ctx context.Context) (string, error)
 	GetRepositoryLastModifiedTime(ctx context.Context) (int64, error)
-	GetVirtualEntityByRecordID(ctx context.Context, recordList string) (string, error)
+	GetVirtualEntityByRecordID(ctx context.Context, recordList string) (int64, error)
 	GetVirtualEntityByRecordID_V2(ctx context.Context, recordList string, flags int64) (string, error)
 	HowEntityByEntityID(ctx context.Context, entityID int64) (string, error)
 	HowEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error)
@@ -182,6 +182,6 @@ type G2engine interface {
 	WhyEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error)
 	WhyEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string) (string, error)
 	WhyEntityByRecordID_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
-	WhyRecords(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string) (string error)
+	WhyRecords(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string) (string, error)
 	WhyRecords_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, flags int64) (string, error)
 }
