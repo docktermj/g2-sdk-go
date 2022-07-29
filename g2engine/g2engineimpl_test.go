@@ -205,7 +205,7 @@ func TestExportCSVEntityReport(test *testing.T) {
 	g2engine := getTestObject(ctx)
 	csvColumnList := ""
 	var flags int64 = 0
-	actual, err := g2engine.ExportCSVEntityReport(ctx)
+	actual, err := g2engine.ExportCSVEntityReport(ctx, csvColumnList, flags)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
 }
@@ -213,9 +213,8 @@ func TestExportCSVEntityReport(test *testing.T) {
 func TestExportJSONEntityReport(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
-	csvColumnList := ""
 	var flags int64 = 0
-	actual, err := g2engine.ExportJSONEntityReport(ctx)
+	actual, err := g2engine.ExportJSONEntityReport(ctx, flags)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
 }
@@ -224,7 +223,7 @@ func TestFetchNext(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
 	responseHandle := ""
-	actual, err := g2engine.FetchNext(ctx)
+	actual, err := g2engine.FetchNext(ctx, responseHandle)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
 }
@@ -423,8 +422,9 @@ func TestFindPathIncludingSourceByEntityID_V2(test *testing.T) {
 	var entityID2 int64 = 2
 	maxDegree := 1
 	excludedEntities := ""
+	requiredDsrcs := ""
 	var flags int64 = 0
-	actual, err := g2engine.FindPathIncludingSourceByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, flags)
+	actual, err := g2engine.FindPathIncludingSourceByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs, flags)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
 }
@@ -644,8 +644,7 @@ func TestProcess(test *testing.T) {
 func TestProcessRedoRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
-	record := ""
-	actual, err := g2engine.ProcessRedoRecord(ctx, record)
+	actual, err := g2engine.ProcessRedoRecord(ctx)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
 }
@@ -653,8 +652,8 @@ func TestProcessRedoRecord(test *testing.T) {
 func TestProcessRedoRecordWithInfo(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
-	record := ""
-	actualInfo, actual, err := g2engine.ProcessRedoRecordWithInfo(ctx, record)
+	var flags int64 = 0
+	actualInfo, actual, err := g2engine.ProcessRedoRecordWithInfo(ctx, flags)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual Info:", actualInfo)
 	test.Log("Actual:", actual)
@@ -674,7 +673,6 @@ func TestProcessWithResponse(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
 	record := ""
-	var flags int64 = 0
 	actual, err := g2engine.ProcessWithResponse(ctx, record)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
@@ -684,7 +682,6 @@ func TestProcessWithResponseResize(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
 	record := ""
-	var flags int64 = 0
 	actual, err := g2engine.ProcessWithResponseResize(ctx, record)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
@@ -740,7 +737,7 @@ func TestReevaluateRecordWithInfo(test *testing.T) {
 func TestReinit(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
-	var initConfigID = 0
+	var initConfigID int64 = 0
 	err := g2engine.Reinit(ctx, initConfigID)
 	testError(test, ctx, g2engine, err)
 }
