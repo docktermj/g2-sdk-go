@@ -15,6 +15,12 @@ package g2engine
 typedef void* EntityListBySizeHandle;
 typedef void*(*resize_buffer_type)(void *, size_t);
 
+struct recordIDwithInfo {
+    char* recordID;
+    char* withInfo;
+    int returnCode;
+};
+
 void* G2_resizeStringBuffer(void *ptr, size_t size) {
     //deallocate old buffer
     if (ptr != 0)
@@ -35,21 +41,23 @@ char* G2_addRecordWithInfo_local(const char* dataSourceCode, const char* recordI
     return charBuff;
 }
 
-char* G2_addRecordWithInfoWithReturnedRecordID_local(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags) {
+struct recordIDwithInfo G2_addRecordWithInfoWithReturnedRecordID_local(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags) {
     size_t bufferSize = 1;
-    size_t recordIDBufSize = 1;
+    size_t recordIDBufSize = 256;
 
     char recordIDBuf[100];
     char *charBuff = (char *)malloc(1);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_addRecordWithInfoWithReturnedRecordID(dataSourceCode, jsonData, loadID, flags, recordIDBuf, recordIDBufSize, &charBuff, &bufferSize, resizeFuncPointer);
 
+    struct recordIDwithInfo result;
+    result.recordID = recordIDBuf;
+    result.withInfo = charBuff;
+    result.returnCode = returnCode;
+
     //  _DLEXPORT int G2_addRecordWithInfoWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags, char *recordIDBuf, const size_t recordIDBufSize, char **responseBuf, size_t *responseBufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 
-    if (returnCode != 0) {
-        return "";
-    }
-    return charBuff;
+    return result;
 }
 
 char* G2_deleteRecordWithInfo_local(const char* dataSourceCode, const char* recordID, const char *loadID, const long long flags) {
@@ -187,20 +195,19 @@ func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID(ctx context.
 	loadIDForC := C.CString(loadID)
 	defer C.free(unsafe.Pointer(loadIDForC))
 
-	// FIXME:
-
-	stringIdBuffer := ""
-
-	// FIXME: figure out how to get 2 strings from a C function.
-	stringBuffer := C.GoString(C.G2_addRecordWithInfoWithReturnedRecordID_local(dataSourceCodeForC, jsonDataForC, loadIDForC, C.longlong(flags)))
+	result := C.G2_addRecordWithInfoWithReturnedRecordID_local(dataSourceCodeForC, jsonDataForC, loadIDForC, C.longlong(flags))
 
 	// Handle result.
 
-	if len(stringIdBuffer) == 0 || len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 2, dataSourceCode, stringIdBuffer, jsonData, loadID, strconv.FormatInt(flags, 2))
+	recordID := C.GoString(result.recordID)
+	withInfo := C.GoString(result.withInfo)
+	returnCode := result.returnCode
+
+	if returnCode != 0 {
+		err = g2engine.getError(ctx, 2, dataSourceCode, recordID, jsonData, loadID, strconv.FormatInt(flags, 2))
 	}
 
-	return stringIdBuffer, stringBuffer, err
+	return withInfo, recordID, err
 }
 
 // TODO: Document.
