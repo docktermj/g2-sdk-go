@@ -113,19 +113,18 @@ func TestAddRecordWithReturnedRecordID(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//
-//func TestCheckRecord(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//
-//	record := ""
-//	recordQueryList := ""
-//
-//	actual, err := g2engine.CheckRecord(ctx, record, recordQueryList)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestCheckRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+
+	record := `{"DATA_SOURCE": "TEST", "NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "Smith", "NAME_MIDDLE": "M" }], "PASSPORT_NUMBER": "PP11111", "PASSPORT_COUNTRY": "US", "DRIVERS_LICENSE_NUMBER": "DL11111", "SSN_NUMBER": "111-11-1111"}`
+	recordQueryList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "987654321"},{"DATA_SOURCE": "TEST","RECORD_ID": "123456789"}]}`
+
+	actual, err := g2engine.CheckRecord(ctx, record, recordQueryList)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestClearLastException(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)

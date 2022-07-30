@@ -44,39 +44,27 @@ char* G2_addRecordWithInfo_local(const char* dataSourceCode, const char* recordI
 struct recordIDwithInfo G2_addRecordWithInfoWithReturnedRecordID_local(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags) {
     size_t bufferSize = 1;
     size_t recordIDBufSize = 256;
-
     char recordIDBuf[recordIDBufSize];
     char *charBuff = (char *)malloc(1);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
-    //  _DLEXPORT int G2_addRecordWithInfoWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags, char *recordIDBuf, const size_t recordIDBufSize, char **responseBuf, size_t *responseBufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
     int returnCode = G2_addRecordWithInfoWithReturnedRecordID(dataSourceCode, jsonData, loadID, flags, recordIDBuf, recordIDBufSize, &charBuff, &bufferSize, resizeFuncPointer);
-
     struct recordIDwithInfo result;
     result.recordID = recordIDBuf;
     result.withInfo = charBuff;
     result.returnCode = returnCode;
-
-
     return result;
 }
 
-//char* G2_addRecordWithReturnedRecordID_local(const char* dataSourceCode, const char* jsonData, const char *loadID) {
-//    size_t recordIDBufSize = 256;
-//
-//    char recordIDBuf[recordIDBufSize];
-//    //  _DLEXPORT int G2_addRecordWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, char *recordIDBuf, const size_t bufSize);
-//
-//    int returnCode = G2_addRecordWithReturnedRecordID(dataSourceCode, jsonData, loadID, recordIDBuf, recordIDBufSize);
-//    if (returnCode != 0) {
-//        return "";
-//    }
-//
-//    struct recordIDwithInfo result;
-//    result.recordID = recordIDBuf;
-//    result.returnCode = returnCode;
-//
-//    return recordIDBuf;
-//}
+char* G2_checkRecord_local(const char* record, const char* recordQueryList) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_checkRecord(record, recordQueryList, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
 
 char* G2_deleteRecordWithInfo_local(const char* dataSourceCode, const char* recordID, const char *loadID, const long long flags) {
     size_t bufferSize = 1;
@@ -88,7 +76,6 @@ char* G2_deleteRecordWithInfo_local(const char* dataSourceCode, const char* reco
     }
     return charBuff;
 }
-
 
 char* G2_stats_local() {
     size_t bufferSize = 1;
@@ -222,7 +209,7 @@ func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID(ctx context.
 	returnCode := result.returnCode
 
 	if returnCode != 0 {
-		err = g2engine.getError(ctx, 2, dataSourceCode, recordID, jsonData, loadID, strconv.FormatInt(flags, 2))
+		err = g2engine.getError(ctx, 3, dataSourceCode, recordID, jsonData, loadID, strconv.FormatInt(flags, 2))
 	}
 
 	return withInfo, recordID, err
@@ -246,7 +233,7 @@ func (g2engine *G2engineImpl) AddRecordWithReturnedRecordID(ctx context.Context,
 
 	result := C.G2_addRecordWithReturnedRecordID(dataSourceCodeForC, jsonDataForC, loadIDForC, (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	if result != 0 {
-		err = g2engine.getError(ctx, 14, dataSourceCode, jsonData, loadID)
+		err = g2engine.getError(ctx, 4, dataSourceCode, jsonData, loadID)
 	}
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	return string(stringBuffer), err
@@ -256,7 +243,21 @@ func (g2engine *G2engineImpl) AddRecordWithReturnedRecordID(ctx context.Context,
 func (g2engine *G2engineImpl) CheckRecord(ctx context.Context, record string, recordQueryList string) (string, error) {
 	//  _DLEXPORT int G2_checkRecord(const char *record, const char* recordQueryList, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-	return "", err
+
+	recordForC := C.CString(record)
+	defer C.free(unsafe.Pointer(recordForC))
+
+	recordQueryListForC := C.CString(recordQueryList)
+	defer C.free(unsafe.Pointer(recordQueryListForC))
+
+	stringBuffer := C.GoString(C.G2_checkRecord_local(recordForC, recordQueryListForC))
+
+	// Handle result.
+
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 5, record, recordQueryList)
+	}
+	return stringBuffer, err
 }
 
 // ClearLastException returns the available memory, in bytes, on the host system.
@@ -300,7 +301,7 @@ func (g2engine *G2engineImpl) DeleteRecord(ctx context.Context, dataSourceCode s
 	// Handle result.
 
 	if result != 0 {
-		err = g2engine.getError(ctx, 3, dataSourceCode, recordID, loadID)
+		err = g2engine.getError(ctx, 6, dataSourceCode, recordID, loadID)
 	}
 
 	return err
@@ -324,7 +325,7 @@ func (g2engine *G2engineImpl) DeleteRecordWithInfo(ctx context.Context, dataSour
 	// Handle result.
 
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 4, dataSourceCode, recordID, loadID, strconv.FormatInt(flags, 2))
+		err = g2engine.getError(ctx, 7, dataSourceCode, recordID, loadID, strconv.FormatInt(flags, 2))
 	}
 	return stringBuffer, err
 }
@@ -335,7 +336,7 @@ func (g2engine *G2engineImpl) Destroy(ctx context.Context) error {
 	var err error = nil
 	result := C.G2_destroy()
 	if result != 0 {
-		err = g2engine.getError(ctx, 5)
+		err = g2engine.getError(ctx, 8)
 	}
 	return err
 }
@@ -632,7 +633,7 @@ func (g2engine *G2engineImpl) Init(ctx context.Context, moduleName string, iniPa
 	// Handle result.
 
 	if result != 0 {
-		err = g2engine.getError(ctx, 6, moduleName, iniParams, strconv.Itoa(verboseLogging))
+		err = g2engine.getError(ctx, 9, moduleName, iniParams, strconv.Itoa(verboseLogging))
 	}
 	return err
 }
@@ -769,7 +770,7 @@ func (g2engine *G2engineImpl) Stats(ctx context.Context) (string, error) {
 	var err error = nil
 	stringBuffer := C.GoString(C.G2_stats_local())
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 7)
+		err = g2engine.getError(ctx, 10)
 	}
 	return stringBuffer, err
 }
