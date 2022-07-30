@@ -150,8 +150,6 @@ func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode stri
 
 	result := C.G2_addRecord(dataSourceCodeForC, recordIDForC, jsonDataForC, loadIDForC)
 
-	// Handle result.
-
 	if result != 0 {
 		err = g2engine.getError(ctx, 1, dataSourceCode, recordID, jsonData, loadID)
 	}
@@ -177,8 +175,6 @@ func (g2engine *G2engineImpl) AddRecordWithInfo(ctx context.Context, dataSourceC
 
 	stringBuffer := C.GoString(C.G2_addRecordWithInfo_local(dataSourceCodeForC, recordIDForC, jsonDataForC, loadIDForC, C.longlong(flags)))
 
-	// Handle result.
-
 	if len(stringBuffer) == 0 {
 		err = g2engine.getError(ctx, 2, dataSourceCode, recordID, jsonData, loadID, strconv.FormatInt(flags, 2))
 	}
@@ -202,16 +198,12 @@ func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID(ctx context.
 
 	result := C.G2_addRecordWithInfoWithReturnedRecordID_local(dataSourceCodeForC, jsonDataForC, loadIDForC, C.longlong(flags))
 
-	// Handle result.
-
 	recordID := C.GoString(result.recordID)
 	withInfo := C.GoString(result.withInfo)
 	returnCode := result.returnCode
-
 	if returnCode != 0 {
 		err = g2engine.getError(ctx, 3, dataSourceCode, recordID, jsonData, loadID, strconv.FormatInt(flags, 2))
 	}
-
 	return withInfo, recordID, err
 }
 
@@ -232,6 +224,7 @@ func (g2engine *G2engineImpl) AddRecordWithReturnedRecordID(ctx context.Context,
 	stringBuffer := g2engine.getByteArray(250)
 
 	result := C.G2_addRecordWithReturnedRecordID(dataSourceCodeForC, jsonDataForC, loadIDForC, (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+
 	if result != 0 {
 		err = g2engine.getError(ctx, 4, dataSourceCode, jsonData, loadID)
 	}
@@ -251,8 +244,6 @@ func (g2engine *G2engineImpl) CheckRecord(ctx context.Context, record string, re
 	defer C.free(unsafe.Pointer(recordQueryListForC))
 
 	stringBuffer := C.GoString(C.G2_checkRecord_local(recordForC, recordQueryListForC))
-
-	// Handle result.
 
 	if len(stringBuffer) == 0 {
 		err = g2engine.getError(ctx, 5, record, recordQueryList)
@@ -298,8 +289,6 @@ func (g2engine *G2engineImpl) DeleteRecord(ctx context.Context, dataSourceCode s
 
 	result := C.G2_deleteRecord(dataSourceCodeForC, recordIDForC, loadIDForC)
 
-	// Handle result.
-
 	if result != 0 {
 		err = g2engine.getError(ctx, 6, dataSourceCode, recordID, loadID)
 	}
@@ -321,8 +310,6 @@ func (g2engine *G2engineImpl) DeleteRecordWithInfo(ctx context.Context, dataSour
 	defer C.free(unsafe.Pointer(loadIDForC))
 
 	stringBuffer := C.GoString(C.G2_deleteRecordWithInfo_local(dataSourceCodeForC, recordIDForC, loadIDForC, C.longlong(flags)))
-
-	// Handle result.
 
 	if len(stringBuffer) == 0 {
 		err = g2engine.getError(ctx, 7, dataSourceCode, recordID, loadID, strconv.FormatInt(flags, 2))
@@ -626,11 +613,7 @@ func (g2engine *G2engineImpl) Init(ctx context.Context, moduleName string, iniPa
 	iniParamsForC := C.CString(iniParams)
 	defer C.free(unsafe.Pointer(iniParamsForC))
 
-	// Call Senzing.
-
 	result := C.G2_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
-
-	// Handle result.
 
 	if result != 0 {
 		err = g2engine.getError(ctx, 9, moduleName, iniParams, strconv.Itoa(verboseLogging))
