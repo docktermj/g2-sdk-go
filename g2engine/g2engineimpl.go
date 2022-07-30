@@ -45,9 +45,10 @@ struct recordIDwithInfo G2_addRecordWithInfoWithReturnedRecordID_local(const cha
     size_t bufferSize = 1;
     size_t recordIDBufSize = 256;
 
-    char recordIDBuf[100];
+    char recordIDBuf[recordIDBufSize];
     char *charBuff = (char *)malloc(1);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    //  _DLEXPORT int G2_addRecordWithInfoWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags, char *recordIDBuf, const size_t recordIDBufSize, char **responseBuf, size_t *responseBufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
     int returnCode = G2_addRecordWithInfoWithReturnedRecordID(dataSourceCode, jsonData, loadID, flags, recordIDBuf, recordIDBufSize, &charBuff, &bufferSize, resizeFuncPointer);
 
     struct recordIDwithInfo result;
@@ -55,10 +56,27 @@ struct recordIDwithInfo G2_addRecordWithInfoWithReturnedRecordID_local(const cha
     result.withInfo = charBuff;
     result.returnCode = returnCode;
 
-    //  _DLEXPORT int G2_addRecordWithInfoWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags, char *recordIDBuf, const size_t recordIDBufSize, char **responseBuf, size_t *responseBufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 
     return result;
 }
+
+//char* G2_addRecordWithReturnedRecordID_local(const char* dataSourceCode, const char* jsonData, const char *loadID) {
+//    size_t recordIDBufSize = 256;
+//
+//    char recordIDBuf[recordIDBufSize];
+//    //  _DLEXPORT int G2_addRecordWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, char *recordIDBuf, const size_t bufSize);
+//
+//    int returnCode = G2_addRecordWithReturnedRecordID(dataSourceCode, jsonData, loadID, recordIDBuf, recordIDBufSize);
+//    if (returnCode != 0) {
+//        return "";
+//    }
+//
+//    struct recordIDwithInfo result;
+//    result.recordID = recordIDBuf;
+//    result.returnCode = returnCode;
+//
+//    return recordIDBuf;
+//}
 
 char* G2_deleteRecordWithInfo_local(const char* dataSourceCode, const char* recordID, const char *loadID, const long long flags) {
     size_t bufferSize = 1;
@@ -214,7 +232,24 @@ func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID(ctx context.
 func (g2engine *G2engineImpl) AddRecordWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string) (string, error) {
 	//  _DLEXPORT int G2_addRecordWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, char *recordIDBuf, const size_t bufSize);
 	var err error = nil
-	return "", err
+
+	dataSourceCodeForC := C.CString(dataSourceCode)
+	defer C.free(unsafe.Pointer(dataSourceCodeForC))
+
+	jsonDataForC := C.CString(jsonData)
+	defer C.free(unsafe.Pointer(jsonDataForC))
+
+	loadIDForC := C.CString(loadID)
+	defer C.free(unsafe.Pointer(loadIDForC))
+
+	stringBuffer := g2engine.getByteArray(250)
+
+	result := C.G2_addRecordWithReturnedRecordID(dataSourceCodeForC, jsonDataForC, loadIDForC, (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	if result != 0 {
+		err = g2engine.getError(ctx, 14, dataSourceCode, jsonData, loadID)
+	}
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
+	return string(stringBuffer), err
 }
 
 // TODO: Document.
