@@ -41,7 +41,7 @@
 
     ```console
     export DOCKER_COMPOSE_VAR=~/docker-compose-var
-    export SENZING_DOCKER_COMPOSE_YAML=postgresql/docker-compose-rabbitmq-postgresql.yaml
+    export SENZING_DOCKER_COMPOSE_YAML=postgresql/docker-compose-rabbitmq-postgresql-minimal.yaml
 
     rm -rf ${DOCKER_COMPOSE_VAR:-/tmp/nowhere/for/safety}
     mkdir -p ${DOCKER_COMPOSE_VAR}

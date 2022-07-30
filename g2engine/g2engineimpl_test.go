@@ -468,413 +468,413 @@ func TestGetActiveConfigID(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-func TestGetEntityByEntityID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	var entityID int64 = 1
-	actual, err := g2engine.GetEntityByEntityID(ctx, entityID)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestGetEntityByEntityID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	var entityID int64 = 1
-	var flags int64 = 0
-	actual, err := g2engine.GetEntityByEntityID_V2(ctx, entityID, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestGetEntityByRecordID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	dataSourceCode := "TEST"
-	recordID := ""
-	actual, err := g2engine.GetEntityByRecordID(ctx, dataSourceCode, recordID)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestGetEntityByRecordID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	dataSourceCode := "TEST"
-	recordID := ""
-	var flags int64 = 0
-	actual, err := g2engine.GetEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestGetLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	actual, err := g2engine.GetLastException(ctx)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestGetLastExceptionCode(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	actual, err := g2engine.GetLastExceptionCode(ctx)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestGetRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	dataSourceCode := "TEST"
-	recordID := ""
-	actual, err := g2engine.GetRecord(ctx, dataSourceCode, recordID)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestGetRecord_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	dataSourceCode := "TEST"
-	recordID := ""
-	var flags int64 = 0
-	actual, err := g2engine.GetRecord_V2(ctx, dataSourceCode, recordID, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestGetRedoRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	actual, err := g2engine.GetRedoRecord(ctx)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestGetRepositoryLastModifiedTime(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	actual, err := g2engine.GetRepositoryLastModifiedTime(ctx)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestGetVirtualEntityByRecordID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	recordList := ""
-	actual, err := g2engine.GetVirtualEntityByRecordID(ctx, recordList)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestGetVirtualEntityByRecordID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	recordList := ""
-	var flags int64 = 0
-	actual, err := g2engine.GetVirtualEntityByRecordID_V2(ctx, recordList, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestHowEntityByEntityID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	var entityID int64 = 1
-	actual, err := g2engine.HowEntityByEntityID(ctx, entityID)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestHowEntityByEntityID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	var entityID int64 = 1
-	var flags int64 = 0
-	actual, err := g2engine.HowEntityByEntityID_V2(ctx, entityID, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestInit(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	moduleName := "Test module name"
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
-	if jsonErr != nil {
-		logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
-	}
-	err := g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestInitWithConfigID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	moduleName := "Test module name"
-	var initConfigID int64 = 1
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
-	if jsonErr != nil {
-		logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
-	}
-	err := g2engine.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestPrimeEngine(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	err := g2engine.PrimeEngine(ctx)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestProcess(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	record := ""
-	err := g2engine.Process(ctx, record)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestProcessRedoRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	actual, err := g2engine.ProcessRedoRecord(ctx)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestProcessRedoRecordWithInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	var flags int64 = 0
-	actualInfo, actual, err := g2engine.ProcessRedoRecordWithInfo(ctx, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual Info:", actualInfo)
-	test.Log("Actual:", actual)
-}
-
-func TestProcessWithInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	record := ""
-	var flags int64 = 0
-	actual, err := g2engine.ProcessWithInfo(ctx, record, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestProcessWithResponse(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	record := ""
-	actual, err := g2engine.ProcessWithResponse(ctx, record)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestProcessWithResponseResize(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	record := ""
-	actual, err := g2engine.ProcessWithResponseResize(ctx, record)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestPurgeRepository(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	err := g2engine.PurgeRepository(ctx)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestReevaluateEntity(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	var entityID int64 = 1
-	var flags int64 = 0
-	err := g2engine.ReevaluateEntity(ctx, entityID, flags)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestReevaluateEntityWithInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	var entityID int64 = 1
-	var flags int64 = 0
-	actual, err := g2engine.ReevaluateEntityWithInfo(ctx, entityID, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestReevaluateRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	dataSourceCode := "TEST"
-	recordID := "987654321"
-	var flags int64 = 0
-	err := g2engine.ReevaluateRecord(ctx, dataSourceCode, recordID, flags)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestReevaluateRecordWithInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	dataSourceCode := "TEST"
-	recordID := "987654321"
-	var flags int64 = 0
-	actual, err := g2engine.ReevaluateRecordWithInfo(ctx, dataSourceCode, recordID, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestReinit(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	var initConfigID int64 = 0
-	err := g2engine.Reinit(ctx, initConfigID)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestReplaceRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	dataSourceCode := "TEST"
-	recordID := "987654321"
-	jsonData := ""
-	loadID := ""
-	err := g2engine.ReplaceRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestReplaceRecordWithInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	dataSourceCode := "TEST"
-	recordID := "987654321"
-	jsonData := ""
-	loadID := ""
-	var flags int64 = 0
-	actual, err := g2engine.ReplaceRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestSearchByAttributes(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	jsonData := ""
-	actual, err := g2engine.SearchByAttributes(ctx, jsonData)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestSearchByAttributes_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	jsonData := ""
-	var flags int64 = 0
-	actual, err := g2engine.SearchByAttributes_V2(ctx, jsonData, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestStats(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	actual, err := g2engine.Stats(ctx)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestWhyEntities(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 2
-	actual, err := g2engine.WhyEntities(ctx, entityID1, entityID2)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestWhyEntities_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 2
-	var flags int64 = 0
-	actual, err := g2engine.WhyEntities_V2(ctx, entityID1, entityID2, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestWhyEntityByEntityID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	var entityID int64 = 1
-	actual, err := g2engine.WhyEntityByEntityID(ctx, entityID)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestWhyEntityByEntityID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	var entityID int64 = 1
-	var flags int64 = 0
-	actual, err := g2engine.WhyEntityByEntityID_V2(ctx, entityID, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestWhyEntityByRecordID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	dataSourceCode := "TEST"
-	recordID := "987654321"
-	actual, err := g2engine.WhyEntityByRecordID(ctx, dataSourceCode, recordID)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestWhyEntityByRecordID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	dataSourceCode := "TEST"
-	recordID := "987654321"
-	var flags int64 = 0
-	actual, err := g2engine.WhyEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestWhyRecords(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	dataSourceCode1 := "TEST"
-	recordID1 := "987654321"
-	dataSourceCode2 := "TEST"
-	recordID2 := ""
-	actual, err := g2engine.WhyRecords(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
-func TestWhyRecords_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-	dataSourceCode1 := "TEST"
-	recordID1 := "987654321"
-	dataSourceCode2 := "TEST"
-	recordID2 := ""
-	var flags int64 = 0
-	actual, err := g2engine.WhyRecords_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
+//func TestGetEntityByEntityID(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	var entityID int64 = 1
+//	actual, err := g2engine.GetEntityByEntityID(ctx, entityID)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestGetEntityByEntityID_V2(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	var entityID int64 = 1
+//	var flags int64 = 0
+//	actual, err := g2engine.GetEntityByEntityID_V2(ctx, entityID, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestGetEntityByRecordID(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	dataSourceCode := "TEST"
+//	recordID := ""
+//	actual, err := g2engine.GetEntityByRecordID(ctx, dataSourceCode, recordID)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestGetEntityByRecordID_V2(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	dataSourceCode := "TEST"
+//	recordID := ""
+//	var flags int64 = 0
+//	actual, err := g2engine.GetEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestGetLastException(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	actual, err := g2engine.GetLastException(ctx)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestGetLastExceptionCode(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	actual, err := g2engine.GetLastExceptionCode(ctx)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestGetRecord(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	dataSourceCode := "TEST"
+//	recordID := ""
+//	actual, err := g2engine.GetRecord(ctx, dataSourceCode, recordID)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestGetRecord_V2(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	dataSourceCode := "TEST"
+//	recordID := ""
+//	var flags int64 = 0
+//	actual, err := g2engine.GetRecord_V2(ctx, dataSourceCode, recordID, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestGetRedoRecord(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	actual, err := g2engine.GetRedoRecord(ctx)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestGetRepositoryLastModifiedTime(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	actual, err := g2engine.GetRepositoryLastModifiedTime(ctx)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestGetVirtualEntityByRecordID(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	recordList := ""
+//	actual, err := g2engine.GetVirtualEntityByRecordID(ctx, recordList)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestGetVirtualEntityByRecordID_V2(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	recordList := ""
+//	var flags int64 = 0
+//	actual, err := g2engine.GetVirtualEntityByRecordID_V2(ctx, recordList, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestHowEntityByEntityID(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	var entityID int64 = 1
+//	actual, err := g2engine.HowEntityByEntityID(ctx, entityID)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestHowEntityByEntityID_V2(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	var entityID int64 = 1
+//	var flags int64 = 0
+//	actual, err := g2engine.HowEntityByEntityID_V2(ctx, entityID, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestInit(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	moduleName := "Test module name"
+//	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+//	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
+//	if jsonErr != nil {
+//		logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
+//	}
+//	err := g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+//	testError(test, ctx, g2engine, err)
+//}
+//
+//func TestInitWithConfigID(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	moduleName := "Test module name"
+//	var initConfigID int64 = 1
+//	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+//	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
+//	if jsonErr != nil {
+//		logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
+//	}
+//	err := g2engine.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
+//	testError(test, ctx, g2engine, err)
+//}
+//
+//func TestPrimeEngine(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	err := g2engine.PrimeEngine(ctx)
+//	testError(test, ctx, g2engine, err)
+//}
+//
+//func TestProcess(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	record := ""
+//	err := g2engine.Process(ctx, record)
+//	testError(test, ctx, g2engine, err)
+//}
+//
+//func TestProcessRedoRecord(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	actual, err := g2engine.ProcessRedoRecord(ctx)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestProcessRedoRecordWithInfo(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	var flags int64 = 0
+//	actualInfo, actual, err := g2engine.ProcessRedoRecordWithInfo(ctx, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual Info:", actualInfo)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestProcessWithInfo(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	record := ""
+//	var flags int64 = 0
+//	actual, err := g2engine.ProcessWithInfo(ctx, record, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestProcessWithResponse(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	record := ""
+//	actual, err := g2engine.ProcessWithResponse(ctx, record)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestProcessWithResponseResize(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	record := ""
+//	actual, err := g2engine.ProcessWithResponseResize(ctx, record)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestPurgeRepository(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	err := g2engine.PurgeRepository(ctx)
+//	testError(test, ctx, g2engine, err)
+//}
+//
+//func TestReevaluateEntity(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	var entityID int64 = 1
+//	var flags int64 = 0
+//	err := g2engine.ReevaluateEntity(ctx, entityID, flags)
+//	testError(test, ctx, g2engine, err)
+//}
+//
+//func TestReevaluateEntityWithInfo(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	var entityID int64 = 1
+//	var flags int64 = 0
+//	actual, err := g2engine.ReevaluateEntityWithInfo(ctx, entityID, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestReevaluateRecord(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	dataSourceCode := "TEST"
+//	recordID := "987654321"
+//	var flags int64 = 0
+//	err := g2engine.ReevaluateRecord(ctx, dataSourceCode, recordID, flags)
+//	testError(test, ctx, g2engine, err)
+//}
+//
+//func TestReevaluateRecordWithInfo(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	dataSourceCode := "TEST"
+//	recordID := "987654321"
+//	var flags int64 = 0
+//	actual, err := g2engine.ReevaluateRecordWithInfo(ctx, dataSourceCode, recordID, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestReinit(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	var initConfigID int64 = 0
+//	err := g2engine.Reinit(ctx, initConfigID)
+//	testError(test, ctx, g2engine, err)
+//}
+//
+//func TestReplaceRecord(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	dataSourceCode := "TEST"
+//	recordID := "987654321"
+//	jsonData := ""
+//	loadID := ""
+//	err := g2engine.ReplaceRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
+//	testError(test, ctx, g2engine, err)
+//}
+//
+//func TestReplaceRecordWithInfo(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	dataSourceCode := "TEST"
+//	recordID := "987654321"
+//	jsonData := ""
+//	loadID := ""
+//	var flags int64 = 0
+//	actual, err := g2engine.ReplaceRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestSearchByAttributes(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	jsonData := ""
+//	actual, err := g2engine.SearchByAttributes(ctx, jsonData)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestSearchByAttributes_V2(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	jsonData := ""
+//	var flags int64 = 0
+//	actual, err := g2engine.SearchByAttributes_V2(ctx, jsonData, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestStats(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	actual, err := g2engine.Stats(ctx)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestWhyEntities(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	var entityID1 int64 = 1
+//	var entityID2 int64 = 2
+//	actual, err := g2engine.WhyEntities(ctx, entityID1, entityID2)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestWhyEntities_V2(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	var entityID1 int64 = 1
+//	var entityID2 int64 = 2
+//	var flags int64 = 0
+//	actual, err := g2engine.WhyEntities_V2(ctx, entityID1, entityID2, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestWhyEntityByEntityID(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	var entityID int64 = 1
+//	actual, err := g2engine.WhyEntityByEntityID(ctx, entityID)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestWhyEntityByEntityID_V2(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	var entityID int64 = 1
+//	var flags int64 = 0
+//	actual, err := g2engine.WhyEntityByEntityID_V2(ctx, entityID, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestWhyEntityByRecordID(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	dataSourceCode := "TEST"
+//	recordID := "987654321"
+//	actual, err := g2engine.WhyEntityByRecordID(ctx, dataSourceCode, recordID)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestWhyEntityByRecordID_V2(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	dataSourceCode := "TEST"
+//	recordID := "987654321"
+//	var flags int64 = 0
+//	actual, err := g2engine.WhyEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestWhyRecords(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	dataSourceCode1 := "TEST"
+//	recordID1 := "987654321"
+//	dataSourceCode2 := "TEST"
+//	recordID2 := ""
+//	actual, err := g2engine.WhyRecords(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+//
+//func TestWhyRecords_V2(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx)
+//	dataSourceCode1 := "TEST"
+//	recordID1 := "987654321"
+//	dataSourceCode2 := "TEST"
+//	recordID2 := ""
+//	var flags int64 = 0
+//	actual, err := g2engine.WhyRecords_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
