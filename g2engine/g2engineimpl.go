@@ -12,7 +12,7 @@ package g2engine
 #cgo CFLAGS: -g
 #cgo LDFLAGS: -shared
 
-typedef void* EntityListBySizeHandle;
+typedef void* exportHandle;
 typedef void*(*resize_buffer_type)(void *, size_t);
 
 struct recordIDwithInfo {
@@ -263,6 +263,10 @@ func (g2engine *G2engineImpl) ClearLastException(ctx context.Context) error {
 func (g2engine *G2engineImpl) CloseExport(ctx context.Context, responseHandle interface{}) error {
 	//  _DLEXPORT int G2_closeExport(ExportHandle responseHandle);
 	var err error = nil
+	result := C.G2_closeExport(C.ExportHandle(&responseHandle))
+	if result != 0 {
+		err = g2engine.getError(ctx, 6)
+	}
 	return err
 }
 
@@ -270,7 +274,8 @@ func (g2engine *G2engineImpl) CloseExport(ctx context.Context, responseHandle in
 func (g2engine *G2engineImpl) CountRedoRecords(ctx context.Context) (int64, error) {
 	//  _DLEXPORT long long G2_countRedoRecords();
 	var err error = nil
-	return 0, err
+	result := C.G2_countRedoRecords()
+	return int64(result), err
 }
 
 // TODO: Document.

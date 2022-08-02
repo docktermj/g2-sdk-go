@@ -125,30 +125,39 @@ func TestCheckRecord(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestClearLastException(test *testing.T) {
+func TestClearLastException(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	err := g2engine.ClearLastException(ctx)
+	testError(test, ctx, g2engine, err)
+}
+
+// FAIL:
+//func TestExport(test *testing.T) {
 //	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	err := g2engine.ClearLastException(ctx)
-//	testError(test, ctx, g2engine, err)
+//	g2diagnostic := getTestObject(ctx)
+//	aSize := 10
+//
+//	aHandle, err := g2diagnostic.GetEntityListBySize(ctx, aSize)
+//	testError(test, ctx, g2diagnostic, err)
+//
+//	anEntity, err := g2diagnostic.FetchNextEntityBySize(ctx, aHandle)
+//	testError(test, ctx, g2diagnostic, err)
+//	test.Log("Entity:", anEntity)
+//
+//	err = g2diagnostic.CloseExport(ctx, aHandle)
+//	testError(test, ctx, g2diagnostic, err)
 //}
-//
-//func TestCloseExport(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//
-//	responseHandle := ""
-//	err := g2engine.CloseExport(ctx, responseHandle)
-//	testError(test, ctx, g2engine, err)
-//}
-//
-//func TestCountRedoRecords(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//
-//	actual, err := g2engine.CountRedoRecords(ctx)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
+
+func TestCountRedoRecords(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+
+	actual, err := g2engine.CountRedoRecords(ctx)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //
 //func TestDeleteRecord(test *testing.T) {
 //	ctx := context.TODO()
