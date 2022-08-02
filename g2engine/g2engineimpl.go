@@ -15,9 +15,15 @@ package g2engine
 typedef void* exportHandle;
 typedef void*(*resize_buffer_type)(void *, size_t);
 
-struct recordIDwithInfo {
+struct G2_addRecordWithInfoWithReturnedRecordID_result {
     char* recordID;
     char* withInfo;
+    int returnCode;
+};
+
+struct G2_exportConfigAndConfigID_result {
+    long long configID;
+    char* config;
     int returnCode;
 };
 
@@ -41,14 +47,14 @@ char* G2_addRecordWithInfo_local(const char* dataSourceCode, const char* recordI
     return charBuff;
 }
 
-struct recordIDwithInfo G2_addRecordWithInfoWithReturnedRecordID_local(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags) {
+struct G2_addRecordWithInfoWithReturnedRecordID_result G2_addRecordWithInfoWithReturnedRecordID_local(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags) {
     size_t bufferSize = 1;
     size_t recordIDBufSize = 256;
     char recordIDBuf[recordIDBufSize];
     char *charBuff = (char *)malloc(1);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_addRecordWithInfoWithReturnedRecordID(dataSourceCode, jsonData, loadID, flags, recordIDBuf, recordIDBufSize, &charBuff, &bufferSize, resizeFuncPointer);
-    struct recordIDwithInfo result;
+    struct G2_addRecordWithInfoWithReturnedRecordID_result result;
     result.recordID = recordIDBuf;
     result.withInfo = charBuff;
     result.returnCode = returnCode;
@@ -71,6 +77,30 @@ char* G2_deleteRecordWithInfo_local(const char* dataSourceCode, const char* reco
     char *charBuff = (char *)malloc(1);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_deleteRecordWithInfo(dataSourceCode, recordID, loadID, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+struct G2_exportConfigAndConfigID_result G2_exportConfigAndConfigID_local() {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    long long configID;
+    int returnCode = G2_exportConfigAndConfigID(&charBuff, &bufferSize, resizeFuncPointer, &configID);
+    struct G2_exportConfigAndConfigID_result result;
+    result.configID = configID;
+    result.config = charBuff;
+    result.returnCode = returnCode;
+    return result;
+}
+
+char* G2_exportConfig_local() {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_exportConfig(&charBuff, &bufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -295,7 +325,7 @@ func (g2engine *G2engineImpl) DeleteRecord(ctx context.Context, dataSourceCode s
 	result := C.G2_deleteRecord(dataSourceCodeForC, recordIDForC, loadIDForC)
 
 	if result != 0 {
-		err = g2engine.getError(ctx, 6, dataSourceCode, recordID, loadID)
+		err = g2engine.getError(ctx, 7, dataSourceCode, recordID, loadID)
 	}
 
 	return err
@@ -317,7 +347,7 @@ func (g2engine *G2engineImpl) DeleteRecordWithInfo(ctx context.Context, dataSour
 	stringBuffer := C.GoString(C.G2_deleteRecordWithInfo_local(dataSourceCodeForC, recordIDForC, loadIDForC, C.longlong(flags)))
 
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 7, dataSourceCode, recordID, loadID, strconv.FormatInt(flags, 2))
+		err = g2engine.getError(ctx, 8, dataSourceCode, recordID, loadID, strconv.FormatInt(flags, 2))
 	}
 	return stringBuffer, err
 }
@@ -328,7 +358,7 @@ func (g2engine *G2engineImpl) Destroy(ctx context.Context) error {
 	var err error = nil
 	result := C.G2_destroy()
 	if result != 0 {
-		err = g2engine.getError(ctx, 8)
+		err = g2engine.getError(ctx, 9)
 	}
 	return err
 }
@@ -337,14 +367,25 @@ func (g2engine *G2engineImpl) Destroy(ctx context.Context) error {
 func (g2engine *G2engineImpl) ExportConfigAndConfigID(ctx context.Context) (string, int64, error) {
 	//  _DLEXPORT int G2_exportConfigAndConfigID(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize), long long* configID );
 	var err error = nil
-	return "", 0, err
+	result := C.G2_exportConfigAndConfigID_local()
+	configID := int64(C.longlong(result.configID))
+	config := C.GoString(result.config)
+	returnCode := result.returnCode
+	if returnCode != 0 {
+		err = g2engine.getError(ctx, 10)
+	}
+	return config, configID, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) ExportConfig(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_exportConfig(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2_exportConfig_local())
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 11)
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
@@ -621,7 +662,7 @@ func (g2engine *G2engineImpl) Init(ctx context.Context, moduleName string, iniPa
 	result := C.G2_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 
 	if result != 0 {
-		err = g2engine.getError(ctx, 9, moduleName, iniParams, strconv.Itoa(verboseLogging))
+		err = g2engine.getError(ctx, 44, moduleName, iniParams, strconv.Itoa(verboseLogging))
 	}
 	return err
 }

@@ -158,57 +158,49 @@ func TestCountRedoRecords(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//
-//func TestDeleteRecord(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//
-//	dataSourceCode := "TEST"
-//	recordID := "987654321"
-//	loadID := "TEST"
-//
-//	err := g2engine.DeleteRecord(ctx, dataSourceCode, recordID, loadID)
-//	testError(test, ctx, g2engine, err)
-//}
-//
-//func TestDeleteRecordWithInfo(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//
-//	dataSourceCode := "TEST"
-//	recordID := "987654321"
-//	loadID := "TEST"
-//	var flags int64 = 0
-//
-//	actual, err := g2engine.DeleteRecordWithInfo(ctx, dataSourceCode, recordID, loadID, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestDestroy(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	err := g2engine.Destroy(ctx)
-//	testError(test, ctx, g2engine, err)
-//}
-//
-//func TestExportConfigAndConfigID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	actualConfig, actualConfigId, err := g2engine.ExportConfigAndConfigID(ctx)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual Config:", actualConfig)
-//	test.Log("Actual Config ID:", actualConfigId)
-//}
-//
-//func TestExportConfig(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	actual, err := g2engine.ExportConfig(ctx)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestDeleteRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+
+	dataSourceCode := "TEST"
+	recordID := "987654321"
+	loadID := "TEST"
+
+	err := g2engine.DeleteRecord(ctx, dataSourceCode, recordID, loadID)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestDeleteRecordWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+
+	dataSourceCode := "TEST"
+	recordID := "987654321"
+	loadID := "TEST"
+	var flags int64 = 0
+
+	actual, err := g2engine.DeleteRecordWithInfo(ctx, dataSourceCode, recordID, loadID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestExportConfigAndConfigID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	actualConfig, actualConfigId, err := g2engine.ExportConfigAndConfigID(ctx)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual Config:", actualConfig)
+	test.Log("Actual Config ID:", actualConfigId)
+}
+
+func TestExportConfig(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	actual, err := g2engine.ExportConfig(ctx)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestExportCSVEntityReport(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
@@ -887,3 +879,10 @@ func TestCountRedoRecords(test *testing.T) {
 //	testError(test, ctx, g2engine, err)
 //	test.Log("Actual:", actual)
 //}
+
+func TestDestroy(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	err := g2engine.Destroy(ctx)
+	testError(test, ctx, g2engine, err)
+}
