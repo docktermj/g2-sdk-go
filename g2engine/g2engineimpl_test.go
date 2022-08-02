@@ -133,21 +133,21 @@ func TestClearLastException(test *testing.T) {
 }
 
 // FAIL:
-//func TestExport(test *testing.T) {
-//	ctx := context.TODO()
-//	g2diagnostic := getTestObject(ctx)
-//	aSize := 10
-//
-//	aHandle, err := g2diagnostic.GetEntityListBySize(ctx, aSize)
-//	testError(test, ctx, g2diagnostic, err)
-//
-//	anEntity, err := g2diagnostic.FetchNextEntityBySize(ctx, aHandle)
-//	testError(test, ctx, g2diagnostic, err)
-//	test.Log("Entity:", anEntity)
-//
-//	err = g2diagnostic.CloseExport(ctx, aHandle)
-//	testError(test, ctx, g2diagnostic, err)
-//}
+func TestExportJSONEntityReport(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	flags := int64(0)
+
+	aHandle, err := g2engine.ExportJSONEntityReport(ctx, flags)
+	testError(test, ctx, g2engine, err)
+
+	anEntity, err := g2engine.FetchNext(ctx, aHandle)
+	testError(test, ctx, g2engine, err)
+	test.Log("Entity:", anEntity)
+
+	err = g2engine.CloseExport(ctx, aHandle)
+	testError(test, ctx, g2engine, err)
+}
 
 func TestCountRedoRecords(test *testing.T) {
 	ctx := context.TODO()

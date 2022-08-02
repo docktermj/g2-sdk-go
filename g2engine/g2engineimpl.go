@@ -12,7 +12,7 @@ package g2engine
 #cgo CFLAGS: -g
 #cgo LDFLAGS: -shared
 
-typedef void* exportHandle;
+typedef void* ExportHandle;
 typedef void*(*resize_buffer_type)(void *, size_t);
 
 struct G2_addRecordWithInfoWithReturnedRecordID_result {
@@ -107,6 +107,11 @@ char* G2_exportConfig_local() {
     return charBuff;
 }
 
+
+    //  _DLEXPORT int G2_exportCSVEntityReport(const char* csvColumnList, const long long flags, ExportHandle* responseHandle);
+
+
+
 char* G2_stats_local() {
     size_t bufferSize = 1;
     char *charBuff = (char *)malloc(1);
@@ -165,21 +170,15 @@ func (g2engine *G2engineImpl) getError(ctx context.Context, errorNumber int, det
 func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error {
 	//  _DLEXPORT int G2_addRecord(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID);
 	var err error = nil
-
 	dataSourceCodeForC := C.CString(dataSourceCode)
 	defer C.free(unsafe.Pointer(dataSourceCodeForC))
-
 	recordIDForC := C.CString(recordID)
 	defer C.free(unsafe.Pointer(recordIDForC))
-
 	jsonDataForC := C.CString(jsonData)
 	defer C.free(unsafe.Pointer(jsonDataForC))
-
 	loadIDForC := C.CString(loadID)
 	defer C.free(unsafe.Pointer(loadIDForC))
-
 	result := C.G2_addRecord(dataSourceCodeForC, recordIDForC, jsonDataForC, loadIDForC)
-
 	if result != 0 {
 		err = g2engine.getError(ctx, 1, dataSourceCode, recordID, jsonData, loadID)
 	}
@@ -190,21 +189,15 @@ func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode stri
 func (g2engine *G2engineImpl) AddRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_addRecordWithInfo(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-
 	dataSourceCodeForC := C.CString(dataSourceCode)
 	defer C.free(unsafe.Pointer(dataSourceCodeForC))
-
 	recordIDForC := C.CString(recordID)
 	defer C.free(unsafe.Pointer(recordIDForC))
-
 	jsonDataForC := C.CString(jsonData)
 	defer C.free(unsafe.Pointer(jsonDataForC))
-
 	loadIDForC := C.CString(loadID)
 	defer C.free(unsafe.Pointer(loadIDForC))
-
 	stringBuffer := C.GoString(C.G2_addRecordWithInfo_local(dataSourceCodeForC, recordIDForC, jsonDataForC, loadIDForC, C.longlong(flags)))
-
 	if len(stringBuffer) == 0 {
 		err = g2engine.getError(ctx, 2, dataSourceCode, recordID, jsonData, loadID, strconv.FormatInt(flags, 2))
 	}
@@ -214,20 +207,14 @@ func (g2engine *G2engineImpl) AddRecordWithInfo(ctx context.Context, dataSourceC
 // TODO: Document.
 func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string, flags int64) (string, string, error) {
 	//  _DLEXPORT int G2_addRecordWithInfoWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags, char *recordIDBuf, const size_t recordIDBufSize, char **responseBuf, size_t *responseBufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
-
 	var err error = nil
-
 	dataSourceCodeForC := C.CString(dataSourceCode)
 	defer C.free(unsafe.Pointer(dataSourceCodeForC))
-
 	jsonDataForC := C.CString(jsonData)
 	defer C.free(unsafe.Pointer(jsonDataForC))
-
 	loadIDForC := C.CString(loadID)
 	defer C.free(unsafe.Pointer(loadIDForC))
-
 	result := C.G2_addRecordWithInfoWithReturnedRecordID_local(dataSourceCodeForC, jsonDataForC, loadIDForC, C.longlong(flags))
-
 	recordID := C.GoString(result.recordID)
 	withInfo := C.GoString(result.withInfo)
 	returnCode := result.returnCode
@@ -241,20 +228,14 @@ func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID(ctx context.
 func (g2engine *G2engineImpl) AddRecordWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string) (string, error) {
 	//  _DLEXPORT int G2_addRecordWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, char *recordIDBuf, const size_t bufSize);
 	var err error = nil
-
 	dataSourceCodeForC := C.CString(dataSourceCode)
 	defer C.free(unsafe.Pointer(dataSourceCodeForC))
-
 	jsonDataForC := C.CString(jsonData)
 	defer C.free(unsafe.Pointer(jsonDataForC))
-
 	loadIDForC := C.CString(loadID)
 	defer C.free(unsafe.Pointer(loadIDForC))
-
 	stringBuffer := g2engine.getByteArray(250)
-
 	result := C.G2_addRecordWithReturnedRecordID(dataSourceCodeForC, jsonDataForC, loadIDForC, (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-
 	if result != 0 {
 		err = g2engine.getError(ctx, 4, dataSourceCode, jsonData, loadID)
 	}
@@ -266,15 +247,11 @@ func (g2engine *G2engineImpl) AddRecordWithReturnedRecordID(ctx context.Context,
 func (g2engine *G2engineImpl) CheckRecord(ctx context.Context, record string, recordQueryList string) (string, error) {
 	//  _DLEXPORT int G2_checkRecord(const char *record, const char* recordQueryList, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-
 	recordForC := C.CString(record)
 	defer C.free(unsafe.Pointer(recordForC))
-
 	recordQueryListForC := C.CString(recordQueryList)
 	defer C.free(unsafe.Pointer(recordQueryListForC))
-
 	stringBuffer := C.GoString(C.G2_checkRecord_local(recordForC, recordQueryListForC))
-
 	if len(stringBuffer) == 0 {
 		err = g2engine.getError(ctx, 5, record, recordQueryList)
 	}
@@ -312,22 +289,16 @@ func (g2engine *G2engineImpl) CountRedoRecords(ctx context.Context) (int64, erro
 func (g2engine *G2engineImpl) DeleteRecord(ctx context.Context, dataSourceCode string, recordID string, loadID string) error {
 	//  _DLEXPORT int G2_deleteRecord(const char* dataSourceCode, const char* recordID, const char* loadID);
 	var err error = nil
-
 	dataSourceCodeForC := C.CString(dataSourceCode)
 	defer C.free(unsafe.Pointer(dataSourceCodeForC))
-
 	recordIDForC := C.CString(recordID)
 	defer C.free(unsafe.Pointer(recordIDForC))
-
 	loadIDForC := C.CString(loadID)
 	defer C.free(unsafe.Pointer(loadIDForC))
-
 	result := C.G2_deleteRecord(dataSourceCodeForC, recordIDForC, loadIDForC)
-
 	if result != 0 {
 		err = g2engine.getError(ctx, 7, dataSourceCode, recordID, loadID)
 	}
-
 	return err
 }
 
@@ -337,15 +308,11 @@ func (g2engine *G2engineImpl) DeleteRecordWithInfo(ctx context.Context, dataSour
 	var err error = nil
 	dataSourceCodeForC := C.CString(dataSourceCode)
 	defer C.free(unsafe.Pointer(dataSourceCodeForC))
-
 	recordIDForC := C.CString(recordID)
 	defer C.free(unsafe.Pointer(recordIDForC))
-
 	loadIDForC := C.CString(loadID)
 	defer C.free(unsafe.Pointer(loadIDForC))
-
 	stringBuffer := C.GoString(C.G2_deleteRecordWithInfo_local(dataSourceCodeForC, recordIDForC, loadIDForC, C.longlong(flags)))
-
 	if len(stringBuffer) == 0 {
 		err = g2engine.getError(ctx, 8, dataSourceCode, recordID, loadID, strconv.FormatInt(flags, 2))
 	}
@@ -392,21 +359,39 @@ func (g2engine *G2engineImpl) ExportConfig(ctx context.Context) (string, error) 
 func (g2engine *G2engineImpl) ExportCSVEntityReport(ctx context.Context, csvColumnList string, flags int64) (interface{}, error) {
 	//  _DLEXPORT int G2_exportCSVEntityReport(const char* csvColumnList, const long long flags, ExportHandle* responseHandle);
 	var err error = nil
-	return "", err
+	csvColumnListForC := C.CString(csvColumnList)
+	defer C.free(unsafe.Pointer(csvColumnListForC))
+	var exportHandle unsafe.Pointer
+	result := C.G2_exportCSVEntityReport(csvColumnListForC, C.longlong(flags), (*C.ExportHandle)(&exportHandle))
+	if result != 0 {
+		err = g2engine.getError(ctx, 12, csvColumnList, strconv.FormatInt(flags, 10))
+	}
+	return exportHandle, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) ExportJSONEntityReport(ctx context.Context, flags int64) (interface{}, error) {
 	//  _DLEXPORT int G2_exportJSONEntityReport(const long long flags, ExportHandle* responseHandle);
 	var err error = nil
-	return "", err
+	var exportHandle unsafe.Pointer
+	result := C.G2_exportJSONEntityReport(C.longlong(flags), (*C.ExportHandle)(&exportHandle))
+	if result != 0 {
+		err = g2engine.getError(ctx, 13, strconv.FormatInt(flags, 10))
+	}
+	return exportHandle, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) FetchNext(ctx context.Context, responseHandle interface{}) (string, error) {
 	//  _DLEXPORT int G2_fetchNext(ExportHandle responseHandle, char *responseBuf, const size_t bufSize);
 	var err error = nil
-	return "", err
+	stringBuffer := g2engine.getByteArray(initialByteArraySize)
+	result := C.G2_fetchNext(C.ExportHandle(&responseHandle), (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	if result != 0 {
+		err = g2engine.getError(ctx, 14)
+	}
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
+	return string(stringBuffer), err
 }
 
 // TODO: Document.
