@@ -62,12 +62,20 @@ func TestAddRecord(test *testing.T) {
 	g2engine := getTestObject(ctx)
 
 	dataSourceCode := "TEST"
-	recordID := "987654321"
-	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "987654321", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	recordID := "111"
+	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "111", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
 	loadID := "TEST"
 
 	err := g2engine.AddRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
 	testError(test, ctx, g2engine, err)
+
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	jsonData2 := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "222", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID2 := "TEST"
+
+	err2 := g2engine.AddRecord(ctx, dataSourceCode2, recordID2, jsonData2, loadID2)
+	testError(test, ctx, g2engine, err2)
 }
 
 func TestAddRecordWithInfo(test *testing.T) {
@@ -75,8 +83,8 @@ func TestAddRecordWithInfo(test *testing.T) {
 	g2engine := getTestObject(ctx)
 
 	dataSourceCode := "TEST"
-	recordID := "987654321"
-	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "987654321", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	recordID := "333"
+	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "333", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
 	loadID := "TEST"
 	var flags int64 = 0
 
@@ -117,7 +125,7 @@ func TestCheckRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
 	record := `{"DATA_SOURCE": "TEST", "NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "Smith", "NAME_MIDDLE": "M" }], "PASSPORT_NUMBER": "PP11111", "PASSPORT_COUNTRY": "US", "DRIVERS_LICENSE_NUMBER": "DL11111", "SSN_NUMBER": "111-11-1111"}`
-	recordQueryList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "987654321"},{"DATA_SOURCE": "TEST","RECORD_ID": "123456789"}]}`
+	recordQueryList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "123456789"}]}`
 	actual, err := g2engine.CheckRecord(ctx, record, recordQueryList)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
@@ -198,7 +206,7 @@ func TestFindInterestingEntitiesByRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
 	dataSourceCode := "TEST"
-	recordID := "987654321"
+	recordID := "111"
 	var flags int64 = 0
 	actual, err := g2engine.FindInterestingEntitiesByRecordID(ctx, dataSourceCode, recordID, flags)
 	testError(test, ctx, g2engine, err)
@@ -217,31 +225,31 @@ func TestFindNetworkByEntityID(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestFindNetworkByEntityID_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	entityList := ""
-//	maxDegree := 1
-//	buildOutDegree := 2
-//	maxEntities := 10
-//	var flags int64 = 0
-//	actual, err := g2engine.FindNetworkByEntityID_V2(ctx, entityList, maxDegree, buildOutDegree, maxEntities, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestFindNetworkByRecordID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	recordList := ""
-//	maxDegree := 1
-//	buildOutDegree := 2
-//	maxEntities := 10
-//	actual, err := g2engine.FindNetworkByRecordID(ctx, recordList, maxDegree, buildOutDegree, maxEntities)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestFindNetworkByEntityID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	entityList := `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 2}, {"ENTITY_ID": 3}]}`
+	maxDegree := 2
+	buildOutDegree := 1
+	maxEntities := 10
+	var flags int64 = 0
+	actual, err := g2engine.FindNetworkByEntityID_V2(ctx, entityList, maxDegree, buildOutDegree, maxEntities, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestFindNetworkByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST", "RECORD_ID": "111"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "222"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "333"}]}`
+	maxDegree := 1
+	buildOutDegree := 2
+	maxEntities := 10
+	actual, err := g2engine.FindNetworkByRecordID(ctx, recordList, maxDegree, buildOutDegree, maxEntities)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestFindNetworkByRecordID_V2(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
@@ -673,7 +681,7 @@ func TestFindNetworkByEntityID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
 //	dataSourceCode := "TEST"
-//	recordID := "987654321"
+//	recordID := "111"
 //	var flags int64 = 0
 //	err := g2engine.ReevaluateRecord(ctx, dataSourceCode, recordID, flags)
 //	testError(test, ctx, g2engine, err)
@@ -683,7 +691,7 @@ func TestFindNetworkByEntityID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
 //	dataSourceCode := "TEST"
-//	recordID := "987654321"
+//	recordID := "111"
 //	var flags int64 = 0
 //	actual, err := g2engine.ReevaluateRecordWithInfo(ctx, dataSourceCode, recordID, flags)
 //	testError(test, ctx, g2engine, err)
@@ -702,7 +710,7 @@ func TestFindNetworkByEntityID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
 //	dataSourceCode := "TEST"
-//	recordID := "987654321"
+//	recordID := "111"
 //	jsonData := ""
 //	loadID := ""
 //	err := g2engine.ReplaceRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
@@ -713,7 +721,7 @@ func TestFindNetworkByEntityID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
 //	dataSourceCode := "TEST"
-//	recordID := "987654321"
+//	recordID := "111"
 //	jsonData := ""
 //	loadID := ""
 //	var flags int64 = 0
@@ -793,7 +801,7 @@ func TestFindNetworkByEntityID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
 //	dataSourceCode := "TEST"
-//	recordID := "987654321"
+//	recordID := "111"
 //	actual, err := g2engine.WhyEntityByRecordID(ctx, dataSourceCode, recordID)
 //	testError(test, ctx, g2engine, err)
 //	test.Log("Actual:", actual)
@@ -803,7 +811,7 @@ func TestFindNetworkByEntityID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
 //	dataSourceCode := "TEST"
-//	recordID := "987654321"
+//	recordID := "111"
 //	var flags int64 = 0
 //	actual, err := g2engine.WhyEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
 //	testError(test, ctx, g2engine, err)
@@ -814,7 +822,7 @@ func TestFindNetworkByEntityID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
 //	dataSourceCode1 := "TEST"
-//	recordID1 := "987654321"
+//	recordID1 := "111"
 //	dataSourceCode2 := "TEST"
 //	recordID2 := ""
 //	actual, err := g2engine.WhyRecords(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2)
@@ -826,7 +834,7 @@ func TestFindNetworkByEntityID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
 //	dataSourceCode1 := "TEST"
-//	recordID1 := "987654321"
+//	recordID1 := "111"
 //	dataSourceCode2 := "TEST"
 //	recordID2 := ""
 //	var flags int64 = 0
@@ -840,7 +848,7 @@ func TestDeleteRecord(test *testing.T) {
 	g2engine := getTestObject(ctx)
 
 	dataSourceCode := "TEST"
-	recordID := "987654321"
+	recordID := "111"
 	loadID := "TEST"
 
 	err := g2engine.DeleteRecord(ctx, dataSourceCode, recordID, loadID)
@@ -852,7 +860,7 @@ func TestDeleteRecordWithInfo(test *testing.T) {
 	g2engine := getTestObject(ctx)
 
 	dataSourceCode := "TEST"
-	recordID := "987654321"
+	recordID := "111"
 	loadID := "TEST"
 	var flags int64 = 0
 

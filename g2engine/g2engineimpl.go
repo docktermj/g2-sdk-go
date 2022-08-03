@@ -140,6 +140,28 @@ char* G2_findNetworkByEntityID_local(const char* entityList, const int maxDegree
     return charBuff;
 }
 
+char* G2_findNetworkByEntityID_V2_local(const char* entityList, const int maxDegree, const int buildOutDegree, const int maxEntities, long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findNetworkByEntityID_V2(entityList, maxDegree, buildOutDegree, maxEntities, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+char* G2_findNetworkByRecordID_local(const char* recordList, const int maxDegree, const int buildOutDegree, const int maxEntities) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findNetworkByRecordID(recordList, maxDegree, buildOutDegree, maxEntities, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
 char* G2_stats_local() {
     size_t bufferSize = 1;
     char *charBuff = (char *)malloc(1);
@@ -454,7 +476,7 @@ func (g2engine *G2engineImpl) FindNetworkByEntityID(ctx context.Context, entityL
 	var err error = nil
 	entityListForC := C.CString(entityList)
 	defer C.free(unsafe.Pointer(entityListForC))
-	stringBuffer := C.GoString(C.G2_findNetworkByEntityID_local(entityListForC, C.int(maxDegree), C.int(maxDegree), C.int(maxEntities)))
+	stringBuffer := C.GoString(C.G2_findNetworkByEntityID_local(entityListForC, C.int(maxDegree), C.int(buildOutDegree), C.int(maxEntities)))
 	if len(stringBuffer) == 0 {
 		err = g2engine.getError(ctx, 15, entityList, strconv.Itoa(maxDegree), strconv.Itoa(buildOutDegree), strconv.Itoa(maxEntities))
 	}
@@ -465,14 +487,26 @@ func (g2engine *G2engineImpl) FindNetworkByEntityID(ctx context.Context, entityL
 func (g2engine *G2engineImpl) FindNetworkByEntityID_V2(ctx context.Context, entityList string, maxDegree int, buildOutDegree int, maxEntities int, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findNetworkByEntityID_V2(const char* entityList, const int maxDegree, const int buildOutDegree, const int maxEntities, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	entityListForC := C.CString(entityList)
+	defer C.free(unsafe.Pointer(entityListForC))
+	stringBuffer := C.GoString(C.G2_findNetworkByEntityID_V2_local(entityListForC, C.int(maxDegree), C.int(buildOutDegree), C.int(maxEntities), C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, entityList, strconv.Itoa(maxDegree), strconv.Itoa(buildOutDegree), strconv.Itoa(maxEntities))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) FindNetworkByRecordID(ctx context.Context, recordList string, maxDegree int, buildOutDegree int, maxEntities int) (string, error) {
 	//  _DLEXPORT int G2_findNetworkByRecordID(const char* recordList, const int maxDegree, const int buildOutDegree, const int maxEntities, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	recordListForC := C.CString(recordList)
+	defer C.free(unsafe.Pointer(recordListForC))
+	stringBuffer := C.GoString(C.G2_findNetworkByRecordID_local(recordListForC, C.int(maxDegree), C.int(buildOutDegree), C.int(maxEntities)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, recordList, strconv.Itoa(maxDegree), strconv.Itoa(buildOutDegree), strconv.Itoa(maxEntities))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
