@@ -107,10 +107,38 @@ char* G2_exportConfig_local() {
     return charBuff;
 }
 
+char* G2_findInterestingEntitiesByEntityID_local(long long entityID, long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findInterestingEntitiesByEntityID(entityID, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
 
-    //  _DLEXPORT int G2_exportCSVEntityReport(const char* csvColumnList, const long long flags, ExportHandle* responseHandle);
+char* G2_findInterestingEntitiesByRecordID_local(const char* dataSourceCode, const char* recordID, long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findInterestingEntitiesByRecordID(dataSourceCode, recordID, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
 
-
+char* G2_findNetworkByEntityID_local(const char* entityList, const int maxDegree, const int buildOutDegree, const int maxEntities) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findNetworkByEntityID(entityList, maxDegree, buildOutDegree, maxEntities, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
 
 char* G2_stats_local() {
     size_t bufferSize = 1;
@@ -398,21 +426,39 @@ func (g2engine *G2engineImpl) FetchNext(ctx context.Context, responseHandle inte
 func (g2engine *G2engineImpl) FindInterestingEntitiesByEntityID(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findInterestingEntitiesByEntityID(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2_findInterestingEntitiesByEntityID_local(C.longlong(entityID), C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, strconv.FormatInt(entityID, 2), strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) FindInterestingEntitiesByRecordID(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findInterestingEntitiesByRecordID(const char* dataSourceCode, const char* recordID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	dataSourceCodeForC := C.CString(dataSourceCode)
+	defer C.free(unsafe.Pointer(dataSourceCodeForC))
+	recordIDForC := C.CString(recordID)
+	defer C.free(unsafe.Pointer(recordIDForC))
+	stringBuffer := C.GoString(C.G2_findInterestingEntitiesByRecordID_local(dataSourceCodeForC, recordIDForC, C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, dataSourceCode, recordID)
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) FindNetworkByEntityID(ctx context.Context, entityList string, maxDegree int, buildOutDegree int, maxEntities int) (string, error) {
 	//  _DLEXPORT int G2_findNetworkByEntityID(const char* entityList, const int maxDegree, const int buildOutDegree, const int maxEntities, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	entityListForC := C.CString(entityList)
+	defer C.free(unsafe.Pointer(entityListForC))
+	stringBuffer := C.GoString(C.G2_findNetworkByEntityID_local(entityListForC, C.int(maxDegree), C.int(maxDegree), C.int(maxEntities)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, entityList, strconv.Itoa(maxDegree), strconv.Itoa(buildOutDegree), strconv.Itoa(maxEntities))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.

@@ -116,10 +116,8 @@ func TestAddRecordWithReturnedRecordID(test *testing.T) {
 func TestCheckRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
-
 	record := `{"DATA_SOURCE": "TEST", "NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "Smith", "NAME_MIDDLE": "M" }], "PASSPORT_NUMBER": "PP11111", "PASSPORT_COUNTRY": "US", "DRIVERS_LICENSE_NUMBER": "DL11111", "SSN_NUMBER": "111-11-1111"}`
 	recordQueryList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "987654321"},{"DATA_SOURCE": "TEST","RECORD_ID": "123456789"}]}`
-
 	actual, err := g2engine.CheckRecord(ctx, record, recordQueryList)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
@@ -158,32 +156,6 @@ func TestCountRedoRecords(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-func TestDeleteRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-
-	dataSourceCode := "TEST"
-	recordID := "987654321"
-	loadID := "TEST"
-
-	err := g2engine.DeleteRecord(ctx, dataSourceCode, recordID, loadID)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestDeleteRecordWithInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx)
-
-	dataSourceCode := "TEST"
-	recordID := "987654321"
-	loadID := "TEST"
-	var flags int64 = 0
-
-	actual, err := g2engine.DeleteRecordWithInfo(ctx, dataSourceCode, recordID, loadID, flags)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
-}
-
 func TestExportConfigAndConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
@@ -211,57 +183,40 @@ func TestExportConfig(test *testing.T) {
 //	test.Log("Actual:", actual)
 //}
 //
-//func TestExportJSONEntityReport(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var flags int64 = 0
-//	actual, err := g2engine.ExportJSONEntityReport(ctx, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestFetchNext(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	responseHandle := ""
-//	actual, err := g2engine.FetchNext(ctx, responseHandle)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestFindInterestingEntitiesByEntityID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var entityID int64 = 1
-//	var flags int64 = 0
-//	actual, err := g2engine.FindInterestingEntitiesByEntityID(ctx, entityID, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestFindInterestingEntitiesByRecordID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode := "TEST"
-//	recordID := "987654321"
-//	var flags int64 = 0
-//	actual, err := g2engine.FindInterestingEntitiesByRecordID(ctx, dataSourceCode, recordID, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestFindNetworkByEntityID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	entityList := ""
-//	maxDegree := 1
-//	buildOutDegree := 2
-//	maxEntities := 10
-//	actual, err := g2engine.FindNetworkByEntityID(ctx, entityList, maxDegree, buildOutDegree, maxEntities)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+
+func TestFindInterestingEntitiesByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var entityID int64 = 1
+	var flags int64 = 0
+	actual, err := g2engine.FindInterestingEntitiesByEntityID(ctx, entityID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestFindInterestingEntitiesByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode := "TEST"
+	recordID := "987654321"
+	var flags int64 = 0
+	actual, err := g2engine.FindInterestingEntitiesByRecordID(ctx, dataSourceCode, recordID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestFindNetworkByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	entityList := `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 2}, {"ENTITY_ID": 3}]}`
+	maxDegree := 2
+	buildOutDegree := 1
+	maxEntities := 10
+	actual, err := g2engine.FindNetworkByEntityID(ctx, entityList, maxDegree, buildOutDegree, maxEntities)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestFindNetworkByEntityID_V2(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
@@ -879,6 +834,32 @@ func TestExportConfig(test *testing.T) {
 //	testError(test, ctx, g2engine, err)
 //	test.Log("Actual:", actual)
 //}
+
+func TestDeleteRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+
+	dataSourceCode := "TEST"
+	recordID := "987654321"
+	loadID := "TEST"
+
+	err := g2engine.DeleteRecord(ctx, dataSourceCode, recordID, loadID)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestDeleteRecordWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+
+	dataSourceCode := "TEST"
+	recordID := "987654321"
+	loadID := "TEST"
+	var flags int64 = 0
+
+	actual, err := g2engine.DeleteRecordWithInfo(ctx, dataSourceCode, recordID, loadID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
 
 func TestDestroy(test *testing.T) {
 	ctx := context.TODO()
