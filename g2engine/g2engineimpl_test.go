@@ -366,20 +366,20 @@ func TestFindPathIncludingSourceByEntityID(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestFindPathIncludingSourceByEntityID_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var entityID1 int64 = 1
-//	var entityID2 int64 = 2
-//	maxDegree := 1
-//	excludedEntities := ""
-//	requiredDsrcs := ""
-//	var flags int64 = 0
-//	actual, err := g2engine.FindPathIncludingSourceByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestFindPathIncludingSourceByEntityID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	excludedEntities := ""
+	requiredDsrcs := ""
+	var flags int64 = 0
+	actual, err := g2engine.FindPathIncludingSourceByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestFindPathIncludingSourceByRecordID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)

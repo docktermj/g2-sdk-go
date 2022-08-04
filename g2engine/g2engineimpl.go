@@ -272,6 +272,17 @@ char* G2_findPathIncludingSourceByEntityID_local(const long long entityID1, cons
     return charBuff;
 }
 
+char* G2_findPathIncludingSourceByEntityID_V2_local(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, const char* requiredDsrcs, const long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findPathIncludingSourceByEntityID_V2(entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
 char* G2_stats_local() {
     size_t bufferSize = 1;
     char *charBuff = (char *)malloc(1);
@@ -779,7 +790,15 @@ func (g2engine *G2engineImpl) FindPathIncludingSourceByEntityID(ctx context.Cont
 func (g2engine *G2engineImpl) FindPathIncludingSourceByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, requiredDsrcs string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathIncludingSourceByEntityID_V2(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, const char* requiredDsrcs, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	excludedEntitiesForC := C.CString(excludedEntities)
+	defer C.free(unsafe.Pointer(excludedEntitiesForC))
+	requiredDsrcsForC := C.CString(requiredDsrcs)
+	defer C.free(unsafe.Pointer(requiredDsrcsForC))
+	stringBuffer := C.GoString(C.G2_findPathIncludingSourceByEntityID_V2_local(C.longlong(entityID1), C.longlong(entityID2), C.int(maxDegree), excludedEntitiesForC, requiredDsrcsForC, C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, strconv.FormatInt(entityID1, 10), strconv.FormatInt(entityID2, 10), strconv.Itoa(maxDegree), excludedEntities, requiredDsrcs, strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
