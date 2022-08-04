@@ -60,20 +60,16 @@ func TestGetObject(test *testing.T) {
 func TestAddRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
-
 	dataSourceCode := "TEST"
 	recordID := "111"
 	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "111", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
 	loadID := "TEST"
-
 	err := g2engine.AddRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
 	testError(test, ctx, g2engine, err)
-
 	dataSourceCode2 := "TEST"
 	recordID2 := "222"
 	jsonData2 := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "222", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
 	loadID2 := "TEST"
-
 	err2 := g2engine.AddRecord(ctx, dataSourceCode2, recordID2, jsonData2, loadID2)
 	testError(test, ctx, g2engine, err2)
 }
@@ -81,13 +77,11 @@ func TestAddRecord(test *testing.T) {
 func TestAddRecordWithInfo(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
-
 	dataSourceCode := "TEST"
 	recordID := "333"
 	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "333", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
 	loadID := "TEST"
 	var flags int64 = 0
-
 	actual, err := g2engine.AddRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
@@ -96,12 +90,10 @@ func TestAddRecordWithInfo(test *testing.T) {
 func TestAddRecordWithInfoWithReturnedRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
-
 	dataSourceCode := "TEST"
 	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
 	loadID := "TEST"
 	var flags int64 = 0
-
 	actual, actualRecordID, err := g2engine.AddRecordWithInfoWithReturnedRecordID(ctx, dataSourceCode, jsonData, loadID, flags)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual RecordID:", actualRecordID)
@@ -111,11 +103,9 @@ func TestAddRecordWithInfoWithReturnedRecordID(test *testing.T) {
 func TestAddRecordWithReturnedRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
-
 	dataSourceCode := "TEST"
 	jsonData := `{"SOCIAL_HANDLE": "bobby", "DATE_OF_BIRTH": "1/2/1983", "ADDR_STATE": "WI", "ADDR_POSTAL_CODE": "54434", "SSN_NUMBER": "987-65-4321", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "Smith", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
 	loadID := "TEST"
-
 	actual, err := g2engine.AddRecordWithReturnedRecordID(ctx, dataSourceCode, jsonData, loadID)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
@@ -143,14 +133,11 @@ func TestExportJSONEntityReport(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
 	flags := int64(0)
-
 	aHandle, err := g2engine.ExportJSONEntityReport(ctx, flags)
 	testError(test, ctx, g2engine, err)
-
 	anEntity, err := g2engine.FetchNext(ctx, aHandle)
 	testError(test, ctx, g2engine, err)
 	test.Log("Entity:", anEntity)
-
 	err = g2engine.CloseExport(ctx, aHandle)
 	testError(test, ctx, g2engine, err)
 }
@@ -158,7 +145,6 @@ func TestExportJSONEntityReport(test *testing.T) {
 func TestCountRedoRecords(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
-
 	actual, err := g2engine.CountRedoRecords(ctx)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
@@ -250,94 +236,94 @@ func TestFindNetworkByRecordID(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestFindNetworkByRecordID_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	recordList := ""
-//	maxDegree := 1
-//	buildOutDegree := 2
-//	maxEntities := 10
-//	var flags int64 = 0
-//	actual, err := g2engine.FindNetworkByRecordID_V2(ctx, recordList, maxDegree, buildOutDegree, maxEntities, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestFindPathByEntityID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var entityID1 int64 = 1
-//	var entityID2 int64 = 2
-//	maxDegree := 1
-//	actual, err := g2engine.FindPathByEntityID(ctx, entityID1, entityID2, maxDegree)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestFindPathByEntityID_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var entityID1 int64 = 1
-//	var entityID2 int64 = 2
-//	maxDegree := 1
-//	var flags int64 = 0
-//	actual, err := g2engine.FindPathByEntityID_V2(ctx, entityID1, entityID2, maxDegree, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestFindPathByRecordID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode1 := "TEST"
-//	recordID1 := ""
-//	dataSourceCode2 := "TEST"
-//	recordID2 := ""
-//	maxDegree := 1
-//	actual, err := g2engine.FindPathByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestFindPathByRecordID_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode1 := "TEST"
-//	recordID1 := ""
-//	dataSourceCode2 := "TEST"
-//	recordID2 := ""
-//	maxDegree := 1
-//	var flags int64 = 0
-//	actual, err := g2engine.FindPathByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestFindPathExcludingByEntityID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var entityID1 int64 = 1
-//	var entityID2 int64 = 2
-//	maxDegree := 1
-//	excludedEntities := ""
-//	actual, err := g2engine.FindPathExcludingByEntityID(ctx, entityID1, entityID2, maxDegree, excludedEntities)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestFindPathExcludingByEntityID_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var entityID1 int64 = 1
-//	var entityID2 int64 = 2
-//	maxDegree := 1
-//	excludedEntities := ""
-//	var flags int64 = 0
-//	actual, err := g2engine.FindPathExcludingByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestFindNetworkByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	recordList := ""
+	maxDegree := 1
+	buildOutDegree := 2
+	maxEntities := 10
+	var flags int64 = 0
+	actual, err := g2engine.FindNetworkByRecordID_V2(ctx, recordList, maxDegree, buildOutDegree, maxEntities, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestFindPathByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	actual, err := g2engine.FindPathByEntityID(ctx, entityID1, entityID2, maxDegree)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestFindPathByEntityID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	var flags int64 = 0
+	actual, err := g2engine.FindPathByEntityID_V2(ctx, entityID1, entityID2, maxDegree, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestFindPathByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	actual, err := g2engine.FindPathByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestFindPathByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	var flags int64 = 0
+	actual, err := g2engine.FindPathByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestFindPathExcludingByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	actual, err := g2engine.FindPathExcludingByEntityID(ctx, entityID1, entityID2, maxDegree, excludedEntities)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestFindPathExcludingByEntityID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	var flags int64 = 0
+	actual, err := g2engine.FindPathExcludingByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestFindPathExcludingByRecordID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)

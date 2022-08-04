@@ -162,6 +162,83 @@ char* G2_findNetworkByRecordID_local(const char* recordList, const int maxDegree
     return charBuff;
 }
 
+char* G2_findNetworkByRecordID_V2_local(const char* recordList, const int maxDegree, const int buildOutDegree, const int maxEntities, const long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findNetworkByRecordID_V2(recordList, maxDegree, buildOutDegree, maxEntities, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+char* G2_findPathByEntityID_local(const long long entityID1, const long long entityID2, const int maxDegree) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findPathByEntityID(entityID1, entityID2, maxDegree, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+char* G2_findPathByEntityID_V2_local(const long long entityID1, const long long entityID2, const int maxDegree, const long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findPathByEntityID_V2(entityID1, entityID2, maxDegree, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+char* G2_findPathByRecordID_local(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findPathByRecordID(dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+char* G2_findPathByRecordID_V2_local(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findPathByRecordID_V2(dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+char* G2_findPathExcludingByEntityID_local(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findPathExcludingByEntityID(entityID1, entityID2, maxDegree, excludedEntities, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+char* G2_findPathExcludingByEntityID_V2_local(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, const long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *)malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findPathExcludingByEntityID_V2(entityID1, entityID2, maxDegree, excludedEntities, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
 char* G2_stats_local() {
     size_t bufferSize = 1;
     char *charBuff = (char *)malloc(1);
@@ -414,7 +491,7 @@ func (g2engine *G2engineImpl) ExportCSVEntityReport(ctx context.Context, csvColu
 	var exportHandle unsafe.Pointer
 	result := C.G2_exportCSVEntityReport(csvColumnListForC, C.longlong(flags), (*C.ExportHandle)(&exportHandle))
 	if result != 0 {
-		err = g2engine.getError(ctx, 12, csvColumnList, strconv.FormatInt(flags, 10))
+		err = g2engine.getError(ctx, 12, csvColumnList, strconv.FormatInt(flags, 2))
 	}
 	return exportHandle, err
 }
@@ -426,7 +503,7 @@ func (g2engine *G2engineImpl) ExportJSONEntityReport(ctx context.Context, flags 
 	var exportHandle unsafe.Pointer
 	result := C.G2_exportJSONEntityReport(C.longlong(flags), (*C.ExportHandle)(&exportHandle))
 	if result != 0 {
-		err = g2engine.getError(ctx, 13, strconv.FormatInt(flags, 10))
+		err = g2engine.getError(ctx, 13, strconv.FormatInt(flags, 2))
 	}
 	return exportHandle, err
 }
@@ -450,7 +527,7 @@ func (g2engine *G2engineImpl) FindInterestingEntitiesByEntityID(ctx context.Cont
 	var err error = nil
 	stringBuffer := C.GoString(C.G2_findInterestingEntitiesByEntityID_local(C.longlong(entityID), C.longlong(flags)))
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 15, strconv.FormatInt(entityID, 2), strconv.FormatInt(flags, 2))
+		err = g2engine.getError(ctx, 15, strconv.FormatInt(entityID, 10), strconv.FormatInt(flags, 2))
 	}
 	return stringBuffer, err
 }
@@ -465,7 +542,7 @@ func (g2engine *G2engineImpl) FindInterestingEntitiesByRecordID(ctx context.Cont
 	defer C.free(unsafe.Pointer(recordIDForC))
 	stringBuffer := C.GoString(C.G2_findInterestingEntitiesByRecordID_local(dataSourceCodeForC, recordIDForC, C.longlong(flags)))
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 15, dataSourceCode, recordID)
+		err = g2engine.getError(ctx, 15, dataSourceCode, recordID, strconv.FormatInt(flags, 2))
 	}
 	return stringBuffer, err
 }
@@ -491,7 +568,7 @@ func (g2engine *G2engineImpl) FindNetworkByEntityID_V2(ctx context.Context, enti
 	defer C.free(unsafe.Pointer(entityListForC))
 	stringBuffer := C.GoString(C.G2_findNetworkByEntityID_V2_local(entityListForC, C.int(maxDegree), C.int(buildOutDegree), C.int(maxEntities), C.longlong(flags)))
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 15, entityList, strconv.Itoa(maxDegree), strconv.Itoa(buildOutDegree), strconv.Itoa(maxEntities))
+		err = g2engine.getError(ctx, 15, entityList, strconv.Itoa(maxDegree), strconv.Itoa(buildOutDegree), strconv.Itoa(maxEntities), strconv.FormatInt(flags, 2))
 	}
 	return stringBuffer, err
 }
@@ -513,49 +590,99 @@ func (g2engine *G2engineImpl) FindNetworkByRecordID(ctx context.Context, recordL
 func (g2engine *G2engineImpl) FindNetworkByRecordID_V2(ctx context.Context, recordList string, maxDegree int, buildOutDegree int, maxEntities int, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findNetworkByRecordID_V2(const char* recordList, const int maxDegree, const int buildOutDegree, const int maxEntities, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	recordListForC := C.CString(recordList)
+	defer C.free(unsafe.Pointer(recordListForC))
+	stringBuffer := C.GoString(C.G2_findNetworkByRecordID_V2_local(recordListForC, C.int(maxDegree), C.int(buildOutDegree), C.int(maxEntities), C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, recordList, strconv.Itoa(maxDegree), strconv.Itoa(buildOutDegree), strconv.Itoa(maxEntities), strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) FindPathByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int) (string, error) {
 	//  _DLEXPORT int G2_findPathByEntityID(const long long entityID1, const long long entityID2, const int maxDegree, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2_findPathByEntityID_local(C.longlong(entityID1), C.longlong(entityID2), C.int(maxDegree)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, strconv.FormatInt(entityID1, 10), strconv.FormatInt(entityID2, 10), strconv.Itoa(maxDegree))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) FindPathByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathByEntityID_V2(const long long entityID1, const long long entityID2, const int maxDegree, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2_findPathByEntityID_V2_local(C.longlong(entityID1), C.longlong(entityID2), C.int(maxDegree), C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, strconv.FormatInt(entityID1, 10), strconv.FormatInt(entityID2, 10), strconv.Itoa(maxDegree), strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) FindPathByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int) (string, error) {
 	//  _DLEXPORT int G2_findPathByRecordID(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	dataSource1CodeForC := C.CString(dataSourceCode1)
+	defer C.free(unsafe.Pointer(dataSource1CodeForC))
+	recordID1ForC := C.CString(recordID1)
+	defer C.free(unsafe.Pointer(recordID1ForC))
+	dataSource2CodeForC := C.CString(dataSourceCode2)
+	defer C.free(unsafe.Pointer(dataSource2CodeForC))
+	recordID2ForC := C.CString(recordID2)
+	defer C.free(unsafe.Pointer(recordID2ForC))
+	stringBuffer := C.GoString(C.G2_findPathByRecordID_local(dataSource1CodeForC, recordID1ForC, dataSource2CodeForC, recordID2ForC, C.int(maxDegree)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, dataSourceCode1, recordID1, dataSourceCode2, recordID2, strconv.Itoa(maxDegree))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) FindPathByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathByRecordID_V2(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	dataSource1CodeForC := C.CString(dataSourceCode1)
+	defer C.free(unsafe.Pointer(dataSource1CodeForC))
+	recordID1ForC := C.CString(recordID1)
+	defer C.free(unsafe.Pointer(recordID1ForC))
+	dataSource2CodeForC := C.CString(dataSourceCode2)
+	defer C.free(unsafe.Pointer(dataSource2CodeForC))
+	recordID2ForC := C.CString(recordID2)
+	defer C.free(unsafe.Pointer(recordID2ForC))
+	stringBuffer := C.GoString(C.G2_findPathByRecordID_V2_local(dataSource1CodeForC, recordID1ForC, dataSource2CodeForC, recordID2ForC, C.int(maxDegree), C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, dataSourceCode1, recordID1, dataSourceCode2, recordID2, strconv.Itoa(maxDegree), strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) FindPathExcludingByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string) (string, error) {
 	//  _DLEXPORT int G2_findPathExcludingByEntityID(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	excludedEntitiesForC := C.CString(excludedEntities)
+	defer C.free(unsafe.Pointer(excludedEntitiesForC))
+	stringBuffer := C.GoString(C.G2_findPathExcludingByEntityID_local(C.longlong(entityID1), C.longlong(entityID2), C.int(maxDegree), excludedEntitiesForC))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, strconv.FormatInt(entityID1, 10), strconv.FormatInt(entityID2, 10), strconv.Itoa(maxDegree), excludedEntities)
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) FindPathExcludingByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathExcludingByEntityID_V2(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	excludedEntitiesForC := C.CString(excludedEntities)
+	defer C.free(unsafe.Pointer(excludedEntitiesForC))
+	stringBuffer := C.GoString(C.G2_findPathExcludingByEntityID_V2_local(C.longlong(entityID1), C.longlong(entityID2), C.int(maxDegree), excludedEntitiesForC, C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, strconv.FormatInt(entityID1, 10), strconv.FormatInt(entityID2, 10), strconv.Itoa(maxDegree), excludedEntities, strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
