@@ -324,47 +324,48 @@ func TestFindPathExcludingByEntityID_V2(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestFindPathExcludingByRecordID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode1 := "TEST"
-//	recordID1 := ""
-//	dataSourceCode2 := "TEST"
-//	recordID2 := ""
-//	maxDegree := 1
-//	excludedRecords := ""
-//	actual, err := g2engine.FindPathExcludingByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestFindPathExcludingByRecordID_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode1 := "TEST"
-//	recordID1 := ""
-//	dataSourceCode2 := "TEST"
-//	recordID2 := ""
-//	maxDegree := 1
-//	excludedRecords := ""
-//	var flags int64 = 0
-//	actual, err := g2engine.FindPathExcludingByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestFindPathIncludingSourceByEntityID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var entityID1 int64 = 1
-//	var entityID2 int64 = 2
-//	maxDegree := 1
-//	excludedEntities := ""
-//	actual, err := g2engine.FindPathIncludingSourceByEntityID(ctx, entityID1, entityID2, maxDegree, excludedEntities)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestFindPathExcludingByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "TEST", "RECORD_ID": "111"}]}`
+	actual, err := g2engine.FindPathExcludingByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestFindPathExcludingByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "TEST", "RECORD_ID": "111"}]}`
+	var flags int64 = 0
+	actual, err := g2engine.FindPathExcludingByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestFindPathIncludingSourceByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
+	actual, err := g2engine.FindPathIncludingSourceByEntityID(ctx, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestFindPathIncludingSourceByEntityID_V2(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
