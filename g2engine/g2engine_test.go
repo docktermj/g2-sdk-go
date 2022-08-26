@@ -380,21 +380,21 @@ func TestFindPathIncludingSourceByEntityID_V2(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestFindPathIncludingSourceByRecordID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode1 := "TEST"
-//	recordID1 := ""
-//	dataSourceCode2 := "TEST"
-//	recordID2 := ""
-//	maxDegree := 1
-//	excludedRecords := ""
-//	requiredDsrcs := ""
-//	actual, err := g2engine.FindPathIncludingSourceByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, requiredDsrcs)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestFindPathIncludingSourceByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode1 := "TEST"
+	recordID1 := ""
+	dataSourceCode2 := "TEST"
+	recordID2 := ""
+	maxDegree := 1
+	excludedRecords := ""
+	requiredDsrcs := ""
+	actual, err := g2engine.FindPathIncludingSourceByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, requiredDsrcs)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestFindPathIncludingSourceByRecordID_V2(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)

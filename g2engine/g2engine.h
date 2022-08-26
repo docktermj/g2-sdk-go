@@ -40,4 +40,6 @@ char* G2_findPathExcludingByRecordID_local(const char* dataSourceCode1, const ch
 char* G2_findPathExcludingByRecordID_V2_local(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const long long flags);
 char* G2_findPathIncludingSourceByEntityID_local(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, const char* requiredDsrcs);
 char* G2_findPathIncludingSourceByEntityID_V2_local(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, const char* requiredDsrcs, const long long flags);
+char* G2_findPathIncludingSourceByRecordID_local(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const char* requiredDsrcs);
+
 char* G2_stats_local();

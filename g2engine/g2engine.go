@@ -519,7 +519,23 @@ func (g2engine *G2engineImpl) FindPathIncludingSourceByEntityID_V2(ctx context.C
 func (g2engine *G2engineImpl) FindPathIncludingSourceByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, requiredDsrcs string) (string, error) {
 	//  _DLEXPORT int G2_findPathIncludingSourceByRecordID(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const char* requiredDsrcs, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	dataSource1CodeForC := C.CString(dataSourceCode1)
+	defer C.free(unsafe.Pointer(dataSource1CodeForC))
+	recordID1ForC := C.CString(recordID1)
+	defer C.free(unsafe.Pointer(recordID1ForC))
+	dataSource2CodeForC := C.CString(dataSourceCode2)
+	defer C.free(unsafe.Pointer(dataSource2CodeForC))
+	recordID2ForC := C.CString(recordID2)
+	defer C.free(unsafe.Pointer(recordID2ForC))
+	excludedRecordsForC := C.CString(excludedRecords)
+	defer C.free(unsafe.Pointer(excludedRecordsForC))
+	requiredDsrcsForC := C.CString(requiredDsrcs)
+	defer C.free(unsafe.Pointer(requiredDsrcsForC))
+	stringBuffer := C.GoString(C.G2_findPathIncludingSourceByRecordID_local(dataSource1CodeForC, recordID1ForC, dataSource2CodeForC, recordID2ForC, C.int(maxDegree), excludedRecordsForC, requiredDsrcsForC))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, dataSourceCode1, recordID1, dataSourceCode2, recordID2, strconv.Itoa(maxDegree), excludedRecords, requiredDsrcs)
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.

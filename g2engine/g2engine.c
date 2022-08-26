@@ -326,6 +326,22 @@ char* G2_findPathIncludingSourceByEntityID_V2_local(const long long entityID1,
     return charBuff;
 }
 
+
+char* G2_findPathIncludingSourceByRecordID_local(const char* dataSourceCode1,
+        const char* recordID1, const char* dataSourceCode2,
+        const char* recordID2, const int maxDegree, const char* excludedRecords,
+        const char* requiredDsrcs) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *) malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_findPathIncludingSourceByRecordID(dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, requiredDsrcs, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+
 char* G2_stats_local() {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);
@@ -336,3 +352,5 @@ char* G2_stats_local() {
     }
     return charBuff;
 }
+
+

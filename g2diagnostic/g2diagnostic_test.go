@@ -102,13 +102,6 @@ func TestEntityListBySize(test *testing.T) {
 	testError(test, ctx, g2diagnostic, err)
 }
 
-func TestDestroy(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx)
-	err := g2diagnostic.Destroy(ctx)
-	testError(test, ctx, g2diagnostic, err)
-}
-
 func TestFindEntitiesByFeatureIDs(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx)
@@ -289,5 +282,12 @@ func TestReinit(test *testing.T) {
 	g2diagnostic := &G2diagnosticImpl{}
 	initConfigID := int64(4019066234)
 	err := g2diagnostic.Reinit(ctx, initConfigID)
+	testError(test, ctx, g2diagnostic, err)
+}
+
+func TestDestroy(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx)
+	err := g2diagnostic.Destroy(ctx)
 	testError(test, ctx, g2diagnostic, err)
 }
