@@ -384,9 +384,9 @@ func TestFindPathIncludingSourceByRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
 	dataSourceCode1 := "TEST"
-	recordID1 := ""
+	recordID1 := "111"
 	dataSourceCode2 := "TEST"
-	recordID2 := ""
+	recordID2 := "222"
 	maxDegree := 1
 	excludedRecords := ""
 	requiredDsrcs := ""
@@ -395,29 +395,29 @@ func TestFindPathIncludingSourceByRecordID(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestFindPathIncludingSourceByRecordID_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode1 := "TEST"
-//	recordID1 := ""
-//	dataSourceCode2 := "TEST"
-//	recordID2 := ""
-//	maxDegree := 1
-//	excludedRecords := ""
-//	requiredDsrcs := ""
-//	var flags int64 = 0
-//	actual, err := g2engine.FindPathIncludingSourceByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, requiredDsrcs, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestGetActiveConfigID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	actual, err := g2engine.GetActiveConfigID(ctx)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
+func TestFindPathIncludingSourceByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	excludedRecords := ""
+	requiredDsrcs := ""
+	var flags int64 = 0
+	actual, err := g2engine.FindPathIncludingSourceByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, requiredDsrcs, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestGetActiveConfigID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	actual, err := g2engine.GetActiveConfigID(ctx)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
 
 //func TestGetEntityByEntityID(test *testing.T) {
 //	ctx := context.TODO()
@@ -442,7 +442,7 @@ func TestFindPathIncludingSourceByRecordID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
 //	dataSourceCode := "TEST"
-//	recordID := ""
+//	recordID := "111"
 //	actual, err := g2engine.GetEntityByRecordID(ctx, dataSourceCode, recordID)
 //	testError(test, ctx, g2engine, err)
 //	test.Log("Actual:", actual)
@@ -452,7 +452,7 @@ func TestFindPathIncludingSourceByRecordID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
 //	dataSourceCode := "TEST"
-//	recordID := ""
+//	recordID := "111"
 //	var flags int64 = 0
 //	actual, err := g2engine.GetEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
 //	testError(test, ctx, g2engine, err)
@@ -479,7 +479,7 @@ func TestFindPathIncludingSourceByRecordID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
 //	dataSourceCode := "TEST"
-//	recordID := ""
+//	recordID := "111"
 //	actual, err := g2engine.GetRecord(ctx, dataSourceCode, recordID)
 //	testError(test, ctx, g2engine, err)
 //	test.Log("Actual:", actual)
@@ -489,7 +489,7 @@ func TestFindPathIncludingSourceByRecordID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
 //	dataSourceCode := "TEST"
-//	recordID := ""
+//	recordID := "111"
 //	var flags int64 = 0
 //	actual, err := g2engine.GetRecord_V2(ctx, dataSourceCode, recordID, flags)
 //	testError(test, ctx, g2engine, err)
@@ -811,7 +811,7 @@ func TestFindPathIncludingSourceByRecordID(test *testing.T) {
 //	dataSourceCode1 := "TEST"
 //	recordID1 := "111"
 //	dataSourceCode2 := "TEST"
-//	recordID2 := ""
+//	recordID2 := "222"
 //	actual, err := g2engine.WhyRecords(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2)
 //	testError(test, ctx, g2engine, err)
 //	test.Log("Actual:", actual)
@@ -823,7 +823,7 @@ func TestFindPathIncludingSourceByRecordID(test *testing.T) {
 //	dataSourceCode1 := "TEST"
 //	recordID1 := "111"
 //	dataSourceCode2 := "TEST"
-//	recordID2 := ""
+//	recordID2 := "222"
 //	var flags int64 = 0
 //	actual, err := g2engine.WhyRecords_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags)
 //	testError(test, ctx, g2engine, err)

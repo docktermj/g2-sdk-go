@@ -542,14 +542,36 @@ func (g2engine *G2engineImpl) FindPathIncludingSourceByRecordID(ctx context.Cont
 func (g2engine *G2engineImpl) FindPathIncludingSourceByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, requiredDsrcs string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathIncludingSourceByRecordID_V2(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const char* requiredDsrcs, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	dataSource1CodeForC := C.CString(dataSourceCode1)
+	defer C.free(unsafe.Pointer(dataSource1CodeForC))
+	recordID1ForC := C.CString(recordID1)
+	defer C.free(unsafe.Pointer(recordID1ForC))
+	dataSource2CodeForC := C.CString(dataSourceCode2)
+	defer C.free(unsafe.Pointer(dataSource2CodeForC))
+	recordID2ForC := C.CString(recordID2)
+	defer C.free(unsafe.Pointer(recordID2ForC))
+	excludedRecordsForC := C.CString(excludedRecords)
+	defer C.free(unsafe.Pointer(excludedRecordsForC))
+	requiredDsrcsForC := C.CString(requiredDsrcs)
+	defer C.free(unsafe.Pointer(requiredDsrcsForC))
+	stringBuffer := C.GoString(C.G2_findPathIncludingSourceByRecordID_V2_local(dataSource1CodeForC, recordID1ForC, dataSource2CodeForC, recordID2ForC, C.int(maxDegree), excludedRecordsForC, requiredDsrcsForC, C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, dataSourceCode1, recordID1, dataSourceCode2, recordID2, strconv.Itoa(maxDegree), excludedRecords, requiredDsrcs)
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) GetActiveConfigID(ctx context.Context) (int64, error) {
 	//  _DLEXPORT int G2_getActiveConfigID(long long* configID);
 	var err error = nil
-	return 0, err
+	result := C.G2_getActiveConfigID_local()
+	configID := int64(C.longlong(result.configID))
+	returnCode := result.returnCode
+	if returnCode != 0 {
+		err = g2engine.getError(ctx, 10)
+	}
+	return configID, err
 }
 
 // TODO: Document.
