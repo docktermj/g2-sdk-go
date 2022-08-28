@@ -50,5 +50,9 @@ char* G2_findPathIncludingSourceByRecordID_V2_local(const char* dataSourceCode1,
 struct G2_getActiveConfigID_result G2_getActiveConfigID_local();
 char* G2_getEntityByEntityID_local(const long long entityID);
 char* G2_getEntityByEntityID_V2_local(const long long entityID, const long long flags);
+char* G2_getEntityByRecordID_local(const char* dataSourceCode, const char* recordID);
+char* G2_getEntityByRecordID_V2_local(const char* dataSourceCode, const char* recordID, const long long flags);
+
+
 
 char* G2_stats_local();

@@ -446,27 +446,27 @@ func TestGetEntityByEntityID_V2(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestGetEntityByRecordID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode := "TEST"
-//	recordID := "111"
-//	actual, err := g2engine.GetEntityByRecordID(ctx, dataSourceCode, recordID)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestGetEntityByRecordID_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode := "TEST"
-//	recordID := "111"
-//	var flags int64 = 0
-//	actual, err := g2engine.GetEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestGetEntityByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	actual, err := g2engine.GetEntityByRecordID(ctx, dataSourceCode, recordID)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestGetEntityByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	var flags int64 = 0
+	actual, err := g2engine.GetEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestGetLastException(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)

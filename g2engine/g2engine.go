@@ -599,14 +599,30 @@ func (g2engine *G2engineImpl) GetEntityByEntityID_V2(ctx context.Context, entity
 func (g2engine *G2engineImpl) GetEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string) (string, error) {
 	//  _DLEXPORT int G2_getEntityByRecordID(const char* dataSourceCode, const char* recordID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	dataSourceCodeForC := C.CString(dataSourceCode)
+	defer C.free(unsafe.Pointer(dataSourceCodeForC))
+	recordIDForC := C.CString(recordID)
+	defer C.free(unsafe.Pointer(recordIDForC))
+	stringBuffer := C.GoString(C.G2_getEntityByRecordID_local(dataSourceCodeForC, recordIDForC))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, dataSourceCode, recordID)
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) GetEntityByRecordID_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_getEntityByRecordID_V2(const char* dataSourceCode, const char* recordID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	dataSourceCodeForC := C.CString(dataSourceCode)
+	defer C.free(unsafe.Pointer(dataSourceCodeForC))
+	recordIDForC := C.CString(recordID)
+	defer C.free(unsafe.Pointer(recordIDForC))
+	stringBuffer := C.GoString(C.G2_getEntityByRecordID_V2_local(dataSourceCodeForC, recordIDForC, C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, dataSourceCode, recordID, strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
 }
 
 // GetLastException returns the last exception encountered in the Senzing Engine.
