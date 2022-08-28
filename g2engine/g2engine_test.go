@@ -427,25 +427,25 @@ func TestGetActiveConfigID(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestGetEntityByEntityID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var entityID int64 = 1
-//	actual, err := g2engine.GetEntityByEntityID(ctx, entityID)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestGetEntityByEntityID_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var entityID int64 = 1
-//	var flags int64 = 0
-//	actual, err := g2engine.GetEntityByEntityID_V2(ctx, entityID, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestGetEntityByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var entityID int64 = 1
+	actual, err := g2engine.GetEntityByEntityID(ctx, entityID)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestGetEntityByEntityID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var entityID int64 = 1
+	var flags int64 = 0
+	actual, err := g2engine.GetEntityByEntityID_V2(ctx, entityID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestGetEntityByRecordID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)

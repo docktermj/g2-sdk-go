@@ -48,5 +48,7 @@ char* G2_findPathIncludingSourceByEntityID_V2_local(const long long entityID1, c
 char* G2_findPathIncludingSourceByRecordID_local(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const char* requiredDsrcs);
 char* G2_findPathIncludingSourceByRecordID_V2_local(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const char* requiredDsrcs, const long long flags);
 struct G2_getActiveConfigID_result G2_getActiveConfigID_local();
+char* G2_getEntityByEntityID_local(const long long entityID);
+char* G2_getEntityByEntityID_V2_local(const long long entityID, const long long flags);
 
 char* G2_stats_local();

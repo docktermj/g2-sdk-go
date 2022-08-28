@@ -556,7 +556,7 @@ func (g2engine *G2engineImpl) FindPathIncludingSourceByRecordID_V2(ctx context.C
 	defer C.free(unsafe.Pointer(requiredDsrcsForC))
 	stringBuffer := C.GoString(C.G2_findPathIncludingSourceByRecordID_V2_local(dataSource1CodeForC, recordID1ForC, dataSource2CodeForC, recordID2ForC, C.int(maxDegree), excludedRecordsForC, requiredDsrcsForC, C.longlong(flags)))
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 15, dataSourceCode1, recordID1, dataSourceCode2, recordID2, strconv.Itoa(maxDegree), excludedRecords, requiredDsrcs)
+		err = g2engine.getError(ctx, 15, dataSourceCode1, recordID1, dataSourceCode2, recordID2, strconv.Itoa(maxDegree), excludedRecords, requiredDsrcs, strconv.FormatInt(flags, 2))
 	}
 	return stringBuffer, err
 }
@@ -578,14 +578,21 @@ func (g2engine *G2engineImpl) GetActiveConfigID(ctx context.Context) (int64, err
 func (g2engine *G2engineImpl) GetEntityByEntityID(ctx context.Context, entityID int64) (string, error) {
 	//  _DLEXPORT int G2_getEntityByEntityID(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2_getEntityByEntityID_local(C.longlong(entityID)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, strconv.FormatInt(entityID, 10))
+	}
+	return stringBuffer, err
 }
 
-// TODO: Document.
 func (g2engine *G2engineImpl) GetEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_getEntityByEntityID_V2(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2_getEntityByEntityID_V2_local(C.longlong(entityID), C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, strconv.FormatInt(entityID, 10), strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
