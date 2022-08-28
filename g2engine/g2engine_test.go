@@ -48,6 +48,14 @@ func testError(test *testing.T, ctx context.Context, g2engine G2engine, err erro
 // Test harness
 // ----------------------------------------------------------------------------
 
+func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
+	actual, err := g2configuration.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		test.Log("Error:", err.Error())
+		assert.FailNow(test, actual)
+	}
+}
+
 func TestGetObject(test *testing.T) {
 	ctx := context.TODO()
 	getTestObject(ctx)

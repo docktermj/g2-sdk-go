@@ -57,6 +57,14 @@ func setupSuite(test testing.TB) func(test testing.TB) {
 	}
 }
 
+func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
+	actual, err := g2configuration.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		test.Log("Error:", err.Error())
+		assert.FailNow(test, actual)
+	}
+}
+
 func TestGetObject(test *testing.T) {
 	ctx := context.TODO()
 	getTestObject(ctx)
@@ -68,10 +76,8 @@ func TestGetObject(test *testing.T) {
 
 func TestCheckDBPerf(test *testing.T) {
 	ctx := context.TODO()
-
 	teardownSuite := setupSuite(test)
 	defer teardownSuite(test)
-
 	g2diagnostic := getTestObject(ctx)
 	secondsToRun := 1
 	actual, err := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
