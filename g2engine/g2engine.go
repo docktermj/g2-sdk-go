@@ -642,7 +642,8 @@ func (g2engine *G2engineImpl) GetLastException(ctx context.Context) (string, err
 func (g2engine *G2engineImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
 	//  _DLEXPORT int G2_getLastExceptionCode();
 	var err error = nil
-	return 0, err
+	result := C.G2_getLastExceptionCode()
+	return int(result), err
 }
 
 // TODO: Document.
