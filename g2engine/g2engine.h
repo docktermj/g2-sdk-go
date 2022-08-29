@@ -60,5 +60,6 @@ char* G2_getVirtualEntityByRecordID_local(const char* recordList);
 char* G2_getVirtualEntityByRecordID_V2_local(const char* recordList, const long long flags);
 char* G2_howEntityByEntityID_local(const long long entityID);
 char* G2_howEntityByEntityID_V2_local(const long long entityID, const long long flags);
+char* G2_processRedoRecord_local();
 
 char* G2_stats_local();

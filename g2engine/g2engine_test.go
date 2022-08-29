@@ -600,14 +600,14 @@ func TestProcess(test *testing.T) {
 	testError(test, ctx, g2engine, err)
 }
 
-//func TestProcessRedoRecord(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	actual, err := g2engine.ProcessRedoRecord(ctx)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestProcessRedoRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	actual, err := g2engine.ProcessRedoRecord(ctx)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestProcessRedoRecordWithInfo(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)

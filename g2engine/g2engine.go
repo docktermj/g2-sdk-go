@@ -801,7 +801,11 @@ func (g2engine *G2engineImpl) Process(ctx context.Context, record string) error 
 func (g2engine *G2engineImpl) ProcessRedoRecord(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_processRedoRecord(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2_processRedoRecord_local())
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 11)
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
