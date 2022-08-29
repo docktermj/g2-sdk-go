@@ -483,27 +483,27 @@ func TestGetLastExceptionCode(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestGetRecord(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode := "TEST"
-//	recordID := "111"
-//	actual, err := g2engine.GetRecord(ctx, dataSourceCode, recordID)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestGetRecord_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode := "TEST"
-//	recordID := "111"
-//	var flags int64 = 0
-//	actual, err := g2engine.GetRecord_V2(ctx, dataSourceCode, recordID, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestGetRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	actual, err := g2engine.GetRecord(ctx, dataSourceCode, recordID)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestGetRecord_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	var flags int64 = 0
+	actual, err := g2engine.GetRecord_V2(ctx, dataSourceCode, recordID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestGetRedoRecord(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)

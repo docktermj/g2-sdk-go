@@ -412,6 +412,29 @@ char* G2_getEntityByRecordID_V2_local(const char* dataSourceCode, const char* re
     return charBuff;
 }
 
+
+char* G2_getRecord_local(const char* dataSourceCode, const char* recordID) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *) malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_getRecord(dataSourceCode, recordID, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+char* G2_getRecord_V2_local(const char* dataSourceCode, const char* recordID, const long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *) malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_getRecord_V2(dataSourceCode, recordID, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
 char* G2_stats_local() {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);

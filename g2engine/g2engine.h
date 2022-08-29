@@ -52,7 +52,8 @@ char* G2_getEntityByEntityID_local(const long long entityID);
 char* G2_getEntityByEntityID_V2_local(const long long entityID, const long long flags);
 char* G2_getEntityByRecordID_local(const char* dataSourceCode, const char* recordID);
 char* G2_getEntityByRecordID_V2_local(const char* dataSourceCode, const char* recordID, const long long flags);
-
+char* G2_getRecord_local(const char* dataSourceCode, const char* recordID);
+char* G2_getRecord_V2_local(const char* dataSourceCode, const char* recordID, const long long flags);
 
 
 char* G2_stats_local();
