@@ -504,22 +504,22 @@ func TestGetRecord_V2(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestGetRedoRecord(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	actual, err := g2engine.GetRedoRecord(ctx)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestGetRepositoryLastModifiedTime(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	actual, err := g2engine.GetRepositoryLastModifiedTime(ctx)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestGetRedoRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	actual, err := g2engine.GetRedoRecord(ctx)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestGetRepositoryLastModifiedTime(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	actual, err := g2engine.GetRepositoryLastModifiedTime(ctx)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestGetVirtualEntityByRecordID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)

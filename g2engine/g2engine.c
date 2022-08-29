@@ -435,6 +435,23 @@ char* G2_getRecord_V2_local(const char* dataSourceCode, const char* recordID, co
     return charBuff;
 }
 
+char* G2_getRedoRecord_local() {
+    size_t bufferSize = 1;
+    char *charBuff = (char *) malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_getRedoRecord(&charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+long long G2_getRepositoryLastModifiedTime_local() {
+    long long repositoryLastModifiedTime;
+    int returnCode = G2_getActiveConfigID(&repositoryLastModifiedTime);
+    return repositoryLastModifiedTime;
+}
+
 char* G2_stats_local() {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);

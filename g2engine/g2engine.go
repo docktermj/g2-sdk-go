@@ -680,14 +680,19 @@ func (g2engine *G2engineImpl) GetRecord_V2(ctx context.Context, dataSourceCode s
 func (g2engine *G2engineImpl) GetRedoRecord(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_getRedoRecord(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2_getRedoRecord_local())
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 11)
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) GetRepositoryLastModifiedTime(ctx context.Context) (int64, error) {
 	//  _DLEXPORT int G2_getRepositoryLastModifiedTime(long long* lastModifiedTime);
 	var err error = nil
-	return 0, err
+	result := C.G2_getRepositoryLastModifiedTime_local()
+	return int64(result), err
 }
 
 // TODO: Document.
