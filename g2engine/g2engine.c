@@ -474,6 +474,29 @@ char* G2_getVirtualEntityByRecordID_V2_local(const char* recordList, const long 
     return charBuff;
 }
 
+char* G2_howEntityByEntityID_local(const long long entityID) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *) malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_howEntityByEntityID(entityID, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+char* G2_howEntityByEntityID_V2_local(const long long entityID, const long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *) malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_howEntityByEntityID_V2(entityID, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+
 char* G2_stats_local() {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);

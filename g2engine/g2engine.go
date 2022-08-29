@@ -725,14 +725,22 @@ func (g2engine *G2engineImpl) GetVirtualEntityByRecordID_V2(ctx context.Context,
 func (g2engine *G2engineImpl) HowEntityByEntityID(ctx context.Context, entityID int64) (string, error) {
 	//  _DLEXPORT int G2_howEntityByEntityID(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2_howEntityByEntityID_local(C.longlong(entityID)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, strconv.FormatInt(entityID, 10))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) HowEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_howEntityByEntityID_V2(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	stringBuffer := C.GoString(C.G2_howEntityByEntityID_V2_local(C.longlong(entityID), C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, strconv.FormatInt(entityID, 10), strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
 }
 
 // Init initializes the Senzing G2diagnosis.

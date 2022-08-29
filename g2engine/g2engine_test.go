@@ -539,25 +539,25 @@ func TestGetVirtualEntityByRecordID_V2(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestHowEntityByEntityID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var entityID int64 = 1
-//	actual, err := g2engine.HowEntityByEntityID(ctx, entityID)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestHowEntityByEntityID_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var entityID int64 = 1
-//	var flags int64 = 0
-//	actual, err := g2engine.HowEntityByEntityID_V2(ctx, entityID, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestHowEntityByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var entityID int64 = 1
+	actual, err := g2engine.HowEntityByEntityID(ctx, entityID)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestHowEntityByEntityID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var entityID int64 = 1
+	var flags int64 = 0
+	actual, err := g2engine.HowEntityByEntityID_V2(ctx, entityID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestInit(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
