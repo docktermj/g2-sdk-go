@@ -747,17 +747,11 @@ func (g2engine *G2engineImpl) HowEntityByEntityID_V2(ctx context.Context, entity
 func (g2engine *G2engineImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	var err error = nil
-
-	// Transform Go datatypes to C datatypes.
-
 	moduleNameForC := C.CString(moduleName)
 	defer C.free(unsafe.Pointer(moduleNameForC))
-
 	iniParamsForC := C.CString(iniParams)
 	defer C.free(unsafe.Pointer(iniParamsForC))
-
 	result := C.G2_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
-
 	if result != 0 {
 		err = g2engine.getError(ctx, 44, moduleName, iniParams, strconv.Itoa(verboseLogging))
 	}
@@ -768,6 +762,14 @@ func (g2engine *G2engineImpl) Init(ctx context.Context, moduleName string, iniPa
 func (g2engine *G2engineImpl) InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error {
 	//  _DLEXPORT int G2_initWithConfigID(const char *moduleName, const char *iniParams, const long long initConfigID, const int verboseLogging);
 	var err error = nil
+	moduleNameForC := C.CString(moduleName)
+	defer C.free(unsafe.Pointer(moduleNameForC))
+	iniParamsForC := C.CString(iniParams)
+	defer C.free(unsafe.Pointer(iniParamsForC))
+	result := C.G2_initWithConfigID(moduleNameForC, iniParamsForC, C.longlong(initConfigID), C.int(verboseLogging))
+	if result != 0 {
+		err = g2engine.getError(ctx, 44, moduleName, iniParams, strconv.FormatInt(initConfigID, 10), strconv.Itoa(verboseLogging))
+	}
 	return err
 }
 
@@ -775,6 +777,10 @@ func (g2engine *G2engineImpl) InitWithConfigID(ctx context.Context, moduleName s
 func (g2engine *G2engineImpl) PrimeEngine(ctx context.Context) error {
 	//  _DLEXPORT int G2_primeEngine();
 	var err error = nil
+	result := C.G2_primeEngine()
+	if result != 0 {
+		err = g2engine.getError(ctx, 44)
+	}
 	return err
 }
 
@@ -782,6 +788,12 @@ func (g2engine *G2engineImpl) PrimeEngine(ctx context.Context) error {
 func (g2engine *G2engineImpl) Process(ctx context.Context, record string) error {
 	//  _DLEXPORT int G2_process(const char *record);
 	var err error = nil
+	recordForC := C.CString(record)
+	defer C.free(unsafe.Pointer(recordForC))
+	result := C.G2_process(recordForC)
+	if result != 0 {
+		err = g2engine.getError(ctx, 44, record)
+	}
 	return err
 }
 

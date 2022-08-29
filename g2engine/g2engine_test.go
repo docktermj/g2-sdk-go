@@ -558,48 +558,48 @@ func TestHowEntityByEntityID_V2(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestInit(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	moduleName := "Test module name"
-//	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-//	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
-//	if jsonErr != nil {
-//		logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
-//	}
-//	err := g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
-//	testError(test, ctx, g2engine, err)
-//}
-//
-//func TestInitWithConfigID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	moduleName := "Test module name"
-//	var initConfigID int64 = 1
-//	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-//	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
-//	if jsonErr != nil {
-//		logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
-//	}
-//	err := g2engine.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
-//	testError(test, ctx, g2engine, err)
-//}
-//
-//func TestPrimeEngine(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	err := g2engine.PrimeEngine(ctx)
-//	testError(test, ctx, g2engine, err)
-//}
-//
-//func TestProcess(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	record := ""
-//	err := g2engine.Process(ctx, record)
-//	testError(test, ctx, g2engine, err)
-//}
-//
+func TestInit(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	moduleName := "Test module name"
+	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
+	if jsonErr != nil {
+		logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
+	}
+	err := g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestInitWithConfigID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	moduleName := "Test module name"
+	var initConfigID int64 = 1
+	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
+	if jsonErr != nil {
+		logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
+	}
+	err := g2engine.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestPrimeEngine(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	err := g2engine.PrimeEngine(ctx)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestProcess(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "444", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	err := g2engine.Process(ctx, record)
+	testError(test, ctx, g2engine, err)
+}
+
 //func TestProcessRedoRecord(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
