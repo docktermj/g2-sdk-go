@@ -152,7 +152,7 @@ type G2engine interface {
 	GetRecord_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
 	GetRedoRecord(ctx context.Context) (string, error)
 	GetRepositoryLastModifiedTime(ctx context.Context) (int64, error)
-	GetVirtualEntityByRecordID(ctx context.Context, recordList string) (int64, error)
+	GetVirtualEntityByRecordID(ctx context.Context, recordList string) (string, error)
 	GetVirtualEntityByRecordID_V2(ctx context.Context, recordList string, flags int64) (string, error)
 	HowEntityByEntityID(ctx context.Context, entityID int64) (string, error)
 	HowEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error)

@@ -452,6 +452,28 @@ long long G2_getRepositoryLastModifiedTime_local() {
     return repositoryLastModifiedTime;
 }
 
+char* G2_getVirtualEntityByRecordID_local(const char* recordList) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *) malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_getVirtualEntityByRecordID(recordList, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
+char* G2_getVirtualEntityByRecordID_V2_local(const char* recordList, const long long flags) {
+    size_t bufferSize = 1;
+    char *charBuff = (char *) malloc(1);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_getVirtualEntityByRecordID_V2(recordList, flags, &charBuff, &bufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuff;
+}
+
 char* G2_stats_local() {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);

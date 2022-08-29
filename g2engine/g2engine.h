@@ -56,7 +56,8 @@ char* G2_getRecord_local(const char* dataSourceCode, const char* recordID);
 char* G2_getRecord_V2_local(const char* dataSourceCode, const char* recordID, const long long flags);
 char* G2_getRedoRecord_local();
 long long G2_getRepositoryLastModifiedTime_local();
-
+char* G2_getVirtualEntityByRecordID_local(const char* recordList);
+char* G2_getVirtualEntityByRecordID_V2_local(const char* recordList, const long long flags);
 
 
 char* G2_stats_local();

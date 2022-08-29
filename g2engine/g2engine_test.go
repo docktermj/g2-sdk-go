@@ -520,25 +520,25 @@ func TestGetRepositoryLastModifiedTime(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestGetVirtualEntityByRecordID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	recordList := ""
-//	actual, err := g2engine.GetVirtualEntityByRecordID(ctx, recordList)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestGetVirtualEntityByRecordID_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	recordList := ""
-//	var flags int64 = 0
-//	actual, err := g2engine.GetVirtualEntityByRecordID_V2(ctx, recordList, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestGetVirtualEntityByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "222"}]}`
+	actual, err := g2engine.GetVirtualEntityByRecordID(ctx, recordList)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestGetVirtualEntityByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "222"}]}`
+	var flags int64 = 0
+	actual, err := g2engine.GetVirtualEntityByRecordID_V2(ctx, recordList, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestHowEntityByEntityID(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)

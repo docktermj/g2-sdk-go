@@ -696,17 +696,29 @@ func (g2engine *G2engineImpl) GetRepositoryLastModifiedTime(ctx context.Context)
 }
 
 // TODO: Document.
-func (g2engine *G2engineImpl) GetVirtualEntityByRecordID(ctx context.Context, recordList string) (int64, error) {
+func (g2engine *G2engineImpl) GetVirtualEntityByRecordID(ctx context.Context, recordList string) (string, error) {
 	//  _DLEXPORT int G2_getVirtualEntityByRecordID(const char* recordList, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return 0, err
+	recordListForC := C.CString(recordList)
+	defer C.free(unsafe.Pointer(recordListForC))
+	stringBuffer := C.GoString(C.G2_getVirtualEntityByRecordID_local(recordListForC))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, recordList)
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) GetVirtualEntityByRecordID_V2(ctx context.Context, recordList string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_getVirtualEntityByRecordID_V2(const char* recordList, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	recordListForC := C.CString(recordList)
+	defer C.free(unsafe.Pointer(recordListForC))
+	stringBuffer := C.GoString(C.G2_getVirtualEntityByRecordID_V2_local(recordListForC, C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 15, recordList, strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
