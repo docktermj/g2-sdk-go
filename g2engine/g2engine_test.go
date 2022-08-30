@@ -608,16 +608,16 @@ func TestProcessRedoRecord(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestProcessRedoRecordWithInfo(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var flags int64 = 0
-//	actualInfo, actual, err := g2engine.ProcessRedoRecordWithInfo(ctx, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual Info:", actualInfo)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestProcessRedoRecordWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var flags int64 = 0
+	actual, actualInfo, err := g2engine.ProcessRedoRecordWithInfo(ctx, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+	test.Log("Actual Info:", actualInfo)
+}
+
 //func TestProcessWithInfo(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)

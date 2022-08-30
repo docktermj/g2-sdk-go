@@ -22,6 +22,12 @@ struct G2_getActiveConfigID_result {
     int returnCode;
 };
 
+struct G2_processRedoRecordWithInfo_result {
+    char* response;
+    char* withInfo;
+    int returnCode;
+};
+
 void* G2_resizeStringBuffer(void *ptr, size_t size);
 char* G2_addRecordWithInfo_local(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags);
 struct G2_addRecordWithInfoWithReturnedRecordID_result G2_addRecordWithInfoWithReturnedRecordID_local(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags);
@@ -61,5 +67,6 @@ char* G2_getVirtualEntityByRecordID_V2_local(const char* recordList, const long 
 char* G2_howEntityByEntityID_local(const long long entityID);
 char* G2_howEntityByEntityID_V2_local(const long long entityID, const long long flags);
 char* G2_processRedoRecord_local();
+struct G2_processRedoRecordWithInfo_result G2_processRedoRecordWithInfo_local(const long long flags);
 
 char* G2_stats_local();

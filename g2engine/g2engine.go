@@ -812,7 +812,14 @@ func (g2engine *G2engineImpl) ProcessRedoRecord(ctx context.Context) (string, er
 func (g2engine *G2engineImpl) ProcessRedoRecordWithInfo(ctx context.Context, flags int64) (string, string, error) {
 	//  _DLEXPORT int G2_processRedoRecordWithInfo(const long long flags, char **responseBuf, size_t *bufSize, char **infoBuf, size_t *infoBufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", "", err
+	result := C.G2_processRedoRecordWithInfo_local(C.longlong(flags))
+	response := C.GoString(result.response)
+	withInfo := C.GoString(result.withInfo)
+	returnCode := result.returnCode
+	if returnCode != 0 {
+		err = g2engine.getError(ctx, 3, strconv.FormatInt(flags, 2))
+	}
+	return response, withInfo, err
 }
 
 // TODO: Document.
