@@ -618,60 +618,53 @@ func TestProcessRedoRecordWithInfo(test *testing.T) {
 	test.Log("Actual Info:", actualInfo)
 }
 
-//func TestProcessWithInfo(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	record := ""
-//	var flags int64 = 0
-//	actual, err := g2engine.ProcessWithInfo(ctx, record, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestProcessWithResponse(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	record := ""
-//	actual, err := g2engine.ProcessWithResponse(ctx, record)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestProcessWithResponseResize(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	record := ""
-//	actual, err := g2engine.ProcessWithResponseResize(ctx, record)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestPurgeRepository(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	err := g2engine.PurgeRepository(ctx)
-//	testError(test, ctx, g2engine, err)
-//}
-//
-//func TestReevaluateEntity(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var entityID int64 = 1
-//	var flags int64 = 0
-//	err := g2engine.ReevaluateEntity(ctx, entityID, flags)
-//	testError(test, ctx, g2engine, err)
-//}
-//
-//func TestReevaluateEntityWithInfo(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var entityID int64 = 1
-//	var flags int64 = 0
-//	actual, err := g2engine.ReevaluateEntityWithInfo(ctx, entityID, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestProcessWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "555", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	var flags int64 = 0
+	actual, err := g2engine.ProcessWithInfo(ctx, record, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestProcessWithResponse(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "666", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	actual, err := g2engine.ProcessWithResponse(ctx, record)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestProcessWithResponseResize(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "777", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	actual, err := g2engine.ProcessWithResponseResize(ctx, record)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestReevaluateEntity(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var entityID int64 = 1
+	var flags int64 = 0
+	err := g2engine.ReevaluateEntity(ctx, entityID, flags)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestReevaluateEntityWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	var entityID int64 = 1
+	var flags int64 = 0
+	actual, err := g2engine.ReevaluateEntityWithInfo(ctx, entityID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestReevaluateRecord(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
@@ -862,6 +855,13 @@ func TestDeleteRecordWithInfo(test *testing.T) {
 	actual, err := g2engine.DeleteRecordWithInfo(ctx, dataSourceCode, recordID, loadID, flags)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
+}
+
+func TestPurgeRepository(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	err := g2engine.PurgeRepository(ctx)
+	testError(test, ctx, g2engine, err)
 }
 
 func TestDestroy(test *testing.T) {
