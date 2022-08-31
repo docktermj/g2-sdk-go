@@ -72,7 +72,7 @@ char* G2_processWithInfo_helper(const char* record, const long long flags);
 char* G2_processWithResponse_helper(const char* record);
 char* G2_processWithResponseResize_helper(const char* record);
 char* G2_reevaluateEntityWithInfo_helper(const long long entityID, const long long flags);
-char* G2_reevaluateRecord_helper(const char* dataSourceCode, const char* recordID, const long long flags);
+char* G2_reevaluateRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const long long flags);
 
 
 char* G2_stats_helper();

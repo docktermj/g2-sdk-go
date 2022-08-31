@@ -565,6 +565,17 @@ char* G2_reevaluateEntityWithInfo_helper(const long long entityID, const long lo
     return charBuffer;
 }
 
+char* G2_reevaluateRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const long long flags) {
+    size_t charBufferSize = 1;
+    char *charBuffer = (char *) malloc(charBufferSize);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_reevaluateRecordWithInfo(dataSourceCode, recordID, flags, &charBuffer, &charBufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuffer;
+}
+
 char* G2_stats_helper() {
     size_t charBufferSize = 1;
     char *charBuffer = (char *) malloc(charBufferSize);

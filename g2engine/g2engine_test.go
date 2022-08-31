@@ -675,17 +675,17 @@ func TestReevaluateRecord(test *testing.T) {
 	testError(test, ctx, g2engine, err)
 }
 
-//func TestReevaluateRecordWithInfo(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode := "TEST"
-//	recordID := "111"
-//	var flags int64 = 0
-//	actual, err := g2engine.ReevaluateRecordWithInfo(ctx, dataSourceCode, recordID, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestReevaluateRecordWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	var flags int64 = 0
+	actual, err := g2engine.ReevaluateRecordWithInfo(ctx, dataSourceCode, recordID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestReinit(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)
