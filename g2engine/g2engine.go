@@ -928,6 +928,10 @@ func (g2engine *G2engineImpl) ReevaluateRecordWithInfo(ctx context.Context, data
 func (g2engine *G2engineImpl) Reinit(ctx context.Context, initConfigID int64) error {
 	//  _DLEXPORT int G2_reinit(const long long initConfigID);
 	var err error = nil
+	result := C.G2_reinit(C.longlong(initConfigID))
+	if result != 0 {
+		err = g2engine.getError(ctx, 15, strconv.FormatInt(initConfigID, 10))
+	}
 	return err
 }
 
@@ -935,6 +939,18 @@ func (g2engine *G2engineImpl) Reinit(ctx context.Context, initConfigID int64) er
 func (g2engine *G2engineImpl) ReplaceRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error {
 	//  _DLEXPORT int G2_replaceRecord(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID);
 	var err error = nil
+	dataSourceCodeForC := C.CString(dataSourceCode)
+	defer C.free(unsafe.Pointer(dataSourceCodeForC))
+	recordIDForC := C.CString(recordID)
+	defer C.free(unsafe.Pointer(recordIDForC))
+	jsonDataForC := C.CString(jsonData)
+	defer C.free(unsafe.Pointer(jsonDataForC))
+	loadIDForC := C.CString(loadID)
+	defer C.free(unsafe.Pointer(loadIDForC))
+	result := C.G2_replaceRecord(dataSourceCodeForC, recordIDForC, jsonDataForC, loadIDForC)
+	if result != 0 {
+		err = g2engine.getError(ctx, 1, dataSourceCode, recordID, jsonData, loadID)
+	}
 	return err
 }
 
@@ -942,21 +958,45 @@ func (g2engine *G2engineImpl) ReplaceRecord(ctx context.Context, dataSourceCode 
 func (g2engine *G2engineImpl) ReplaceRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_replaceRecordWithInfo(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	dataSourceCodeForC := C.CString(dataSourceCode)
+	defer C.free(unsafe.Pointer(dataSourceCodeForC))
+	recordIDForC := C.CString(recordID)
+	defer C.free(unsafe.Pointer(recordIDForC))
+	jsonDataForC := C.CString(jsonData)
+	defer C.free(unsafe.Pointer(jsonDataForC))
+	loadIDForC := C.CString(loadID)
+	defer C.free(unsafe.Pointer(loadIDForC))
+	stringBuffer := C.GoString(C.G2_replaceRecordWithInfo_helper(dataSourceCodeForC, recordIDForC, jsonDataForC, loadIDForC, C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 2, dataSourceCode, recordID, jsonData, loadID, strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) SearchByAttributes(ctx context.Context, jsonData string) (string, error) {
 	//  _DLEXPORT int G2_searchByAttributes(const char* jsonData, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	jsonDataForC := C.CString(jsonData)
+	defer C.free(unsafe.Pointer(jsonDataForC))
+	stringBuffer := C.GoString(C.G2_searchByAttributes_helper(jsonDataForC))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 2, jsonData)
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.
 func (g2engine *G2engineImpl) SearchByAttributes_V2(ctx context.Context, jsonData string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_searchByAttributes_V2(const char* jsonData, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	jsonDataForC := C.CString(jsonData)
+	defer C.free(unsafe.Pointer(jsonDataForC))
+	stringBuffer := C.GoString(C.G2_searchByAttributes_V2_helper(jsonDataForC, C.longlong(flags)))
+	if len(stringBuffer) == 0 {
+		err = g2engine.getError(ctx, 2, jsonData, strconv.FormatInt(flags, 2))
+	}
+	return stringBuffer, err
 }
 
 // TODO: Document.

@@ -686,65 +686,67 @@ func TestReevaluateRecordWithInfo(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestReinit(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	var initConfigID int64 = 0
-//	err := g2engine.Reinit(ctx, initConfigID)
-//	testError(test, ctx, g2engine, err)
-//}
-//
-//func TestReplaceRecord(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode := "TEST"
-//	recordID := "111"
-//	jsonData := ""
-//	loadID := ""
-//	err := g2engine.ReplaceRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
-//	testError(test, ctx, g2engine, err)
-//}
-//
-//func TestReplaceRecordWithInfo(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode := "TEST"
-//	recordID := "111"
-//	jsonData := ""
-//	loadID := ""
-//	var flags int64 = 0
-//	actual, err := g2engine.ReplaceRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestSearchByAttributes(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	jsonData := ""
-//	actual, err := g2engine.SearchByAttributes(ctx, jsonData)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestSearchByAttributes_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	jsonData := ""
-//	var flags int64 = 0
-//	actual, err := g2engine.SearchByAttributes_V2(ctx, jsonData, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestStats(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	actual, err := g2engine.Stats(ctx)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
+func TestReinit(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	initConfigID, err := g2engine.GetActiveConfigID(ctx)
+	testError(test, ctx, g2engine, err)
+	err = g2engine.Reinit(ctx, initConfigID)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", initConfigID)
+}
+
+func TestReplaceRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1984", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "111", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID := "TEST"
+	err := g2engine.ReplaceRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestReplaceRecordWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1985", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "111", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID := "TEST"
+	var flags int64 = 0
+	actual, err := g2engine.ReplaceRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestSearchByAttributes(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	jsonData := `{"NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "SEAMAN"}], "SSN_NUMBER": "053-39-3251"}`
+	actual, err := g2engine.SearchByAttributes(ctx, jsonData)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestSearchByAttributes_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	jsonData := `{"NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "SEAMAN"}], "SSN_NUMBER": "053-39-3251"}`
+	var flags int64 = 0
+	actual, err := g2engine.SearchByAttributes_V2(ctx, jsonData, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestStats(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	actual, err := g2engine.Stats(ctx)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
 //func TestWhyEntities(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx)

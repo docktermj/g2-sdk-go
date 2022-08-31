@@ -576,6 +576,42 @@ char* G2_reevaluateRecordWithInfo_helper(const char* dataSourceCode, const char*
     return charBuffer;
 }
 
+char* G2_replaceRecordWithInfo_helper(const char* dataSourceCode,
+        const char* recordID, const char* jsonData, const char *loadID,
+        const long long flags) {
+    size_t charBufferSize = 1;
+    char *charBuffer = (char *) malloc(charBufferSize);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_replaceRecordWithInfo(dataSourceCode, recordID, jsonData,
+            loadID, flags, &charBuffer, &charBufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuffer;
+}
+
+char* G2_searchByAttributes_helper(const char* jsonData) {
+    size_t charBufferSize = 1;
+    char *charBuffer = (char *) malloc(charBufferSize);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_searchByAttributes(jsonData, &charBuffer, &charBufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuffer;
+}
+
+char* G2_searchByAttributes_V2_helper(const char* jsonData, const long long flags) {
+    size_t charBufferSize = 1;
+    char *charBuffer = (char *) malloc(charBufferSize);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_searchByAttributes_V2(jsonData, flags, &charBuffer, &charBufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuffer;
+}
+
 char* G2_stats_helper() {
     size_t charBufferSize = 1;
     char *charBuffer = (char *) malloc(charBufferSize);

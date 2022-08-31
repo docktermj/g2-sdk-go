@@ -73,6 +73,7 @@ char* G2_processWithResponse_helper(const char* record);
 char* G2_processWithResponseResize_helper(const char* record);
 char* G2_reevaluateEntityWithInfo_helper(const long long entityID, const long long flags);
 char* G2_reevaluateRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const long long flags);
-
-
+char* G2_replaceRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags);
+char* G2_searchByAttributes_helper(const char* jsonData);
+char* G2_searchByAttributes_V2_helper(const char* jsonData, const long long flags);
 char* G2_stats_helper();
