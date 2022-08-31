@@ -77,3 +77,8 @@ char* G2_replaceRecordWithInfo_helper(const char* dataSourceCode, const char* re
 char* G2_searchByAttributes_helper(const char* jsonData);
 char* G2_searchByAttributes_V2_helper(const char* jsonData, const long long flags);
 char* G2_stats_helper();
+char* G2_whyEntities_helper(const long long entityID1, const long long entityID2);
+char* G2_whyEntities_V2_helper(const long long entityID1, const long long entityID2, const long long flags);
+char* G2_whyEntityByEntityID_helper(const long long entityID1);
+char* G2_whyEntityByEntityID_V2_helper(const long long entityID1, const long long flags);
+

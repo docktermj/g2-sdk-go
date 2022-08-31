@@ -623,3 +623,46 @@ char* G2_stats_helper() {
     return charBuffer;
 }
 
+char* G2_whyEntities_helper(const long long entityID1, const long long entityID2) {
+    size_t charBufferSize = 1;
+    char *charBuffer = (char *) malloc(charBufferSize);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_whyEntities(entityID1, entityID2, &charBuffer, &charBufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuffer;
+}
+
+char* G2_whyEntities_V2_helper(const long long entityID1, const long long entityID2, const long long flags) {
+    size_t charBufferSize = 1;
+    char *charBuffer = (char *) malloc(charBufferSize);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_whyEntities_V2(entityID1, entityID2, flags, &charBuffer, &charBufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuffer;
+}
+
+char* G2_whyEntityByEntityID_helper(const long long entityID1) {
+    size_t charBufferSize = 1;
+    char *charBuffer = (char *) malloc(charBufferSize);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_whyEntityByEntityID(entityID1, &charBuffer, &charBufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuffer;
+}
+
+char* G2_whyEntityByEntityID_V2_helper(const long long entityID1, const long long flags) {
+    size_t charBufferSize = 1;
+    char *charBuffer = (char *) malloc(charBufferSize);
+    resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
+    int returnCode = G2_whyEntityByEntityID_V2(entityID1, flags, &charBuffer, &charBufferSize, resizeFuncPointer);
+    if (returnCode != 0) {
+        return "";
+    }
+    return charBuffer;
+}
