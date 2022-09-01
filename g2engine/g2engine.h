@@ -81,4 +81,9 @@ char* G2_whyEntities_helper(const long long entityID1, const long long entityID2
 char* G2_whyEntities_V2_helper(const long long entityID1, const long long entityID2, const long long flags);
 char* G2_whyEntityByEntityID_helper(const long long entityID1);
 char* G2_whyEntityByEntityID_V2_helper(const long long entityID1, const long long flags);
+char* G2_whyEntityByRecordID_helper(const char* dataSourceCode, const char* recordID);
+char* G2_whyEntityByRecordID_V2_helper(const char* dataSourceCode, const char* recordID, const long long flags);
+char* G2_whyRecords_helper(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2,  const char* recordID2);
+char* G2_whyRecords_V2_helper(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2,  const char* recordID2, const long long flags);
+
 

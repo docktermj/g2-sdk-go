@@ -787,60 +787,58 @@ func TestWhyEntityByEntityID_V2(test *testing.T) {
 	test.Log("Actual:", actual)
 }
 
-//func TestWhyEntityByRecordID(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode := "TEST"
-//	recordID := "111"
-//	actual, err := g2engine.WhyEntityByRecordID(ctx, dataSourceCode, recordID)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestWhyEntityByRecordID_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode := "TEST"
-//	recordID := "111"
-//	var flags int64 = 0
-//	actual, err := g2engine.WhyEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestWhyRecords(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode1 := "TEST"
-//	recordID1 := "111"
-//	dataSourceCode2 := "TEST"
-//	recordID2 := "222"
-//	actual, err := g2engine.WhyRecords(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-//
-//func TestWhyRecords_V2(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx)
-//	dataSourceCode1 := "TEST"
-//	recordID1 := "111"
-//	dataSourceCode2 := "TEST"
-//	recordID2 := "222"
-//	var flags int64 = 0
-//	actual, err := g2engine.WhyRecords_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
+func TestWhyEntityByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	actual, err := g2engine.WhyEntityByRecordID(ctx, dataSourceCode, recordID)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestWhyEntityByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	var flags int64 = 0
+	actual, err := g2engine.WhyEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestWhyRecords(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	actual, err := g2engine.WhyRecords(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
+
+func TestWhyRecords_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	var flags int64 = 0
+	actual, err := g2engine.WhyRecords_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags)
+	testError(test, ctx, g2engine, err)
+	test.Log("Actual:", actual)
+}
 
 func TestDeleteRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
-
 	dataSourceCode := "TEST"
 	recordID := "111"
 	loadID := "TEST"
-
 	err := g2engine.DeleteRecord(ctx, dataSourceCode, recordID, loadID)
 	testError(test, ctx, g2engine, err)
 }
@@ -848,12 +846,10 @@ func TestDeleteRecord(test *testing.T) {
 func TestDeleteRecordWithInfo(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
-
 	dataSourceCode := "TEST"
 	recordID := "111"
 	loadID := "TEST"
 	var flags int64 = 0
-
 	actual, err := g2engine.DeleteRecordWithInfo(ctx, dataSourceCode, recordID, loadID, flags)
 	testError(test, ctx, g2engine, err)
 	test.Log("Actual:", actual)
