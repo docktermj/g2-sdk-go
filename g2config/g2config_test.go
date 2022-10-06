@@ -82,71 +82,46 @@ func TestClearLastException(test *testing.T) {
 }
 
 func TestClose(test *testing.T) {
-	ctx := context.TODO()
-	g2config := getTestObject(ctx)
-	err := g2config.ClearLastException(ctx)
-	testError(test, ctx, g2config, err)
 }
 
 func TestCreate(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx)
-	err := g2config.ClearLastException(ctx)
+	actual, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
+	test.Log("Actual:", actual)
 }
 
 func TestDeleteDataSource(test *testing.T) {
-	ctx := context.TODO()
-	g2config := getTestObject(ctx)
-	err := g2config.ClearLastException(ctx)
-	testError(test, ctx, g2config, err)
 }
 
 func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
-	err := g2config.ClearLastException(ctx)
-	testError(test, ctx, g2config, err)
+	g2diagnostic := getTestObject(ctx)
+	actual, err := g2config.GetLastException(ctx)
+	testError(test, ctx, g2diagnostic, err)
+	test.Log("Actual:", actual)
 }
 
 func TestGetLastExceptionCode(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
-	err := g2config.ClearLastException(ctx)
-	testError(test, ctx, g2config, err)
+	g2diagnostic := getTestObject(ctx)
+	actual, err := g2config.GetLastExceptionCode(ctx)
+	testError(test, ctx, g2diagnostic, err)
+	test.Log("Actual:", actual)
 }
 
 func TestInit(test *testing.T) {
-	ctx := context.TODO()
-	g2config := getTestObject(ctx)
-	err := g2config.ClearLastException(ctx)
-	testError(test, ctx, g2config, err)
 }
 
 func TestListDataSources(test *testing.T) {
-	ctx := context.TODO()
-	g2config := getTestObject(ctx)
-	err := g2config.ClearLastException(ctx)
-	testError(test, ctx, g2config, err)
 }
 
 func TestLoad(test *testing.T) {
-	ctx := context.TODO()
-	g2config := getTestObject(ctx)
-	err := g2config.ClearLastException(ctx)
-	testError(test, ctx, g2config, err)
 }
 
 func TestSave(test *testing.T) {
-	ctx := context.TODO()
-	g2config := getTestObject(ctx)
-	err := g2config.ClearLastException(ctx)
-	testError(test, ctx, g2config, err)
 }
 
 func TestDestroy(test *testing.T) {
-	ctx := context.TODO()
-	g2config := getTestObject(ctx)
-	err := g2config.Destroy(ctx)
-	testError(test, ctx, g2config, err)
 }

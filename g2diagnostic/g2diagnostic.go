@@ -231,16 +231,11 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 }
 
 // TODO: Document.
-func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) (string, error) {
-	//  _DLEXPORT int G2Diagnostic_getLastException(char *buffer, const size_t bufSize);
+func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
+	//  _DLEXPORT int G2Diagnostic_getLastExceptionCode();
 	var err error = nil
-	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
-	result := C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	if result != 0 {
-		err = g2diagnostic.getError(ctx, 14)
-	}
-	stringBuffer = bytes.Trim(stringBuffer, "\x00")
-	return string(stringBuffer), err
+	result := C.G2Config_getLastExceptionCode()
+	return int(result), err
 }
 
 // GetLogicalCores returns the number of logical cores on the host system.

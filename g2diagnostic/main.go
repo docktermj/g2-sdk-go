@@ -47,7 +47,7 @@ type G2diagnostic interface {
 	GetFeature(ctx context.Context, libFeatID int64) (string, error)
 	GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount int) (string, error)
 	GetLastException(ctx context.Context) (string, error)
-	GetLastExceptionCode(ctx context.Context) (string, error)
+	GetLastExceptionCode(ctx context.Context) (int, error)
 	GetLogicalCores(ctx context.Context) (int, error)
 	GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error)
 	GetPhysicalCores(ctx context.Context) (int, error)

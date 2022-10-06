@@ -11,7 +11,9 @@ package g2config
 import "C"
 
 import (
+	"bytes"
 	"context"
+	"unsafe"
 
 	"github.com/docktermj/go-xyzzy-helpers/logger"
 )
@@ -74,6 +76,7 @@ func (g2config *G2configImpl) Create(ctx context.Context) (int64, error) {
 	// _DLEXPORT int G2Config_create(ConfigHandle* configHandle);
 
 	var err error = nil
+	//	var configHandle interface{}
 	result := C.G2config_create_helper()
 	return int64(result), err
 }
@@ -89,21 +92,32 @@ func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle
 func (g2config *G2configImpl) Destroy(ctx context.Context) error {
 	// _DLEXPORT int G2Config_destroy();
 	var err error = nil
+	result := C.G2Config_destroy()
+	if result != 0 {
+		err = g2config.getError(ctx, 3)
+	}
 	return err
 }
 
-// TODO: Document.
+// GetLastException returns the last exception encountered in the Senzing Engine.
 func (g2config *G2configImpl) GetLastException(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2Config_getLastException(char *buffer, const size_t bufSize);
 	var err error = nil
-	return "", err
+	stringBuffer := g2config.getByteArray(initialByteArraySize)
+	C.G2Config_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
+	if len(stringBuffer) == 0 {
+		err = logger.BuildError(MessageIdFormat, 2999, "Cannot retrieve last error message.")
+	}
+	return string(stringBuffer), err
 }
 
 // TODO: Document.
 func (g2config *G2configImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
 	//  _DLEXPORT int G2Config_getLastExceptionCode();
 	var err error = nil
-	return 0, err
+	result := C.G2Config_getLastExceptionCode()
+	return int(result), err
 }
 
 // TODO: Document.
