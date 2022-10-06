@@ -70,7 +70,7 @@ func (g2config *G2configImpl) ClearLastException(ctx context.Context) error {
 func (g2config *G2configImpl) Close(ctx context.Context, configHandle unsafe.Pointer) error {
 	// _DLEXPORT int G2Config_close(ConfigHandle configHandle);
 	var err error = nil
-	result := C.G2config_close_helper(C.unsconfigHandle)
+	result := C.G2config_close_helper(configHandle)
 	if result != 0 {
 		err = g2config.getError(ctx, 3)
 	}
