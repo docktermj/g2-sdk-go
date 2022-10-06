@@ -57,10 +57,11 @@ func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle in
 	return "", err
 }
 
-// TODO: Document.
+// ClearLastException returns the available memory, in bytes, on the host system.
 func (g2config *G2configImpl) ClearLastException(ctx context.Context) error {
 	// _DLEXPORT void G2Config_clearLastException();
 	var err error = nil
+	C.G2Config_clearLastException()
 	return err
 }
 
