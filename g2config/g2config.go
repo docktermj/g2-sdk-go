@@ -13,7 +13,6 @@ import "C"
 import (
 	"bytes"
 	"context"
-	"errors"
 	"strconv"
 	"unsafe"
 
@@ -68,21 +67,24 @@ func (g2config *G2configImpl) ClearLastException(ctx context.Context) error {
 }
 
 // TODO: Document.
-func (g2config *G2configImpl) Close(ctx context.Context, configHandle int64) error {
+func (g2config *G2configImpl) Close(ctx context.Context, configHandle unsafe.Pointer) error {
 	// _DLEXPORT int G2Config_close(ConfigHandle configHandle);
 	var err error = nil
+	result := C.G2config_close_helper(C.unsconfigHandle)
+	if result != 0 {
+		err = g2config.getError(ctx, 3)
+	}
 	return err
 }
 
 // TODO: Document.
 func (g2config *G2configImpl) Create(ctx context.Context) (unsafe.Pointer, error) {
 	// _DLEXPORT int G2Config_create(ConfigHandle* configHandle);
-
 	var err error = nil
-	//	var configHandle interface{}
 	result := C.G2config_create_helper()
-	C.fflush(C.stdout)
-
+	if result == 0 {
+		err = g2config.getError(ctx, 3)
+	}
 	return result, err
 }
 
@@ -137,8 +139,6 @@ func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniPa
 	if result != 0 {
 		err = g2config.getError(ctx, 44, moduleName, iniParams, strconv.Itoa(verboseLogging))
 	}
-
-	err = errors.New("Bad Dog")
 	return err
 }
 

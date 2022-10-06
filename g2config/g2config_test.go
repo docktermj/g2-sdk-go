@@ -18,7 +18,6 @@ var (
 
 func getTestObject(ctx context.Context) G2config {
 
-	logger.Infof(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 	if g2config == nil {
 		g2config = &G2configImpl{}
 
@@ -83,6 +82,13 @@ func TestClearLastException(test *testing.T) {
 }
 
 func TestClose(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	configHandle, err := g2config.Create(ctx)
+	testError(test, ctx, g2config, err)
+
+	err = g2config.Close(ctx, configHandle)
+	testError(test, ctx, g2config, err)
 }
 
 func TestCreate(test *testing.T) {

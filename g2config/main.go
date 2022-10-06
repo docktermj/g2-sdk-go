@@ -34,7 +34,7 @@ const MessageIdFormat = "senzing-6014%04d"
 type G2config interface {
 	AddDataSource(ctx context.Context, configHandle int64, inputJson string) (string, error)
 	ClearLastException(ctx context.Context) error
-	Close(ctx context.Context, configHandle int64) error
+	Close(ctx context.Context, configHandle unsafe.Pointer) error
 	Create(ctx context.Context) (unsafe.Pointer, error)
 	DeleteDataSource(ctx context.Context, configHandle int64, inputJson string) error
 	Destroy(ctx context.Context) error
