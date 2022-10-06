@@ -5,10 +5,16 @@
 
 typedef void* ConfigHandle;
 
-uintptr_t G2config_create_helper() {
+void* G2config_create_helper() {
     ConfigHandle configHandle;
+    printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+    fflush(stdout);
     int returnCode = G2Config_create(&configHandle);
-    return (uintptr_t)configHandle;
+    printf("%i\n", returnCode);
+    printf("%p\n", configHandle);
+    printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+    fflush(stdout);
+    return configHandle;
 }
 
 void* G2config_create_helper_1() {

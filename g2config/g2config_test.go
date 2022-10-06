@@ -18,6 +18,7 @@ var (
 
 func getTestObject(ctx context.Context) G2config {
 
+	logger.Infof(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 	if g2config == nil {
 		g2config = &G2configImpl{}
 

@@ -13,6 +13,8 @@ import "C"
 import (
 	"bytes"
 	"context"
+	"errors"
+	"strconv"
 	"unsafe"
 
 	"github.com/docktermj/go-xyzzy-helpers/logger"
@@ -73,13 +75,15 @@ func (g2config *G2configImpl) Close(ctx context.Context, configHandle int64) err
 }
 
 // TODO: Document.
-func (g2config *G2configImpl) Create(ctx context.Context) (int64, error) {
+func (g2config *G2configImpl) Create(ctx context.Context) (unsafe.Pointer, error) {
 	// _DLEXPORT int G2Config_create(ConfigHandle* configHandle);
 
 	var err error = nil
 	//	var configHandle interface{}
 	result := C.G2config_create_helper()
-	return int64(result), err
+	C.fflush(C.stdout)
+
+	return result, err
 }
 
 // TODO: Document.
@@ -125,6 +129,16 @@ func (g2config *G2configImpl) GetLastExceptionCode(ctx context.Context) (int, er
 func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Config_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	var err error = nil
+	moduleNameForC := C.CString(moduleName)
+	defer C.free(unsafe.Pointer(moduleNameForC))
+	iniParamsForC := C.CString(iniParams)
+	defer C.free(unsafe.Pointer(iniParamsForC))
+	result := C.G2Config_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
+	if result != 0 {
+		err = g2config.getError(ctx, 44, moduleName, iniParams, strconv.Itoa(verboseLogging))
+	}
+
+	err = errors.New("Bad Dog")
 	return err
 }
 
