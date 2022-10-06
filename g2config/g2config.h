@@ -4,3 +4,6 @@
 
 typedef void* ExportHandle;
 typedef void*(*resize_buffer_type)(void *, size_t);
+
+
+long long G2config_create_helper();

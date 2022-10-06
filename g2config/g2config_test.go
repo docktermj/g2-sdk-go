@@ -81,6 +81,69 @@ func TestClearLastException(test *testing.T) {
 	testError(test, ctx, g2config, err)
 }
 
+func TestClose(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	err := g2config.ClearLastException(ctx)
+	testError(test, ctx, g2config, err)
+}
+
+func TestCreate(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	err := g2config.ClearLastException(ctx)
+	testError(test, ctx, g2config, err)
+}
+
+func TestDeleteDataSource(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	err := g2config.ClearLastException(ctx)
+	testError(test, ctx, g2config, err)
+}
+
+func TestGetLastException(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	err := g2config.ClearLastException(ctx)
+	testError(test, ctx, g2config, err)
+}
+
+func TestGetLastExceptionCode(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	err := g2config.ClearLastException(ctx)
+	testError(test, ctx, g2config, err)
+}
+
+func TestInit(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	err := g2config.ClearLastException(ctx)
+	testError(test, ctx, g2config, err)
+}
+
+func TestListDataSources(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	err := g2config.ClearLastException(ctx)
+	testError(test, ctx, g2config, err)
+}
+
+func TestLoad(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	err := g2config.ClearLastException(ctx)
+	testError(test, ctx, g2config, err)
+}
+
+func TestSave(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	err := g2config.ClearLastException(ctx)
+	testError(test, ctx, g2config, err)
+}
+
 func TestDestroy(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx)

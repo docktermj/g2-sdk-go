@@ -12,7 +12,7 @@ void* G2Diagnostic_resizeStringBuffer(void *ptr, size_t size) {
     return buffer;
 }
 
-char* G2Diagnostic_checkDBPerf_local(int secondsToRun) {
+char* G2Diagnostic_checkDBPerf_helper(int secondsToRun) {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);
     resize_buffer_type resizeFuncPointer = &G2Diagnostic_resizeStringBuffer;
@@ -24,7 +24,7 @@ char* G2Diagnostic_checkDBPerf_local(int secondsToRun) {
     return charBuff;
 }
 
-char* G2Diagnostic_findEntitiesByFeatureIDs_local(const char *features) {
+char* G2Diagnostic_findEntitiesByFeatureIDs_helper(const char *features) {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);
     resize_buffer_type resizeFuncPointer = &G2Diagnostic_resizeStringBuffer;
@@ -36,7 +36,7 @@ char* G2Diagnostic_findEntitiesByFeatureIDs_local(const char *features) {
     return charBuff;
 }
 
-char* G2Diagnostic_getDataSourceCounts_local() {
+char* G2Diagnostic_getDataSourceCounts_helper() {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);
     resize_buffer_type resizeFuncPointer = &G2Diagnostic_resizeStringBuffer;
@@ -48,7 +48,7 @@ char* G2Diagnostic_getDataSourceCounts_local() {
     return charBuff;
 }
 
-char* G2Diagnostic_getDBInfo_local() {
+char* G2Diagnostic_getDBInfo_helper() {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);
     resize_buffer_type resizeFuncPointer = &G2Diagnostic_resizeStringBuffer;
@@ -60,7 +60,7 @@ char* G2Diagnostic_getDBInfo_local() {
     return charBuff;
 }
 
-char* G2Diagnostic_getEntityDetails_local(const long long entityID,
+char* G2Diagnostic_getEntityDetails_helper(const long long entityID,
         const int includeInternalFeatures) {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);
@@ -73,7 +73,7 @@ char* G2Diagnostic_getEntityDetails_local(const long long entityID,
     return charBuff;
 }
 
-char* G2Diagnostic_getEntityResume_local(const long long entityID) {
+char* G2Diagnostic_getEntityResume_helper(const long long entityID) {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);
     resize_buffer_type resizeFuncPointer = &G2Diagnostic_resizeStringBuffer;
@@ -85,7 +85,7 @@ char* G2Diagnostic_getEntityResume_local(const long long entityID) {
     return charBuff;
 }
 
-char* G2Diagnostic_getEntitySizeBreakdown_local(const size_t minimumEntitySize,
+char* G2Diagnostic_getEntitySizeBreakdown_helper(const size_t minimumEntitySize,
         const int includeInternalFeatures) {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);
@@ -98,7 +98,7 @@ char* G2Diagnostic_getEntitySizeBreakdown_local(const size_t minimumEntitySize,
     return charBuff;
 }
 
-char* G2Diagnostic_getFeature_local(const long long libFeatID) {
+char* G2Diagnostic_getFeature_helper(const long long libFeatID) {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);
     resize_buffer_type resizeFuncPointer = &G2Diagnostic_resizeStringBuffer;
@@ -110,7 +110,7 @@ char* G2Diagnostic_getFeature_local(const long long libFeatID) {
     return charBuff;
 }
 
-char* G2Diagnostic_getGenericFeatures_local(const char *featureType,
+char* G2Diagnostic_getGenericFeatures_helper(const char *featureType,
         const size_t maximumEstimatedCount) {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);
@@ -123,7 +123,7 @@ char* G2Diagnostic_getGenericFeatures_local(const char *featureType,
     return charBuff;
 }
 
-char* G2Diagnostic_getMappingStatistics_local(const int includeInternalFeatures) {
+char* G2Diagnostic_getMappingStatistics_helper(const int includeInternalFeatures) {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);
     resize_buffer_type resizeFuncPointer = &G2Diagnostic_resizeStringBuffer;
@@ -135,7 +135,7 @@ char* G2Diagnostic_getMappingStatistics_local(const int includeInternalFeatures)
     return charBuff;
 }
 
-char* G2Diagnostic_getRelationshipDetails_local(const long long relationshipID,
+char* G2Diagnostic_getRelationshipDetails_helper(const long long relationshipID,
         const int includeInternalFeatures) {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);
@@ -148,7 +148,7 @@ char* G2Diagnostic_getRelationshipDetails_local(const long long relationshipID,
     return charBuff;
 }
 
-char* G2Diagnostic_getResolutionStatistics_local() {
+char* G2Diagnostic_getResolutionStatistics_helper() {
     size_t bufferSize = 1;
     char *charBuff = (char *) malloc(1);
     resize_buffer_type resizeFuncPointer = &G2Diagnostic_resizeStringBuffer;

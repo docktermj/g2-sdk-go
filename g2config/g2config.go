@@ -72,8 +72,10 @@ func (g2config *G2configImpl) Close(ctx context.Context, configHandle int64) err
 // TODO: Document.
 func (g2config *G2configImpl) Create(ctx context.Context) (int64, error) {
 	// _DLEXPORT int G2Config_create(ConfigHandle* configHandle);
+
 	var err error = nil
-	return 0, err
+	result := C.G2config_create_helper()
+	return int64(result), err
 }
 
 // TODO: Document.
