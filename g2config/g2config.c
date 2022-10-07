@@ -50,6 +50,16 @@ struct G2Config_listDataSources_result G2Config_listDataSources_helper(uintptr_t
     return result;
 }
 
+struct G2Config_save_result G2Config_save_helper(uintptr_t configHandle) {
+    size_t charBufferSize = 1;
+    char *charBuffer = (char *) malloc(charBufferSize);
+    resize_buffer_type resizeFuncPointer = &G2config_resizeStringBuffer;
+    int returnCode = G2Config_save((void*)configHandle, &charBuffer, &charBufferSize, resizeFuncPointer);
+    struct G2Config_save_result result;
+    result.response = charBuffer;
+    result.returnCode = returnCode;
+    return result;
+}
 
 // == DEBUG ===================================================================
 

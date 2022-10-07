@@ -180,5 +180,11 @@ func (g2config *G2configImpl) Load(ctx context.Context, jsonConfig string) (stri
 func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (string, error) {
 	// _DLEXPORT int G2Config_save(ConfigHandle configHandle, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-	return "", err
+	result := C.G2Config_save_helper(C.uintptr_t(configHandle))
+	response := C.GoString(result.response)
+	returnCode := result.returnCode
+	if returnCode != 0 {
+		err = g2config.getError(ctx, 3)
+	}
+	return response, err
 }

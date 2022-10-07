@@ -178,6 +178,13 @@ func TestLoad(test *testing.T) {
 }
 
 func TestSave(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	configHandle, err := g2config.Create(ctx)
+	testError(test, ctx, g2config, err)
+	actual, err := g2config.Save(ctx, configHandle)
+	testError(test, ctx, g2config, err)
+	test.Log("Actual:", actual)
 }
 
 func TestDestroy(test *testing.T) {
