@@ -5,7 +5,7 @@
 
 int G2config_close_helper(uintptr_t configHandle) {
     printf(">>>> Close >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-    printf(" configHandle: %lui\n", configHandle);
+    printf(" configHandle: %lu\n", configHandle);
     printf("&configHandle: %p\n", &configHandle);
     fflush(stdout);
     printf("<<<< Close <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
