@@ -71,12 +71,12 @@ func (g2diagnostic *G2diagnosticImpl) ClearLastException(ctx context.Context) er
 }
 
 // TODO: Document.
-func (g2diagnostic *G2diagnosticImpl) CloseEntityListBySize(ctx context.Context, entityListBySizeHandle interface{}) error {
+func (g2diagnostic *G2diagnosticImpl) CloseEntityListBySize(ctx context.Context, entityListBySizeHandle uintptr) error {
 	//  _DLEXPORT int G2Diagnostic_closeEntityListBySize(EntityListBySizeHandle entityListBySizeHandle);
 	var err error = nil
-	result := C.G2Diagnostic_closeEntityListBySize(C.EntityListBySizeHandle(&entityListBySizeHandle))
+	result := C.G2Diagnostic_closeEntityListBySize_helper(C.uintptr_t(entityListBySizeHandle))
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 2)
+		err = g2diagnostic.getError(ctx, 2, strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -87,19 +87,19 @@ func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
 	var err error = nil
 	result := C.G2Diagnostic_destroy()
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 3)
+		err = g2diagnostic.getError(ctx, 3, strconv.Itoa(int(result)))
 	}
 	return err
 }
 
 // TODO: Document.
-func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle interface{}) (string, error) {
+func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle uintptr) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_fetchNextEntityBySize(EntityListBySizeHandle entityListBySizeHandle, char *responseBuf, const size_t bufSize);
 	var err error = nil
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
-	result := C.G2Diagnostic_fetchNextEntityBySize(C.EntityListBySizeHandle(&entityListBySizeHandle), (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	result := C.G2Diagnostic_fetchNextEntityBySize_helper(C.uintptr_t(entityListBySizeHandle), (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 4)
+		err = g2diagnostic.getError(ctx, 4, strconv.Itoa(int(result)))
 	}
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	return string(stringBuffer), err
@@ -160,15 +160,14 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, enti
 }
 
 // TODO: Document.
-func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context, entitySize int) (interface{}, error) {
+func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context, entitySize int) (uintptr, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntityListBySize(const size_t entitySize, EntityListBySizeHandle* entityListBySizeHandle);
 	var err error = nil
-	var entityListBySizeHandle unsafe.Pointer
-	result := C.G2Diagnostic_getEntityListBySize(C.size_t(entitySize), (*C.EntityListBySizeHandle)(&entityListBySizeHandle))
-	if result != 0 {
+	result := C.G2Diagnostic_getEntityListBySize_helper(C.size_t(entitySize))
+	if result == nil {
 		err = g2diagnostic.getError(ctx, 9, strconv.Itoa(entitySize))
 	}
-	return entityListBySizeHandle, err
+	return (uintptr)(result), err
 }
 
 // TODO: Document.
@@ -234,7 +233,7 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
 	//  _DLEXPORT int G2Diagnostic_getLastExceptionCode();
 	var err error = nil
-	result := C.G2Config_getLastExceptionCode()
+	result := C.G2Diagnostic_getLastExceptionCode()
 	return int(result), err
 }
 
@@ -305,7 +304,7 @@ func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName strin
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2Diagnostic_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 17, moduleName, iniParams, strconv.Itoa(verboseLogging))
+		err = g2diagnostic.getError(ctx, 17, moduleName, iniParams, strconv.Itoa(verboseLogging), strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -320,7 +319,7 @@ func (g2diagnostic *G2diagnosticImpl) InitWithConfigID(ctx context.Context, modu
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2Diagnostic_initWithConfigID(moduleNameForC, iniParamsForC, C.longlong(initConfigID), C.int(verboseLogging))
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 18, moduleName, iniParams, strconv.FormatInt(initConfigID, 10), strconv.Itoa(verboseLogging))
+		err = g2diagnostic.getError(ctx, 18, moduleName, iniParams, strconv.FormatInt(initConfigID, 10), strconv.Itoa(verboseLogging), strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -338,7 +337,7 @@ func (g2diagnostic *G2diagnosticImpl) Reinit(ctx context.Context, initConfigID i
 	var err error = nil
 	result := C.G2Diagnostic_reinit(C.longlong(initConfigID))
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 19, strconv.FormatInt(initConfigID, 10))
+		err = g2diagnostic.getError(ctx, 19, strconv.FormatInt(initConfigID, 10), strconv.Itoa(int(result)))
 	}
 	return err
 }

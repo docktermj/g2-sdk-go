@@ -137,8 +137,11 @@ func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx)
 	actual, err := g2config.GetLastException(ctx)
-	testError(test, ctx, g2config, err)
-	test.Log("Actual:", actual)
+	if err != nil {
+		test.Log("Error:", err.Error())
+	} else {
+		test.Log("Actual:", actual)
+	}
 }
 
 func TestGetLastExceptionCode(test *testing.T) {
