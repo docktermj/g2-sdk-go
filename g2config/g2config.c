@@ -24,6 +24,31 @@ struct G2Config_addDataSource_result G2Config_addDataSource_helper(uintptr_t con
 }
 
 int G2config_close_helper(uintptr_t configHandle) {
+    int returnCode = G2Config_close((void*)configHandle);
+    return returnCode;
+}
+
+void* G2config_create_helper() {
+    ConfigHandle configHandle;
+    int returnCode = G2Config_create(&configHandle);
+    return configHandle;
+}
+
+struct G2Config_listDataSources_result G2Config_listDataSources_helper(uintptr_t configHandle) {
+    size_t charBufferSize = 1;
+    char *charBuffer = (char *) malloc(charBufferSize);
+    resize_buffer_type resizeFuncPointer = &G2config_resizeStringBuffer;
+    int returnCode = G2Config_listDataSources((void*)configHandle, &charBuffer, &charBufferSize, resizeFuncPointer);
+    struct G2Config_listDataSources_result result;
+    result.response = charBuffer;
+    result.returnCode = returnCode;
+    return result;
+}
+
+
+// == DEBUG ===================================================================
+
+int G2config_close_helper_debug(uintptr_t configHandle) {
     printf(">>>> Close >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
     printf(" configHandle: %lu\n", configHandle);
     printf("&configHandle: %p\n", &configHandle);
@@ -33,7 +58,7 @@ int G2config_close_helper(uintptr_t configHandle) {
     return returnCode;
 }
 
-void* G2config_create_helper() {
+void* G2config_create_helper_debug() {
     ConfigHandle configHandle;
     printf(">>>> Create >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
     fflush(stdout);

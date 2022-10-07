@@ -5,7 +5,6 @@ import (
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
 	"github.com/docktermj/go-xyzzy-helpers/logger"
 	"github.com/stretchr/testify/assert"
-	"strconv"
 	"testing"
 )
 
@@ -90,8 +89,8 @@ func TestClose(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx)
 	configHandle, err := g2config.Create(ctx)
-	test.Log(">>> go configHandle decimal:", configHandle)
-	test.Log(">>> go configHandle hex:", strconv.FormatInt(int64(configHandle), 16))
+	//	test.Log(">>> go configHandle decimal:", configHandle)
+	//	test.Log(">>> go configHandle hex:", strconv.FormatInt(int64(configHandle), 16))
 	testError(test, ctx, g2config, err)
 	err = g2config.Close(ctx, configHandle)
 	testError(test, ctx, g2config, err)
@@ -128,6 +127,15 @@ func TestInit(test *testing.T) {
 }
 
 func TestListDataSources(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	configHandle, err := g2config.Create(ctx)
+	testError(test, ctx, g2config, err)
+	actual, err := g2config.ListDataSources(ctx, configHandle)
+	testError(test, ctx, g2config, err)
+	test.Log("Actual:", actual)
+	err = g2config.Close(ctx, configHandle)
+	testError(test, ctx, g2config, err)
 }
 
 func TestLoad(test *testing.T) {
