@@ -46,41 +46,7 @@ CGO_CFLAGS = \
 CGO_LDFLAGS = \
 	-L${SENZING_G2_DIR}/lib \
 	-lanalytics \
-	-lboost_atomic \
-	-lboost_chrono \
-	-lboost_container \
-	-lboost_context \
-	-lboost_contract \
-	-lboost_coroutine \
-	-lboost_date_time \
-	-lboost_filesystem \
-	-lboost_graph \
-	-lboost_iostreams \
-	-lboost_json \
-	-lboost_locale \
-	-lboost_log \
-	-lboost_log_setup \
-	-lboost_math_c99 \
-	-lboost_math_c99f \
-	-lboost_math_c99l \
-	-lboost_math_tr1 \
-	-lboost_math_tr1f \
-	-lboost_math_tr1l \
-	-lboost_nowide \
-	-lboost_prg_exec_monitor \
-	-lboost_program_options \
-	-lboost_python39 \
-	-lboost_random \
-	-lboost_regex \
-	-lboost_serialization \
-	-lboost_system \
-	-lboost_thread \
-	-lboost_timer \
-	-lboost_type_erasure \
-	-lboost_wave \
-	-lboost_wserialization \
 	-ldb2plugin \
-	-leaexml2 \
 	-lG2 \
 	-lg2AddressComp \
 	-lg2AddressHasher \
@@ -125,17 +91,10 @@ CGO_LDFLAGS = \
 	-lg2StrictSubsetNormalizedFelems \
 	-lg2StrictSubsetTokens \
 	-lg2StringComp \
-	-licudata \
-	-licui18n \
-	-licuio \
-	-licutest \
-	-licutu \
-	-licuuc \
 	-lmariadbplugin \
 	-lmssqlplugin \
 	-lNameDataObject \
 	-loracleplugin \
-	-lpostal \
 	-lpostgresqlplugin \
 	-lscoring \
 	-lSpaceTimeBoxStandardizer \
@@ -287,6 +246,9 @@ build-windows:
 .PHONY: test
 test:
 	@go test -v $(GO_PACKAGE_NAME)/...
+#	@go test -v $(GO_PACKAGE_NAME)/g2diagnostic
+#	@go test -v $(GO_PACKAGE_NAME)/g2engine
+#	@go test -v $(GO_PACKAGE_NAME)/g2config
 
 # -----------------------------------------------------------------------------
 # Run
