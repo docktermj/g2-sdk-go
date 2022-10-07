@@ -89,8 +89,6 @@ func TestClose(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx)
 	configHandle, err := g2config.Create(ctx)
-	//	test.Log(">>> go configHandle decimal:", configHandle)
-	//	test.Log(">>> go configHandle hex:", strconv.FormatInt(int64(configHandle), 16))
 	testError(test, ctx, g2config, err)
 	err = g2config.Close(ctx, configHandle)
 	testError(test, ctx, g2config, err)
@@ -111,20 +109,24 @@ func TestDeleteDataSource(test *testing.T) {
 	configHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
 
+	actual, err := g2config.ListDataSources(ctx, configHandle)
+	testError(test, ctx, g2config, err)
+	test.Log("Original:", actual)
+
 	inputJson := `{"DSRC_CODE": "GO_TEST"}`
-	actual, err := g2config.AddDataSource(ctx, configHandle, inputJson)
+	actual, err = g2config.AddDataSource(ctx, configHandle, inputJson)
 	testError(test, ctx, g2config, err)
 
 	actual, err = g2config.ListDataSources(ctx, configHandle)
 	testError(test, ctx, g2config, err)
-	test.Log("Before:", actual)
+	test.Log("     Add:", actual)
 
 	err = g2config.DeleteDataSource(ctx, configHandle, inputJson)
 	testError(test, ctx, g2config, err)
 
 	actual, err = g2config.ListDataSources(ctx, configHandle)
 	testError(test, ctx, g2config, err)
-	test.Log("After:", actual)
+	test.Log("  Delete:", actual)
 
 	err = g2config.Close(ctx, configHandle)
 	testError(test, ctx, g2config, err)
@@ -132,21 +134,31 @@ func TestDeleteDataSource(test *testing.T) {
 
 func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx)
+	g2config := getTestObject(ctx)
 	actual, err := g2config.GetLastException(ctx)
-	testError(test, ctx, g2diagnostic, err)
+	testError(test, ctx, g2config, err)
 	test.Log("Actual:", actual)
 }
 
 func TestGetLastExceptionCode(test *testing.T) {
 	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx)
+	g2config := getTestObject(ctx)
 	actual, err := g2config.GetLastExceptionCode(ctx)
-	testError(test, ctx, g2diagnostic, err)
+	testError(test, ctx, g2config, err)
 	test.Log("Actual:", actual)
 }
 
 func TestInit(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	moduleName := "Test module name"
+	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
+	if jsonErr != nil {
+		logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
+	}
+	err := g2config.Init(ctx, moduleName, iniParams, verboseLogging)
+	testError(test, ctx, g2config, err)
 }
 
 func TestListDataSources(test *testing.T) {
@@ -168,4 +180,8 @@ func TestSave(test *testing.T) {
 }
 
 func TestDestroy(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	err := g2config.Destroy(ctx)
+	testError(test, ctx, g2config, err)
 }
