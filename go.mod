@@ -3,8 +3,8 @@ module github.com/docktermj/g2-sdk-go
 go 1.18
 
 require (
-	github.com/docktermj/go-xyzzy-helpers v0.0.0-20220622000406-7892f514a1e9
-	github.com/stretchr/testify v1.7.4
+	github.com/docktermj/go-xyzzy-helpers v0.0.0-20221007181716-66fb46bff36f
+	github.com/stretchr/testify v1.8.0
 )
 
 require (
