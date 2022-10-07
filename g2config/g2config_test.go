@@ -66,14 +66,18 @@ func TestGetObject(test *testing.T) {
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-//func TestAddDataSource(test *testing.T) {
-//	ctx := context.TODO()
-//	g2config := getTestObject(ctx)
-//	configHandle := "TEST"
-//	inputJson := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "111", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-//	err := g2config.AddDataSource(ctx, configHandle, inputJson)
-//	testError(test, ctx, g2config, err)
-//}
+func TestAddDataSource(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	configHandle, err := g2config.Create(ctx)
+	testError(test, ctx, g2config, err)
+	inputJson := `{"DSRC_CODE": "GO_TEST"}`
+	actual, err := g2config.AddDataSource(ctx, configHandle, inputJson)
+	testError(test, ctx, g2config, err)
+	test.Log("Actual:", actual)
+	err = g2config.Close(ctx, configHandle)
+	testError(test, ctx, g2config, err)
+}
 
 func TestClearLastException(test *testing.T) {
 	ctx := context.TODO()

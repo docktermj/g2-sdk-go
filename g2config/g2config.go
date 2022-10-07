@@ -52,10 +52,18 @@ func (g2config *G2configImpl) getError(ctx context.Context, errorNumber int, det
 // ----------------------------------------------------------------------------
 
 // TODO: Document.
-func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle int64, inputJson string) (string, error) {
+func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle uintptr, inputJson string) (string, error) {
 	// _DLEXPORT int G2Config_addDataSource(ConfigHandle configHandle, const char *inputJson, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
-	return "", err
+	inputJsonForC := C.CString(inputJson)
+	defer C.free(unsafe.Pointer(inputJsonForC))
+	result := C.G2Config_addDataSource_helper(C.uintptr_t(configHandle), inputJsonForC)
+	response := C.GoString(result.response)
+	returnCode := result.returnCode
+	if returnCode != 0 {
+		err = g2config.getError(ctx, 3, inputJson)
+	}
+	return response, err
 }
 
 // ClearLastException returns the available memory, in bytes, on the host system.
@@ -89,7 +97,7 @@ func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 }
 
 // TODO: Document.
-func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle int64, inputJson string) error {
+func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle uintptr, inputJson string) error {
 	// _DLEXPORT int G2Config_deleteDataSource(ConfigHandle configHandle, const char *inputJson);
 	var err error = nil
 	return err
@@ -143,7 +151,7 @@ func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniPa
 }
 
 // TODO: Document.
-func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle int64) (string, error) {
+func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle uintptr) (string, error) {
 	// _DLEXPORT int G2Config_listDataSources(ConfigHandle configHandle, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
 	return "", err
@@ -157,7 +165,7 @@ func (g2config *G2configImpl) Load(ctx context.Context, jsonConfig string) (stri
 }
 
 // TODO: Document.
-func (g2config *G2configImpl) Save(ctx context.Context, configHandle int64) (string, error) {
+func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (string, error) {
 	// _DLEXPORT int G2Config_save(ConfigHandle configHandle, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
 	return "", err

@@ -3,6 +3,26 @@
 #include <stdlib.h>
 #include "g2config.h"
 
+void* G2config_resizeStringBuffer(void *ptr, size_t size) {
+    //deallocate old buffer
+    if (ptr != 0)
+        free(ptr);
+    //allocate new buffer
+    void* buffer = malloc(size);
+    return buffer;
+}
+
+struct G2Config_addDataSource_result G2Config_addDataSource_helper(uintptr_t configHandle, const char *inputJson) {
+    size_t charBufferSize = 1;
+    char *charBuffer = (char *) malloc(charBufferSize);
+    resize_buffer_type resizeFuncPointer = &G2config_resizeStringBuffer;
+    int returnCode = G2Config_addDataSource((void*)configHandle, inputJson, &charBuffer, &charBufferSize, resizeFuncPointer);
+    struct G2Config_addDataSource_result result;
+    result.response = charBuffer;
+    result.returnCode = returnCode;
+    return result;
+}
+
 int G2config_close_helper(uintptr_t configHandle) {
     printf(">>>> Close >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
     printf(" configHandle: %lu\n", configHandle);
