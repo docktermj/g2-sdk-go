@@ -69,13 +69,13 @@ func TestGetObject(test *testing.T) {
 func TestAddDataSource(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx)
-	configHandle, err := g2config.Create(ctx)
+	aHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
 	inputJson := `{"DSRC_CODE": "GO_TEST"}`
-	actual, err := g2config.AddDataSource(ctx, configHandle, inputJson)
+	actual, err := g2config.AddDataSource(ctx, aHandle, inputJson)
 	testError(test, ctx, g2config, err)
 	test.Log("Actual:", actual)
-	err = g2config.Close(ctx, configHandle)
+	err = g2config.Close(ctx, aHandle)
 	testError(test, ctx, g2config, err)
 }
 
@@ -89,9 +89,9 @@ func TestClearLastException(test *testing.T) {
 func TestClose(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx)
-	configHandle, err := g2config.Create(ctx)
+	aHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
-	err = g2config.Close(ctx, configHandle)
+	err = g2config.Close(ctx, aHandle)
 	testError(test, ctx, g2config, err)
 }
 
@@ -107,29 +107,29 @@ func TestDeleteDataSource(test *testing.T) {
 
 	ctx := context.TODO()
 	g2config := getTestObject(ctx)
-	configHandle, err := g2config.Create(ctx)
+	aHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
 
-	actual, err := g2config.ListDataSources(ctx, configHandle)
+	actual, err := g2config.ListDataSources(ctx, aHandle)
 	testError(test, ctx, g2config, err)
 	test.Log("Original:", actual)
 
 	inputJson := `{"DSRC_CODE": "GO_TEST"}`
-	actual, err = g2config.AddDataSource(ctx, configHandle, inputJson)
+	actual, err = g2config.AddDataSource(ctx, aHandle, inputJson)
 	testError(test, ctx, g2config, err)
 
-	actual, err = g2config.ListDataSources(ctx, configHandle)
+	actual, err = g2config.ListDataSources(ctx, aHandle)
 	testError(test, ctx, g2config, err)
 	test.Log("     Add:", actual)
 
-	err = g2config.DeleteDataSource(ctx, configHandle, inputJson)
+	err = g2config.DeleteDataSource(ctx, aHandle, inputJson)
 	testError(test, ctx, g2config, err)
 
-	actual, err = g2config.ListDataSources(ctx, configHandle)
+	actual, err = g2config.ListDataSources(ctx, aHandle)
 	testError(test, ctx, g2config, err)
 	test.Log("  Delete:", actual)
 
-	err = g2config.Close(ctx, configHandle)
+	err = g2config.Close(ctx, aHandle)
 	testError(test, ctx, g2config, err)
 }
 
@@ -165,12 +165,12 @@ func TestInit(test *testing.T) {
 func TestListDataSources(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx)
-	configHandle, err := g2config.Create(ctx)
+	aHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
-	actual, err := g2config.ListDataSources(ctx, configHandle)
+	actual, err := g2config.ListDataSources(ctx, aHandle)
 	testError(test, ctx, g2config, err)
 	test.Log("Actual:", actual)
-	err = g2config.Close(ctx, configHandle)
+	err = g2config.Close(ctx, aHandle)
 	testError(test, ctx, g2config, err)
 }
 
@@ -178,13 +178,13 @@ func TestLoad(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx)
 
-	configHandle, err := g2config.Create(ctx)
+	aHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
 
-	actual, err := g2config.Save(ctx, configHandle)
+	actual, err := g2config.Save(ctx, aHandle)
 	testError(test, ctx, g2config, err)
 
-	err = g2config.Load(ctx, configHandle, actual)
+	err = g2config.Load(ctx, aHandle, actual)
 	testError(test, ctx, g2config, err)
 
 }
@@ -192,9 +192,9 @@ func TestLoad(test *testing.T) {
 func TestSave(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx)
-	configHandle, err := g2config.Create(ctx)
+	aHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
-	actual, err := g2config.Save(ctx, configHandle)
+	actual, err := g2config.Save(ctx, aHandle)
 	testError(test, ctx, g2config, err)
 	test.Log("Actual:", actual)
 }
