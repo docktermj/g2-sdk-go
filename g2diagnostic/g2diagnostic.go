@@ -252,7 +252,7 @@ func (g2diagnostic *G2diagnosticImpl) GetMappingStatistics(ctx context.Context, 
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getMappingStatistics_helper(C.int(includeInternalFeatures)))
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 15, strconv.Itoa(includeInternalFeatures))
+		err = g2diagnostic.getError(ctx, 14, strconv.Itoa(includeInternalFeatures))
 	}
 	return stringBuffer, err
 }
@@ -271,7 +271,7 @@ func (g2diagnostic *G2diagnosticImpl) GetRelationshipDetails(ctx context.Context
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getRelationshipDetails_helper(C.longlong(relationshipID), C.int(includeInternalFeatures)))
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 16, strconv.FormatInt(relationshipID, 10), strconv.Itoa(includeInternalFeatures))
+		err = g2diagnostic.getError(ctx, 15, strconv.FormatInt(relationshipID, 10), strconv.Itoa(includeInternalFeatures))
 	}
 	return stringBuffer, err
 }
@@ -282,7 +282,7 @@ func (g2diagnostic *G2diagnosticImpl) GetResolutionStatistics(ctx context.Contex
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getResolutionStatistics_helper())
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 17)
+		err = g2diagnostic.getError(ctx, 16)
 	}
 	return stringBuffer, err
 }
@@ -305,7 +305,7 @@ func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName strin
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2Diagnostic_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 18, moduleName, iniParams, strconv.Itoa(verboseLogging))
+		err = g2diagnostic.getError(ctx, 17, moduleName, iniParams, strconv.Itoa(verboseLogging))
 	}
 	return err
 }
@@ -320,7 +320,7 @@ func (g2diagnostic *G2diagnosticImpl) InitWithConfigID(ctx context.Context, modu
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2Diagnostic_initWithConfigID(moduleNameForC, iniParamsForC, C.longlong(initConfigID), C.int(verboseLogging))
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 19, moduleName, iniParams, strconv.FormatInt(initConfigID, 10), strconv.Itoa(verboseLogging))
+		err = g2diagnostic.getError(ctx, 18, moduleName, iniParams, strconv.FormatInt(initConfigID, 10), strconv.Itoa(verboseLogging))
 	}
 	return err
 }
@@ -338,7 +338,7 @@ func (g2diagnostic *G2diagnosticImpl) Reinit(ctx context.Context, initConfigID i
 	var err error = nil
 	result := C.G2Diagnostic_reinit(C.longlong(initConfigID))
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 20, strconv.FormatInt(initConfigID, 10))
+		err = g2diagnostic.getError(ctx, 19, strconv.FormatInt(initConfigID, 10))
 	}
 	return err
 }
