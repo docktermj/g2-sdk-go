@@ -86,7 +86,7 @@ func TestClose(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx)
 	configHandle, err := g2config.Create(ctx)
-	test.Log(">>> go configHandle:", configHandle)
+	test.Log(">>> go configHandle decimal:", configHandle)
 	test.Log(">>> go configHandle hex:", strconv.FormatInt(int64(configHandle), 16))
 	testError(test, ctx, g2config, err)
 	err = g2config.Close(ctx, configHandle)
