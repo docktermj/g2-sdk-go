@@ -20,6 +20,7 @@ struct G2Config_listDataSources_result {
 struct G2Config_addDataSource_result G2Config_addDataSource_helper(uintptr_t configHandle, const char *inputJson);
 int G2config_close_helper(uintptr_t configHandle);
 void* G2config_create_helper();
+int G2Config_deleteDataSource_helper(uintptr_t configHandle, const char *inputJson);
 struct G2Config_listDataSources_result G2Config_listDataSources_helper(uintptr_t configHandle);
 
 

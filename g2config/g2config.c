@@ -34,6 +34,11 @@ void* G2config_create_helper() {
     return configHandle;
 }
 
+int G2Config_deleteDataSource_helper(uintptr_t configHandle, const char *inputJson) {
+    int returnCode = G2Config_deleteDataSource((void*)configHandle, inputJson);
+    return returnCode;
+}
+
 struct G2Config_listDataSources_result G2Config_listDataSources_helper(uintptr_t configHandle) {
     size_t charBufferSize = 1;
     char *charBuffer = (char *) malloc(charBufferSize);

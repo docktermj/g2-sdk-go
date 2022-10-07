@@ -100,6 +100,12 @@ func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle uintptr, inputJson string) error {
 	// _DLEXPORT int G2Config_deleteDataSource(ConfigHandle configHandle, const char *inputJson);
 	var err error = nil
+	inputJsonForC := C.CString(inputJson)
+	defer C.free(unsafe.Pointer(inputJsonForC))
+	returnCode := C.G2Config_deleteDataSource_helper(C.uintptr_t(configHandle), inputJsonForC)
+	if returnCode != 0 {
+		err = g2config.getError(ctx, 3, inputJson)
+	}
 	return err
 }
 

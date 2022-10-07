@@ -105,6 +105,29 @@ func TestCreate(test *testing.T) {
 }
 
 func TestDeleteDataSource(test *testing.T) {
+
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+	configHandle, err := g2config.Create(ctx)
+	testError(test, ctx, g2config, err)
+
+	inputJson := `{"DSRC_CODE": "GO_TEST"}`
+	actual, err := g2config.AddDataSource(ctx, configHandle, inputJson)
+	testError(test, ctx, g2config, err)
+
+	actual, err = g2config.ListDataSources(ctx, configHandle)
+	testError(test, ctx, g2config, err)
+	test.Log("Before:", actual)
+
+	err = g2config.DeleteDataSource(ctx, configHandle, inputJson)
+	testError(test, ctx, g2config, err)
+
+	actual, err = g2config.ListDataSources(ctx, configHandle)
+	testError(test, ctx, g2config, err)
+	test.Log("After:", actual)
+
+	err = g2config.Close(ctx, configHandle)
+	testError(test, ctx, g2config, err)
 }
 
 func TestGetLastException(test *testing.T) {
