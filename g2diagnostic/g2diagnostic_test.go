@@ -63,6 +63,7 @@ func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
 		test.Log("Error:", err.Error())
 		assert.FailNow(test, actual)
 	}
+	test.Log("Actual:", actual)
 }
 
 func TestGetObject(test *testing.T) {
