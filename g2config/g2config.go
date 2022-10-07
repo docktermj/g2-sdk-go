@@ -61,7 +61,7 @@ func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle ui
 	response := C.GoString(result.response)
 	returnCode := result.returnCode
 	if returnCode != 0 {
-		err = g2config.getError(ctx, 3, inputJson)
+		err = g2config.getError(ctx, 1, inputJson)
 	}
 	return response, err
 }
@@ -80,7 +80,7 @@ func (g2config *G2configImpl) Close(ctx context.Context, configHandle uintptr) e
 	var err error = nil
 	result := C.G2config_close_helper(C.uintptr_t(configHandle))
 	if result != 0 {
-		err = g2config.getError(ctx, 3)
+		err = g2config.getError(ctx, 2)
 	}
 	return err
 }
@@ -104,7 +104,7 @@ func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle
 	defer C.free(unsafe.Pointer(inputJsonForC))
 	returnCode := C.G2Config_deleteDataSource_helper(C.uintptr_t(configHandle), inputJsonForC)
 	if returnCode != 0 {
-		err = g2config.getError(ctx, 3, inputJson)
+		err = g2config.getError(ctx, 4, inputJson)
 	}
 	return err
 }
@@ -115,7 +115,7 @@ func (g2config *G2configImpl) Destroy(ctx context.Context) error {
 	var err error = nil
 	result := C.G2Config_destroy()
 	if result != 0 {
-		err = g2config.getError(ctx, 3)
+		err = g2config.getError(ctx, 5)
 	}
 	return err
 }
@@ -151,7 +151,7 @@ func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniPa
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2Config_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
-		err = g2config.getError(ctx, 44, moduleName, iniParams, strconv.Itoa(verboseLogging))
+		err = g2config.getError(ctx, 6, moduleName, iniParams, strconv.Itoa(verboseLogging))
 	}
 	return err
 }
@@ -164,16 +164,22 @@ func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle 
 	response := C.GoString(result.response)
 	returnCode := result.returnCode
 	if returnCode != 0 {
-		err = g2config.getError(ctx, 3)
+		err = g2config.getError(ctx, 7)
 	}
 	return response, err
 }
 
 // TODO: Document.
-func (g2config *G2configImpl) Load(ctx context.Context, jsonConfig string) (string, error) {
+func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, jsonConfig string) error {
 	// _DLEXPORT int G2Config_load(const char *jsonConfig,ConfigHandle* configHandle);
 	var err error = nil
-	return "", err
+	jsonConfigForC := C.CString(jsonConfig)
+	defer C.free(unsafe.Pointer(jsonConfigForC))
+	returnCode := C.G2Config_load_helper(C.uintptr_t(configHandle), jsonConfigForC)
+	if returnCode != 0 {
+		err = g2config.getError(ctx, 8, jsonConfig)
+	}
+	return err
 }
 
 // TODO: Document.
@@ -184,7 +190,7 @@ func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (s
 	response := C.GoString(result.response)
 	returnCode := result.returnCode
 	if returnCode != 0 {
-		err = g2config.getError(ctx, 3)
+		err = g2config.getError(ctx, 9)
 	}
 	return response, err
 }

@@ -50,6 +50,11 @@ struct G2Config_listDataSources_result G2Config_listDataSources_helper(uintptr_t
     return result;
 }
 
+int G2Config_load_helper(uintptr_t configHandle, const char *inputJson) {
+    int returnCode = G2Config_load(inputJson, (void*)configHandle);
+    return returnCode;
+}
+
 struct G2Config_save_result G2Config_save_helper(uintptr_t configHandle) {
     size_t charBufferSize = 1;
     char *charBuffer = (char *) malloc(charBufferSize);

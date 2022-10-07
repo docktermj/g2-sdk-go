@@ -175,6 +175,18 @@ func TestListDataSources(test *testing.T) {
 }
 
 func TestLoad(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx)
+
+	configHandle, err := g2config.Create(ctx)
+	testError(test, ctx, g2config, err)
+
+	actual, err := g2config.Save(ctx, configHandle)
+	testError(test, ctx, g2config, err)
+
+	err = g2config.Load(ctx, configHandle, actual)
+	testError(test, ctx, g2config, err)
+
 }
 
 func TestSave(test *testing.T) {

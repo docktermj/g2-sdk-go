@@ -41,6 +41,6 @@ type G2config interface {
 	GetLastExceptionCode(ctx context.Context) (int, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	ListDataSources(ctx context.Context, configHandle uintptr) (string, error)
-	Load(ctx context.Context, jsonConfig string) (string, error)
+	Load(ctx context.Context, configHandle uintptr, jsonConfig string) error
 	Save(ctx context.Context, configHandle uintptr) (string, error)
 }

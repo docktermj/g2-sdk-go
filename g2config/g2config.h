@@ -25,4 +25,5 @@ int G2config_close_helper(uintptr_t configHandle);
 void* G2config_create_helper();
 int G2Config_deleteDataSource_helper(uintptr_t configHandle, const char *inputJson);
 struct G2Config_listDataSources_result G2Config_listDataSources_helper(uintptr_t configHandle);
+int G2Config_load_helper(uintptr_t configHandle, const char *inputJson);
 struct G2Config_save_result G2Config_save_helper(uintptr_t configHandle);
