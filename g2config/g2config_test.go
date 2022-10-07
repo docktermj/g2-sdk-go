@@ -5,6 +5,7 @@ import (
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
 	"github.com/docktermj/go-xyzzy-helpers/logger"
 	"github.com/stretchr/testify/assert"
+	"strconv"
 	"testing"
 )
 
@@ -85,8 +86,8 @@ func TestClose(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx)
 	configHandle, err := g2config.Create(ctx)
+	test.Log(">>> go configHandle:", strconv.FormatInt(int64(configHandle), 16))
 	testError(test, ctx, g2config, err)
-
 	err = g2config.Close(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 }

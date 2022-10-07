@@ -12,7 +12,6 @@ package g2config
 
 import (
 	"context"
-	"unsafe"
 )
 
 // ----------------------------------------------------------------------------
@@ -34,8 +33,8 @@ const MessageIdFormat = "senzing-6014%04d"
 type G2config interface {
 	AddDataSource(ctx context.Context, configHandle int64, inputJson string) (string, error)
 	ClearLastException(ctx context.Context) error
-	Close(ctx context.Context, configHandle unsafe.Pointer) error
-	Create(ctx context.Context) (unsafe.Pointer, error)
+	Close(ctx context.Context, configHandle uintptr) error
+	Create(ctx context.Context) (uintptr, error)
 	DeleteDataSource(ctx context.Context, configHandle int64, inputJson string) error
 	Destroy(ctx context.Context) error
 	GetLastException(ctx context.Context) (string, error)

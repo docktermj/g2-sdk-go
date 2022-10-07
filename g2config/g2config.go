@@ -67,10 +67,10 @@ func (g2config *G2configImpl) ClearLastException(ctx context.Context) error {
 }
 
 // TODO: Document.
-func (g2config *G2configImpl) Close(ctx context.Context, configHandle unsafe.Pointer) error {
+func (g2config *G2configImpl) Close(ctx context.Context, configHandle uintptr) error {
 	// _DLEXPORT int G2Config_close(ConfigHandle configHandle);
 	var err error = nil
-	result := C.G2config_close_helper(configHandle)
+	result := C.G2config_close_helper(C.uintptr_t(configHandle))
 	if result != 0 {
 		err = g2config.getError(ctx, 3)
 	}
@@ -78,14 +78,14 @@ func (g2config *G2configImpl) Close(ctx context.Context, configHandle unsafe.Poi
 }
 
 // TODO: Document.
-func (g2config *G2configImpl) Create(ctx context.Context) (unsafe.Pointer, error) {
+func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 	// _DLEXPORT int G2Config_create(ConfigHandle* configHandle);
 	var err error = nil
 	result := C.G2config_create_helper()
-	if result == 0 {
+	if result == nil {
 		err = g2config.getError(ctx, 3)
 	}
-	return result, err
+	return (uintptr)(result), err
 }
 
 // TODO: Document.
