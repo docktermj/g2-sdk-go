@@ -113,16 +113,16 @@ type G2engine interface {
 	AddRecordWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string) (string, error)
 	CheckRecord(ctx context.Context, record string, recordQueryList string) (string, error)
 	ClearLastException(ctx context.Context) error
-	CloseExport(ctx context.Context, responseHandle interface{}) error
+	CloseExport(ctx context.Context, responseHandle uintptr) error
 	CountRedoRecords(ctx context.Context) (int64, error)
 	DeleteRecord(ctx context.Context, dataSourceCode string, recordID string, loadID string) error
 	DeleteRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, loadID string, flags int64) (string, error)
 	Destroy(ctx context.Context) error
 	ExportConfig(ctx context.Context) (string, error)
 	ExportConfigAndConfigID(ctx context.Context) (string, int64, error)
-	ExportCSVEntityReport(ctx context.Context, csvColumnList string, flags int64) (interface{}, error)
-	ExportJSONEntityReport(ctx context.Context, flags int64) (interface{}, error)
-	FetchNext(ctx context.Context, responseHandle interface{}) (string, error)
+	ExportCSVEntityReport(ctx context.Context, csvColumnList string, flags int64) (uintptr, error)
+	ExportJSONEntityReport(ctx context.Context, flags int64) (uintptr, error)
+	FetchNext(ctx context.Context, responseHandle uintptr) (string, error)
 	FindInterestingEntitiesByEntityID(ctx context.Context, entityID int64, flags int64) (string, error)
 	FindInterestingEntitiesByRecordID(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
 	FindNetworkByEntityID(ctx context.Context, entityList string, maxDegree int, buildOutDegree int, maxEntities int) (string, error)

@@ -69,6 +69,11 @@ char* G2_deleteRecordWithInfo_helper(const char* dataSourceCode,
     return charBuffer;
 }
 
+int G2_closeExport_helper(uintptr_t responseHandle) {
+    int returnCode = G2_closeExport((void*)responseHandle);
+    return returnCode;
+}
+
 struct G2_exportConfigAndConfigID_result G2_exportConfigAndConfigID_helper() {
     size_t charBufferSize = 1;
     char *charBuffer = (char *) malloc(charBufferSize);
@@ -95,8 +100,20 @@ char* G2_exportConfig_helper() {
     return charBuffer;
 }
 
-char* G2_findInterestingEntitiesByEntityID_helper(long long entityID,
-        long long flags) {
+
+//  _DLEXPORT int G2_exportCSVEntityReport(const char* csvColumnList, const long long flags, ExportHandle* responseHandle);
+
+
+struct G2_exportCSVEntityReport_result G2_exportCSVEntityReport_helper(const char* csvColumnList, const long long flags) {
+
+    int G2_exportCSVEntityReport(const char* csvColumnList, const long long flags, ExportHandle* responseHandle)
+
+}
+G2_exportCSVEntityReport_helper
+result := C.G2_exportCSVEntityReport_helper(csvColumnListForC, C.longlong(flags))
+
+
+char* G2_findInterestingEntitiesByEntityID_helper(long long entityID, long long flags) {
     size_t charBufferSize = 1;
     char *charBuffer = (char *) malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
@@ -108,8 +125,7 @@ char* G2_findInterestingEntitiesByEntityID_helper(long long entityID,
     return charBuffer;
 }
 
-char* G2_findInterestingEntitiesByRecordID_helper(const char* dataSourceCode,
-        const char* recordID, long long flags) {
+char* G2_findInterestingEntitiesByRecordID_helper(const char* dataSourceCode, const char* recordID, long long flags) {
     size_t charBufferSize = 1;
     char *charBuffer = (char *) malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;

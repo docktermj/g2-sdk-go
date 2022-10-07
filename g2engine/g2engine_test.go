@@ -472,8 +472,11 @@ func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
 	actual, err := g2engine.GetLastException(ctx)
-	testError(test, ctx, g2engine, err)
-	test.Log("Actual:", actual)
+	if err != nil {
+		test.Log("Error:", err.Error())
+	} else {
+		test.Log("Actual:", actual)
+	}
 }
 
 func TestGetLastExceptionCode(test *testing.T) {

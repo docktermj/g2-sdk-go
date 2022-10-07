@@ -65,7 +65,7 @@ func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode stri
 	defer C.free(unsafe.Pointer(loadIDForC))
 	result := C.G2_addRecord(dataSourceCodeForC, recordIDForC, jsonDataForC, loadIDForC)
 	if result != 0 {
-		err = g2engine.getError(ctx, 1, dataSourceCode, recordID, jsonData, loadID)
+		err = g2engine.getError(ctx, 1, dataSourceCode, recordID, jsonData, loadID, strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -122,7 +122,7 @@ func (g2engine *G2engineImpl) AddRecordWithReturnedRecordID(ctx context.Context,
 	stringBuffer := g2engine.getByteArray(250)
 	result := C.G2_addRecordWithReturnedRecordID(dataSourceCodeForC, jsonDataForC, loadIDForC, (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	if result != 0 {
-		err = g2engine.getError(ctx, 4, dataSourceCode, jsonData, loadID)
+		err = g2engine.getError(ctx, 4, dataSourceCode, jsonData, loadID, strconv.Itoa(int(result)))
 	}
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	return string(stringBuffer), err
@@ -152,12 +152,12 @@ func (g2engine *G2engineImpl) ClearLastException(ctx context.Context) error {
 }
 
 // TODO: Document.
-func (g2engine *G2engineImpl) CloseExport(ctx context.Context, responseHandle interface{}) error {
+func (g2engine *G2engineImpl) CloseExport(ctx context.Context, responseHandle uintptr) error {
 	//  _DLEXPORT int G2_closeExport(ExportHandle responseHandle);
 	var err error = nil
-	result := C.G2_closeExport(C.ExportHandle(&responseHandle))
+	result := C.G2_closeExport_helper(C.uintptr_t(responseHandle))
 	if result != 0 {
-		err = g2engine.getError(ctx, 6)
+		err = g2engine.getError(ctx, 6, strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -182,7 +182,7 @@ func (g2engine *G2engineImpl) DeleteRecord(ctx context.Context, dataSourceCode s
 	defer C.free(unsafe.Pointer(loadIDForC))
 	result := C.G2_deleteRecord(dataSourceCodeForC, recordIDForC, loadIDForC)
 	if result != 0 {
-		err = g2engine.getError(ctx, 7, dataSourceCode, recordID, loadID)
+		err = g2engine.getError(ctx, 7, dataSourceCode, recordID, loadID, strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -210,7 +210,7 @@ func (g2engine *G2engineImpl) Destroy(ctx context.Context) error {
 	var err error = nil
 	result := C.G2_destroy()
 	if result != 0 {
-		err = g2engine.getError(ctx, 9)
+		err = g2engine.getError(ctx, 9, strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -241,39 +241,40 @@ func (g2engine *G2engineImpl) ExportConfig(ctx context.Context) (string, error) 
 }
 
 // TODO: Document.
-func (g2engine *G2engineImpl) ExportCSVEntityReport(ctx context.Context, csvColumnList string, flags int64) (interface{}, error) {
+func (g2engine *G2engineImpl) ExportCSVEntityReport(ctx context.Context, csvColumnList string, flags int64) (uintptr, error) {
 	//  _DLEXPORT int G2_exportCSVEntityReport(const char* csvColumnList, const long long flags, ExportHandle* responseHandle);
 	var err error = nil
 	csvColumnListForC := C.CString(csvColumnList)
 	defer C.free(unsafe.Pointer(csvColumnListForC))
-	var exportHandle unsafe.Pointer
-	result := C.G2_exportCSVEntityReport(csvColumnListForC, C.longlong(flags), (*C.ExportHandle)(&exportHandle))
-	if result != 0 {
-		err = g2engine.getError(ctx, 12, csvColumnList, strconv.FormatInt(flags, 2))
+	result := C.G2_exportCSVEntityReport_helper(csvColumnListForC, C.longlong(flags))
+	exportHandle := result.exportHandle
+	returnCode := result.returnCode
+	if returnCode != 0 {
+		err = g2engine.getError(ctx, 12, csvColumnList, strconv.FormatInt(flags, 2), strconv.Itoa(int(returnCode)))
 	}
 	return exportHandle, err
 }
 
 // TODO: Document.
-func (g2engine *G2engineImpl) ExportJSONEntityReport(ctx context.Context, flags int64) (interface{}, error) {
+func (g2engine *G2engineImpl) ExportJSONEntityReport(ctx context.Context, flags int64) (uintptr, error) {
 	//  _DLEXPORT int G2_exportJSONEntityReport(const long long flags, ExportHandle* responseHandle);
 	var err error = nil
 	var exportHandle unsafe.Pointer
-	result := C.G2_exportJSONEntityReport(C.longlong(flags), (*C.ExportHandle)(&exportHandle))
+	result := C.G2_exportJSONEntityReport_helper(C.longlong(flags), (*C.ExportHandle)(&exportHandle))
 	if result != 0 {
-		err = g2engine.getError(ctx, 13, strconv.FormatInt(flags, 2))
+		err = g2engine.getError(ctx, 13, strconv.FormatInt(flags, 2), strconv.Itoa(int(result)))
 	}
 	return exportHandle, err
 }
 
 // TODO: Document.
-func (g2engine *G2engineImpl) FetchNext(ctx context.Context, responseHandle interface{}) (string, error) {
+func (g2engine *G2engineImpl) FetchNext(ctx context.Context, responseHandle uintptr) (string, error) {
 	//  _DLEXPORT int G2_fetchNext(ExportHandle responseHandle, char *responseBuf, const size_t bufSize);
 	var err error = nil
 	stringBuffer := g2engine.getByteArray(initialByteArraySize)
-	result := C.G2_fetchNext(C.ExportHandle(&responseHandle), (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	result := C.G2_fetchNext_helper(C.uintptr_t(responseHandle), (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	if result != 0 {
-		err = g2engine.getError(ctx, 14)
+		err = g2engine.getError(ctx, 14, strconv.Itoa(int(result)))
 	}
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	return string(stringBuffer), err
@@ -753,7 +754,7 @@ func (g2engine *G2engineImpl) Init(ctx context.Context, moduleName string, iniPa
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
-		err = g2engine.getError(ctx, 45, moduleName, iniParams, strconv.Itoa(verboseLogging))
+		err = g2engine.getError(ctx, 45, moduleName, iniParams, strconv.Itoa(verboseLogging), strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -768,7 +769,7 @@ func (g2engine *G2engineImpl) InitWithConfigID(ctx context.Context, moduleName s
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2_initWithConfigID(moduleNameForC, iniParamsForC, C.longlong(initConfigID), C.int(verboseLogging))
 	if result != 0 {
-		err = g2engine.getError(ctx, 46, moduleName, iniParams, strconv.FormatInt(initConfigID, 10), strconv.Itoa(verboseLogging))
+		err = g2engine.getError(ctx, 46, moduleName, iniParams, strconv.FormatInt(initConfigID, 10), strconv.Itoa(verboseLogging), strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -779,7 +780,7 @@ func (g2engine *G2engineImpl) PrimeEngine(ctx context.Context) error {
 	var err error = nil
 	result := C.G2_primeEngine()
 	if result != 0 {
-		err = g2engine.getError(ctx, 47)
+		err = g2engine.getError(ctx, 47, strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -792,7 +793,7 @@ func (g2engine *G2engineImpl) Process(ctx context.Context, record string) error 
 	defer C.free(unsafe.Pointer(recordForC))
 	result := C.G2_process(recordForC)
 	if result != 0 {
-		err = g2engine.getError(ctx, 48, record)
+		err = g2engine.getError(ctx, 48, record, strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -867,7 +868,7 @@ func (g2engine *G2engineImpl) PurgeRepository(ctx context.Context) error {
 	var err error = nil
 	result := C.G2_purgeRepository()
 	if result != 0 {
-		err = g2engine.getError(ctx, 54)
+		err = g2engine.getError(ctx, 54, strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -878,7 +879,7 @@ func (g2engine *G2engineImpl) ReevaluateEntity(ctx context.Context, entityID int
 	var err error = nil
 	result := C.G2_reevaluateEntity(C.longlong(entityID), C.longlong(flags))
 	if result != 0 {
-		err = g2engine.getError(ctx, 55, strconv.FormatInt(entityID, 10), strconv.FormatInt(flags, 2))
+		err = g2engine.getError(ctx, 55, strconv.FormatInt(entityID, 10), strconv.FormatInt(flags, 2), strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -904,7 +905,7 @@ func (g2engine *G2engineImpl) ReevaluateRecord(ctx context.Context, dataSourceCo
 	defer C.free(unsafe.Pointer(recordIDForC))
 	result := C.G2_reevaluateRecord(dataSourceCodeForC, recordIDForC, C.longlong(flags))
 	if result != 0 {
-		err = g2engine.getError(ctx, 57, dataSourceCode, recordID, strconv.FormatInt(flags, 2))
+		err = g2engine.getError(ctx, 57, dataSourceCode, recordID, strconv.FormatInt(flags, 2), strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -930,7 +931,7 @@ func (g2engine *G2engineImpl) Reinit(ctx context.Context, initConfigID int64) er
 	var err error = nil
 	result := C.G2_reinit(C.longlong(initConfigID))
 	if result != 0 {
-		err = g2engine.getError(ctx, 59, strconv.FormatInt(initConfigID, 10))
+		err = g2engine.getError(ctx, 59, strconv.FormatInt(initConfigID, 10), strconv.Itoa(int(result)))
 	}
 	return err
 }
@@ -949,7 +950,7 @@ func (g2engine *G2engineImpl) ReplaceRecord(ctx context.Context, dataSourceCode 
 	defer C.free(unsafe.Pointer(loadIDForC))
 	result := C.G2_replaceRecord(dataSourceCodeForC, recordIDForC, jsonDataForC, loadIDForC)
 	if result != 0 {
-		err = g2engine.getError(ctx, 60, dataSourceCode, recordID, jsonData, loadID)
+		err = g2engine.getError(ctx, 60, dataSourceCode, recordID, jsonData, loadID, strconv.Itoa(int(result)))
 	}
 	return err
 }

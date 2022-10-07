@@ -32,6 +32,7 @@ void* G2_resizeStringBuffer(void *ptr, size_t size);
 char* G2_addRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags);
 struct G2_addRecordWithInfoWithReturnedRecordID_result G2_addRecordWithInfoWithReturnedRecordID_helper(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags);
 char* G2_checkRecord_helper(const char* record, const char* recordQueryList);
+int G2_closeExport_helper(uintptr_t responseHandle);
 char* G2_deleteRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const char *loadID, const long long flags);
 struct G2_exportConfigAndConfigID_result G2_exportConfigAndConfigID_helper();
 char* G2_exportConfig_helper();
