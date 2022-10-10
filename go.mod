@@ -3,6 +3,7 @@ module github.com/docktermj/g2-sdk-go
 go 1.18
 
 require (
+	github.com/aquilax/truncate v1.0.0
 	github.com/docktermj/go-xyzzy-helpers v0.0.0-20221007181716-66fb46bff36f
 	github.com/stretchr/testify v1.8.0
 )

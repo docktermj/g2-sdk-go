@@ -278,7 +278,7 @@ func (g2engine *G2engineImpl) FetchNext(ctx context.Context, responseHandle uint
     if returnCode != 0 {
         err = g2engine.getError(ctx, 14, strconv.Itoa(int(returnCode)))
     }
-//    response = bytes.Trim(response, "\x00")
+    //    response = bytes.Trim(response, "\x00")
     return C.GoString(response), err
 }
 

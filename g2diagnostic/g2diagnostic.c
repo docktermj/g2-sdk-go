@@ -82,9 +82,9 @@ char* G2Diagnostic_getEntityDetails_helper(const long long entityID, const int i
 }
 
 void* G2Diagnostic_getEntityListBySize_helper(const size_t entitySize) {
-    EntityListBySizeHandle* handle;
-    int returnCode = G2Diagnostic_getEntityListBySize(entitySize, handle);
-    return *handle;
+    EntityListBySizeHandle handle;
+    int returnCode = G2Diagnostic_getEntityListBySize(entitySize, &handle);
+    return handle;
 }
 
 char* G2Diagnostic_getEntityResume_helper(const long long entityID) {
