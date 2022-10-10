@@ -11,12 +11,12 @@ package g2diagnostic
 import "C"
 
 import (
-    "bytes"
-    "context"
-    "strconv"
-    "unsafe"
+	"bytes"
+	"context"
+	"strconv"
+	"unsafe"
 
-    "github.com/docktermj/go-xyzzy-helpers/logger"
+	"github.com/docktermj/go-xyzzy-helpers/logger"
 )
 
 const initialByteArraySize = 65535
