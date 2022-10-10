@@ -40,9 +40,9 @@ default: help
 
 CGO_CFLAGS = \
 	-I${SENZING_G2_DIR}/sdk/c
-	
+
 # Flags for
-	
+
 CGO_LDFLAGS = \
 	-L${SENZING_G2_DIR}/lib \
 	-lanalytics \
@@ -200,8 +200,8 @@ dependencies:
 build: dependencies \
 	target/linux/$(PROGRAM_NAME)
 #	target/linux/go-hello-senzing-dynamic
-#	target/linux/go-hello-senzing-static \	
-#	target/scratch/senzing	
+#	target/linux/go-hello-senzing-static \
+#	target/scratch/senzing
 #	target/linux/go-hello-senzing-static
 #	build-macos \
 #	build-scratch \
@@ -257,7 +257,7 @@ test:
 .PHONY: run
 run:
 	@target/linux/$(PROGRAM_NAME)
-	
+
 # -----------------------------------------------------------------------------
 # docker-build
 #  - https://docs.docker.com/engine/reference/commandline/build/

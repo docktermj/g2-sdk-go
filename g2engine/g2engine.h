@@ -1,8 +1,8 @@
+#include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "libg2.h"
 
-typedef void* ExportHandle;
 typedef void*(*resize_buffer_type)(void *, size_t);
 
 struct G2_addRecordWithInfoWithReturnedRecordID_result {
@@ -14,6 +14,19 @@ struct G2_addRecordWithInfoWithReturnedRecordID_result {
 struct G2_exportConfigAndConfigID_result {
     long long configID;
     char* config;
+    int returnCode;
+};
+
+struct G2_exportCSVEntityReport_result {
+    void* exportHandle;
+    int returnCode;
+};
+struct G2_exportJSONEntityReport_result {
+    void* exportHandle;
+    int returnCode;
+};
+struct G2_fetchNext_result {
+    char* response;
     int returnCode;
 };
 
@@ -32,9 +45,12 @@ void* G2_resizeStringBuffer(void *ptr, size_t size);
 char* G2_addRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags);
 struct G2_addRecordWithInfoWithReturnedRecordID_result G2_addRecordWithInfoWithReturnedRecordID_helper(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags);
 char* G2_checkRecord_helper(const char* record, const char* recordQueryList);
+int G2_closeExport_helper(uintptr_t responseHandle);
 char* G2_deleteRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const char *loadID, const long long flags);
 struct G2_exportConfigAndConfigID_result G2_exportConfigAndConfigID_helper();
 char* G2_exportConfig_helper();
+struct G2_exportCSVEntityReport_result G2_exportCSVEntityReport_helper(const char* csvColumnList, const long long flags);
+struct G2_exportJSONEntityReport_result G2_exportJSONEntityReport_helper(const long long flags);
 char* G2_findInterestingEntitiesByEntityID_helper(long long entityID, long long flags);
 char* G2_findInterestingEntitiesByRecordID_helper(const char* dataSourceCode, const char* recordID, long long flags);
 char* G2_findNetworkByEntityID_helper(const char* entityList, const int maxDegree, const int buildOutDegree, const int maxEntities);
@@ -53,6 +69,7 @@ char* G2_findPathIncludingSourceByEntityID_helper(const long long entityID1, con
 char* G2_findPathIncludingSourceByEntityID_V2_helper(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, const char* requiredDsrcs, const long long flags);
 char* G2_findPathIncludingSourceByRecordID_helper(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const char* requiredDsrcs);
 char* G2_findPathIncludingSourceByRecordID_V2_helper(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const char* requiredDsrcs, const long long flags);
+struct G2_fetchNext_result G2_fetchNext_helper(uintptr_t exportHandle);
 struct G2_getActiveConfigID_result G2_getActiveConfigID_helper();
 char* G2_getEntityByEntityID_helper(const long long entityID);
 char* G2_getEntityByEntityID_V2_helper(const long long entityID, const long long flags);
