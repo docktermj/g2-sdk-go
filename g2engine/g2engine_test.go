@@ -3,10 +3,11 @@ package g2engine
 import (
     "context"
     "fmt"
+    "testing"
+
     "github.com/docktermj/go-xyzzy-helpers/g2configuration"
     "github.com/docktermj/go-xyzzy-helpers/logger"
     "github.com/stretchr/testify/assert"
-    "testing"
 
     truncator "github.com/aquilax/truncate"
 )
