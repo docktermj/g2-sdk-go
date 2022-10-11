@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "g2config.h"
 
-void* G2config_resizeStringBuffer(void *ptr, size_t size) {
+void* G2config_resizeStringBuffer(void* ptr, size_t size) {
     //deallocate old buffer
     if (ptr != 0)
         free(ptr);
@@ -12,13 +12,11 @@ void* G2config_resizeStringBuffer(void *ptr, size_t size) {
     return buffer;
 }
 
-struct G2Config_addDataSource_result G2Config_addDataSource_helper(
-        uintptr_t configHandle, const char *inputJson) {
+struct G2Config_addDataSource_result G2Config_addDataSource_helper(uintptr_t configHandle, const char* inputJson) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2config_resizeStringBuffer;
-    int returnCode = G2Config_addDataSource((void*) configHandle, inputJson,
-            &charBuffer, &charBufferSize, resizeFuncPointer);
+    int returnCode = G2Config_addDataSource((void*)configHandle, inputJson, &charBuffer, &charBufferSize, resizeFuncPointer);
     struct G2Config_addDataSource_result result;
     result.response = charBuffer;
     result.returnCode = returnCode;
@@ -26,7 +24,7 @@ struct G2Config_addDataSource_result G2Config_addDataSource_helper(
 }
 
 int G2config_close_helper(uintptr_t configHandle) {
-    int returnCode = G2Config_close((void*) configHandle);
+    int returnCode = G2Config_close((void*)configHandle);
     return returnCode;
 }
 
@@ -37,35 +35,33 @@ void* G2config_create_helper() {
 }
 
 int G2Config_deleteDataSource_helper(uintptr_t configHandle,
-        const char *inputJson) {
-    int returnCode = G2Config_deleteDataSource((void*) configHandle, inputJson);
+    const char* inputJson) {
+    int returnCode = G2Config_deleteDataSource((void*)configHandle, inputJson);
     return returnCode;
 }
 
 struct G2Config_listDataSources_result G2Config_listDataSources_helper(
-        uintptr_t configHandle) {
+    uintptr_t configHandle) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2config_resizeStringBuffer;
-    int returnCode = G2Config_listDataSources((void*) configHandle, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+    int returnCode = G2Config_listDataSources((void*)configHandle, &charBuffer, &charBufferSize, resizeFuncPointer);
     struct G2Config_listDataSources_result result;
     result.response = charBuffer;
     result.returnCode = returnCode;
     return result;
 }
 
-int G2Config_load_helper(uintptr_t configHandle, const char *inputJson) {
-    int returnCode = G2Config_load(inputJson, (void*) configHandle);
+int G2Config_load_helper(uintptr_t configHandle, const char* inputJson) {
+    int returnCode = G2Config_load(inputJson, (void*)configHandle);
     return returnCode;
 }
 
 struct G2Config_save_result G2Config_save_helper(uintptr_t configHandle) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2config_resizeStringBuffer;
-    int returnCode = G2Config_save((void*) configHandle, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+    int returnCode = G2Config_save((void*)configHandle, &charBuffer, &charBufferSize, resizeFuncPointer);
     struct G2Config_save_result result;
     result.response = charBuffer;
     result.returnCode = returnCode;
@@ -80,7 +76,7 @@ int G2config_close_helper_debug(uintptr_t configHandle) {
     printf("&configHandle: %p\n", &configHandle);
     fflush(stdout);
     printf("<<<< Close <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
-    int returnCode = G2Config_close((void*) configHandle);
+    int returnCode = G2Config_close((void*)configHandle);
     return returnCode;
 }
 
