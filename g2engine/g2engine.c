@@ -3,7 +3,7 @@
 #include "libg2.h"
 #include "g2engine.h"
 
-void* G2_resizeStringBuffer(void *ptr, size_t size) {
+void* G2_resizeStringBuffer(void* ptr, size_t size) {
     //deallocate old buffer
     if (ptr != 0)
         free(ptr);
@@ -13,13 +13,13 @@ void* G2_resizeStringBuffer(void *ptr, size_t size) {
 }
 
 char* G2_addRecordWithInfo_helper(const char* dataSourceCode,
-        const char* recordID, const char* jsonData, const char *loadID,
-        const long long flags) {
+    const char* recordID, const char* jsonData, const char* loadID,
+    const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_addRecordWithInfo(dataSourceCode, recordID, jsonData,
-            loadID, flags, &charBuffer, &charBufferSize, resizeFuncPointer);
+        loadID, flags, &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -27,16 +27,16 @@ char* G2_addRecordWithInfo_helper(const char* dataSourceCode,
 }
 
 struct G2_addRecordWithInfoWithReturnedRecordID_result G2_addRecordWithInfoWithReturnedRecordID_helper(
-        const char* dataSourceCode, const char* jsonData, const char *loadID,
-        const long long flags) {
+    const char* dataSourceCode, const char* jsonData, const char* loadID,
+    const long long flags) {
     size_t charBufferSize = 1;
     size_t recordIDBufSize = 256;
     char recordIDBuf[recordIDBufSize];
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_addRecordWithInfoWithReturnedRecordID(dataSourceCode,
-            jsonData, loadID, flags, recordIDBuf, recordIDBufSize, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        jsonData, loadID, flags, recordIDBuf, recordIDBufSize, &charBuffer,
+        &charBufferSize, resizeFuncPointer);
     struct G2_addRecordWithInfoWithReturnedRecordID_result result;
     result.recordID = recordIDBuf;
     result.withInfo = charBuffer;
@@ -46,10 +46,10 @@ struct G2_addRecordWithInfoWithReturnedRecordID_result G2_addRecordWithInfoWithR
 
 char* G2_checkRecord_helper(const char* record, const char* recordQueryList) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_checkRecord(record, recordQueryList, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -57,12 +57,12 @@ char* G2_checkRecord_helper(const char* record, const char* recordQueryList) {
 }
 
 char* G2_deleteRecordWithInfo_helper(const char* dataSourceCode,
-        const char* recordID, const char *loadID, const long long flags) {
+    const char* recordID, const char* loadID, const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_deleteRecordWithInfo(dataSourceCode, recordID, loadID,
-            flags, &charBuffer, &charBufferSize, resizeFuncPointer);
+        flags, &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -70,17 +70,17 @@ char* G2_deleteRecordWithInfo_helper(const char* dataSourceCode,
 }
 
 int G2_closeExport_helper(uintptr_t responseHandle) {
-    int returnCode = G2_closeExport((void*) responseHandle);
+    int returnCode = G2_closeExport((void*)responseHandle);
     return returnCode;
 }
 
 struct G2_exportConfigAndConfigID_result G2_exportConfigAndConfigID_helper() {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     long long configID;
     int returnCode = G2_exportConfigAndConfigID(&charBuffer, &charBufferSize,
-            resizeFuncPointer, &configID);
+        resizeFuncPointer, &configID);
     struct G2_exportConfigAndConfigID_result result;
     result.configID = configID;
     result.config = charBuffer;
@@ -90,10 +90,10 @@ struct G2_exportConfigAndConfigID_result G2_exportConfigAndConfigID_helper() {
 
 char* G2_exportConfig_helper() {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_exportConfig(&charBuffer, &charBufferSize,
-            resizeFuncPointer);
+        resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -101,10 +101,10 @@ char* G2_exportConfig_helper() {
 }
 
 struct G2_exportCSVEntityReport_result G2_exportCSVEntityReport_helper(
-        const char* csvColumnList, const long long flags) {
+    const char* csvColumnList, const long long flags) {
     ExportHandle exportHandle;
     int returnCode = G2_exportCSVEntityReport(csvColumnList, flags,
-            &exportHandle);
+        &exportHandle);
     struct G2_exportCSVEntityReport_result result;
     result.exportHandle = exportHandle;
     result.returnCode = returnCode;
@@ -112,7 +112,7 @@ struct G2_exportCSVEntityReport_result G2_exportCSVEntityReport_helper(
 }
 
 struct G2_exportJSONEntityReport_result G2_exportJSONEntityReport_helper(
-        const long long flags) {
+    const long long flags) {
     ExportHandle exportHandle;
     int returnCode = G2_exportJSONEntityReport(flags, &exportHandle);
     struct G2_exportJSONEntityReport_result result;
@@ -122,12 +122,12 @@ struct G2_exportJSONEntityReport_result G2_exportJSONEntityReport_helper(
 }
 
 char* G2_findInterestingEntitiesByEntityID_helper(long long entityID,
-        long long flags) {
+    long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findInterestingEntitiesByEntityID(entityID, flags,
-            &charBuffer, &charBufferSize, resizeFuncPointer);
+        &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -135,12 +135,12 @@ char* G2_findInterestingEntitiesByEntityID_helper(long long entityID,
 }
 
 char* G2_findInterestingEntitiesByRecordID_helper(const char* dataSourceCode,
-        const char* recordID, long long flags) {
+    const char* recordID, long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findInterestingEntitiesByRecordID(dataSourceCode,
-            recordID, flags, &charBuffer, &charBufferSize, resizeFuncPointer);
+        recordID, flags, &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -148,13 +148,13 @@ char* G2_findInterestingEntitiesByRecordID_helper(const char* dataSourceCode,
 }
 
 char* G2_findNetworkByEntityID_helper(const char* entityList,
-        const int maxDegree, const int buildOutDegree, const int maxEntities) {
+    const int maxDegree, const int buildOutDegree, const int maxEntities) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findNetworkByEntityID(entityList, maxDegree,
-            buildOutDegree, maxEntities, &charBuffer, &charBufferSize,
-            resizeFuncPointer);
+        buildOutDegree, maxEntities, &charBuffer, &charBufferSize,
+        resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -162,14 +162,14 @@ char* G2_findNetworkByEntityID_helper(const char* entityList,
 }
 
 char* G2_findNetworkByEntityID_V2_helper(const char* entityList,
-        const int maxDegree, const int buildOutDegree, const int maxEntities,
-        long long flags) {
+    const int maxDegree, const int buildOutDegree, const int maxEntities,
+    long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findNetworkByEntityID_V2(entityList, maxDegree,
-            buildOutDegree, maxEntities, flags, &charBuffer, &charBufferSize,
-            resizeFuncPointer);
+        buildOutDegree, maxEntities, flags, &charBuffer, &charBufferSize,
+        resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -177,13 +177,13 @@ char* G2_findNetworkByEntityID_V2_helper(const char* entityList,
 }
 
 char* G2_findNetworkByRecordID_helper(const char* recordList,
-        const int maxDegree, const int buildOutDegree, const int maxEntities) {
+    const int maxDegree, const int buildOutDegree, const int maxEntities) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findNetworkByRecordID(recordList, maxDegree,
-            buildOutDegree, maxEntities, &charBuffer, &charBufferSize,
-            resizeFuncPointer);
+        buildOutDegree, maxEntities, &charBuffer, &charBufferSize,
+        resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -191,14 +191,14 @@ char* G2_findNetworkByRecordID_helper(const char* recordList,
 }
 
 char* G2_findNetworkByRecordID_V2_helper(const char* recordList,
-        const int maxDegree, const int buildOutDegree, const int maxEntities,
-        const long long flags) {
+    const int maxDegree, const int buildOutDegree, const int maxEntities,
+    const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findNetworkByRecordID_V2(recordList, maxDegree,
-            buildOutDegree, maxEntities, flags, &charBuffer, &charBufferSize,
-            resizeFuncPointer);
+        buildOutDegree, maxEntities, flags, &charBuffer, &charBufferSize,
+        resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -206,12 +206,12 @@ char* G2_findNetworkByRecordID_V2_helper(const char* recordList,
 }
 
 char* G2_findPathByEntityID_helper(const long long entityID1,
-        const long long entityID2, const int maxDegree) {
+    const long long entityID2, const int maxDegree) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findPathByEntityID(entityID1, entityID2, maxDegree,
-            &charBuffer, &charBufferSize, resizeFuncPointer);
+        &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -219,12 +219,12 @@ char* G2_findPathByEntityID_helper(const long long entityID1,
 }
 
 char* G2_findPathByEntityID_V2_helper(const long long entityID1,
-        const long long entityID2, const int maxDegree, const long long flags) {
+    const long long entityID2, const int maxDegree, const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findPathByEntityID_V2(entityID1, entityID2, maxDegree,
-            flags, &charBuffer, &charBufferSize, resizeFuncPointer);
+        flags, &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -232,14 +232,14 @@ char* G2_findPathByEntityID_V2_helper(const long long entityID1,
 }
 
 char* G2_findPathByRecordID_helper(const char* dataSourceCode1,
-        const char* recordID1, const char* dataSourceCode2,
-        const char* recordID2, const int maxDegree) {
+    const char* recordID1, const char* dataSourceCode2,
+    const char* recordID2, const int maxDegree) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findPathByRecordID(dataSourceCode1, recordID1,
-            dataSourceCode2, recordID2, maxDegree, &charBuffer, &charBufferSize,
-            resizeFuncPointer);
+        dataSourceCode2, recordID2, maxDegree, &charBuffer, &charBufferSize,
+        resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -247,14 +247,14 @@ char* G2_findPathByRecordID_helper(const char* dataSourceCode1,
 }
 
 char* G2_findPathByRecordID_V2_helper(const char* dataSourceCode1,
-        const char* recordID1, const char* dataSourceCode2,
-        const char* recordID2, const int maxDegree, const long long flags) {
+    const char* recordID1, const char* dataSourceCode2,
+    const char* recordID2, const int maxDegree, const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findPathByRecordID_V2(dataSourceCode1, recordID1,
-            dataSourceCode2, recordID2, maxDegree, flags, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        dataSourceCode2, recordID2, maxDegree, flags, &charBuffer,
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -262,14 +262,14 @@ char* G2_findPathByRecordID_V2_helper(const char* dataSourceCode1,
 }
 
 char* G2_findPathExcludingByEntityID_helper(const long long entityID1,
-        const long long entityID2, const int maxDegree,
-        const char* excludedEntities) {
+    const long long entityID2, const int maxDegree,
+    const char* excludedEntities) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findPathExcludingByEntityID(entityID1, entityID2,
-            maxDegree, excludedEntities, &charBuffer, &charBufferSize,
-            resizeFuncPointer);
+        maxDegree, excludedEntities, &charBuffer, &charBufferSize,
+        resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -277,14 +277,14 @@ char* G2_findPathExcludingByEntityID_helper(const long long entityID1,
 }
 
 char* G2_findPathExcludingByEntityID_V2_helper(const long long entityID1,
-        const long long entityID2, const int maxDegree,
-        const char* excludedEntities, const long long flags) {
+    const long long entityID2, const int maxDegree,
+    const char* excludedEntities, const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findPathExcludingByEntityID_V2(entityID1, entityID2,
-            maxDegree, excludedEntities, flags, &charBuffer, &charBufferSize,
-            resizeFuncPointer);
+        maxDegree, excludedEntities, flags, &charBuffer, &charBufferSize,
+        resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -292,14 +292,14 @@ char* G2_findPathExcludingByEntityID_V2_helper(const long long entityID1,
 }
 
 char* G2_findPathExcludingByRecordID_helper(const char* dataSourceCode1,
-        const char* recordID1, const char* dataSourceCode2,
-        const char* recordID2, const int maxDegree, const char* excludedRecords) {
+    const char* recordID1, const char* dataSourceCode2,
+    const char* recordID2, const int maxDegree, const char* excludedRecords) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findPathExcludingByRecordID(dataSourceCode1, recordID1,
-            dataSourceCode2, recordID2, maxDegree, excludedRecords, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        dataSourceCode2, recordID2, maxDegree, excludedRecords, &charBuffer,
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -307,15 +307,15 @@ char* G2_findPathExcludingByRecordID_helper(const char* dataSourceCode1,
 }
 
 char* G2_findPathExcludingByRecordID_V2_helper(const char* dataSourceCode1,
-        const char* recordID1, const char* dataSourceCode2,
-        const char* recordID2, const int maxDegree, const char* excludedRecords,
-        const long long flags) {
+    const char* recordID1, const char* dataSourceCode2,
+    const char* recordID2, const int maxDegree, const char* excludedRecords,
+    const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findPathExcludingByRecordID_V2(dataSourceCode1,
-            recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords,
-            flags, &charBuffer, &charBufferSize, resizeFuncPointer);
+        recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords,
+        flags, &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -323,14 +323,14 @@ char* G2_findPathExcludingByRecordID_V2_helper(const char* dataSourceCode1,
 }
 
 char* G2_findPathIncludingSourceByEntityID_helper(const long long entityID1,
-        const long long entityID2, const int maxDegree,
-        const char* excludedEntities, const char* requiredDsrcs) {
+    const long long entityID2, const int maxDegree,
+    const char* excludedEntities, const char* requiredDsrcs) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findPathIncludingSourceByEntityID(entityID1, entityID2,
-            maxDegree, excludedEntities, requiredDsrcs, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        maxDegree, excludedEntities, requiredDsrcs, &charBuffer,
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -338,15 +338,15 @@ char* G2_findPathIncludingSourceByEntityID_helper(const long long entityID1,
 }
 
 char* G2_findPathIncludingSourceByEntityID_V2_helper(const long long entityID1,
-        const long long entityID2, const int maxDegree,
-        const char* excludedEntities, const char* requiredDsrcs,
-        const long long flags) {
+    const long long entityID2, const int maxDegree,
+    const char* excludedEntities, const char* requiredDsrcs,
+    const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findPathIncludingSourceByEntityID_V2(entityID1,
-            entityID2, maxDegree, excludedEntities, requiredDsrcs, flags,
-            &charBuffer, &charBufferSize, resizeFuncPointer);
+        entityID2, maxDegree, excludedEntities, requiredDsrcs, flags,
+        &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -354,15 +354,15 @@ char* G2_findPathIncludingSourceByEntityID_V2_helper(const long long entityID1,
 }
 
 char* G2_findPathIncludingSourceByRecordID_helper(const char* dataSourceCode1,
-        const char* recordID1, const char* dataSourceCode2,
-        const char* recordID2, const int maxDegree, const char* excludedRecords,
-        const char* requiredDsrcs) {
+    const char* recordID1, const char* dataSourceCode2,
+    const char* recordID2, const int maxDegree, const char* excludedRecords,
+    const char* requiredDsrcs) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findPathIncludingSourceByRecordID(dataSourceCode1,
-            recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords,
-            requiredDsrcs, &charBuffer, &charBufferSize, resizeFuncPointer);
+        recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords,
+        requiredDsrcs, &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -370,17 +370,17 @@ char* G2_findPathIncludingSourceByRecordID_helper(const char* dataSourceCode1,
 }
 
 char* G2_findPathIncludingSourceByRecordID_V2_helper(
-        const char* dataSourceCode1, const char* recordID1,
-        const char* dataSourceCode2, const char* recordID2, const int maxDegree,
-        const char* excludedRecords, const char* requiredDsrcs,
-        const long long flags) {
+    const char* dataSourceCode1, const char* recordID1,
+    const char* dataSourceCode2, const char* recordID2, const int maxDegree,
+    const char* excludedRecords, const char* requiredDsrcs,
+    const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_findPathIncludingSourceByRecordID_V2(dataSourceCode1,
-            recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords,
-            requiredDsrcs, flags, &charBuffer, &charBufferSize,
-            resizeFuncPointer);
+        recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords,
+        requiredDsrcs, flags, &charBuffer, &charBufferSize,
+        resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -389,9 +389,9 @@ char* G2_findPathIncludingSourceByRecordID_V2_helper(
 
 struct G2_fetchNext_result G2_fetchNext_helper(uintptr_t exportHandle) {
     size_t charBufferSize = 65535;
-    char *charBuffer = (char *) malloc(charBufferSize);
-    int returnCode = G2_fetchNext((void*) exportHandle, charBuffer,
-            charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
+    int returnCode = G2_fetchNext((void*)exportHandle, charBuffer,
+        charBufferSize);
     struct G2_fetchNext_result result;
     result.response = charBuffer;
     result.returnCode = returnCode;
@@ -409,10 +409,10 @@ struct G2_getActiveConfigID_result G2_getActiveConfigID_helper() {
 
 char* G2_getEntityByEntityID_helper(const long long entityID) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_getEntityByEntityID(entityID, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -420,12 +420,12 @@ char* G2_getEntityByEntityID_helper(const long long entityID) {
 }
 
 char* G2_getEntityByEntityID_V2_helper(const long long entityID,
-        const long long flags) {
+    const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_getEntityByEntityID_V2(entityID, flags, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -433,12 +433,12 @@ char* G2_getEntityByEntityID_V2_helper(const long long entityID,
 }
 
 char* G2_getEntityByRecordID_helper(const char* dataSourceCode,
-        const char* recordID) {
+    const char* recordID) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_getEntityByRecordID(dataSourceCode, recordID,
-            &charBuffer, &charBufferSize, resizeFuncPointer);
+        &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -446,12 +446,12 @@ char* G2_getEntityByRecordID_helper(const char* dataSourceCode,
 }
 
 char* G2_getEntityByRecordID_V2_helper(const char* dataSourceCode,
-        const char* recordID, const long long flags) {
+    const char* recordID, const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_getEntityByRecordID_V2(dataSourceCode, recordID, flags,
-            &charBuffer, &charBufferSize, resizeFuncPointer);
+        &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -460,10 +460,10 @@ char* G2_getEntityByRecordID_V2_helper(const char* dataSourceCode,
 
 char* G2_getRecord_helper(const char* dataSourceCode, const char* recordID) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_getRecord(dataSourceCode, recordID, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -471,12 +471,12 @@ char* G2_getRecord_helper(const char* dataSourceCode, const char* recordID) {
 }
 
 char* G2_getRecord_V2_helper(const char* dataSourceCode, const char* recordID,
-        const long long flags) {
+    const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_getRecord_V2(dataSourceCode, recordID, flags,
-            &charBuffer, &charBufferSize, resizeFuncPointer);
+        &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -485,10 +485,10 @@ char* G2_getRecord_V2_helper(const char* dataSourceCode, const char* recordID,
 
 char* G2_getRedoRecord_helper() {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_getRedoRecord(&charBuffer, &charBufferSize,
-            resizeFuncPointer);
+        resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -503,10 +503,10 @@ long long G2_getRepositoryLastModifiedTime_helper() {
 
 char* G2_getVirtualEntityByRecordID_helper(const char* recordList) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_getVirtualEntityByRecordID(recordList, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -514,12 +514,12 @@ char* G2_getVirtualEntityByRecordID_helper(const char* recordList) {
 }
 
 char* G2_getVirtualEntityByRecordID_V2_helper(const char* recordList,
-        const long long flags) {
+    const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_getVirtualEntityByRecordID_V2(recordList, flags,
-            &charBuffer, &charBufferSize, resizeFuncPointer);
+        &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -528,10 +528,10 @@ char* G2_getVirtualEntityByRecordID_V2_helper(const char* recordList,
 
 char* G2_howEntityByEntityID_helper(const long long entityID) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_howEntityByEntityID(entityID, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -539,12 +539,12 @@ char* G2_howEntityByEntityID_helper(const long long entityID) {
 }
 
 char* G2_howEntityByEntityID_V2_helper(const long long entityID,
-        const long long flags) {
+    const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_howEntityByEntityID_V2(entityID, flags, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -553,10 +553,10 @@ char* G2_howEntityByEntityID_V2_helper(const long long entityID,
 
 char* G2_processRedoRecord_helper() {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_processRedoRecord(&charBuffer, &charBufferSize,
-            resizeFuncPointer);
+        resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -564,15 +564,15 @@ char* G2_processRedoRecord_helper() {
 }
 
 struct G2_processRedoRecordWithInfo_result G2_processRedoRecordWithInfo_helper(
-        const long long flags) {
+    const long long flags) {
     size_t withInfoBufferSize = 1;
     size_t responseBufferSize = 1;
-    char *responseBuffer = (char *) malloc(responseBufferSize);
-    char *withInfoBuffer = (char *) malloc(withInfoBufferSize);
+    char* responseBuffer = (char*)malloc(responseBufferSize);
+    char* withInfoBuffer = (char*)malloc(withInfoBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_processRedoRecordWithInfo(flags, &responseBuffer,
-            &responseBufferSize, &withInfoBuffer, &withInfoBufferSize,
-            resizeFuncPointer);
+        &responseBufferSize, &withInfoBuffer, &withInfoBufferSize,
+        resizeFuncPointer);
     struct G2_processRedoRecordWithInfo_result result;
     result.response = responseBuffer;
     result.withInfo = withInfoBuffer;
@@ -582,10 +582,10 @@ struct G2_processRedoRecordWithInfo_result G2_processRedoRecordWithInfo_helper(
 
 char* G2_processWithInfo_helper(const char* record, const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_processWithInfo(record, flags, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -594,7 +594,7 @@ char* G2_processWithInfo_helper(const char* record, const long long flags) {
 
 char* G2_processWithResponse_helper(const char* record) {
     size_t charBufferSize = 65535;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     int returnCode = G2_processWithResponse(record, charBuffer, charBufferSize);
     if (returnCode != 0) {
         return "";
@@ -604,10 +604,10 @@ char* G2_processWithResponse_helper(const char* record) {
 
 char* G2_processWithResponseResize_helper(const char* record) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_processWithResponseResize(record, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -615,12 +615,12 @@ char* G2_processWithResponseResize_helper(const char* record) {
 }
 
 char* G2_reevaluateEntityWithInfo_helper(const long long entityID,
-        const long long flags) {
+    const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_reevaluateEntityWithInfo(entityID, flags, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -628,12 +628,12 @@ char* G2_reevaluateEntityWithInfo_helper(const long long entityID,
 }
 
 char* G2_reevaluateRecordWithInfo_helper(const char* dataSourceCode,
-        const char* recordID, const long long flags) {
+    const char* recordID, const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_reevaluateRecordWithInfo(dataSourceCode, recordID,
-            flags, &charBuffer, &charBufferSize, resizeFuncPointer);
+        flags, &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -641,14 +641,14 @@ char* G2_reevaluateRecordWithInfo_helper(const char* dataSourceCode,
 }
 
 char* G2_replaceRecordWithInfo_helper(const char* dataSourceCode,
-        const char* recordID, const char* jsonData, const char *loadID,
-        const long long flags) {
+    const char* recordID, const char* jsonData, const char* loadID,
+    const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_replaceRecordWithInfo(dataSourceCode, recordID,
-            jsonData, loadID, flags, &charBuffer, &charBufferSize,
-            resizeFuncPointer);
+        jsonData, loadID, flags, &charBuffer, &charBufferSize,
+        resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -657,10 +657,10 @@ char* G2_replaceRecordWithInfo_helper(const char* dataSourceCode,
 
 char* G2_searchByAttributes_helper(const char* jsonData) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_searchByAttributes(jsonData, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -668,12 +668,12 @@ char* G2_searchByAttributes_helper(const char* jsonData) {
 }
 
 char* G2_searchByAttributes_V2_helper(const char* jsonData,
-        const long long flags) {
+    const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_searchByAttributes_V2(jsonData, flags, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -682,7 +682,7 @@ char* G2_searchByAttributes_V2_helper(const char* jsonData,
 
 char* G2_stats_helper() {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_stats(&charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
@@ -692,12 +692,12 @@ char* G2_stats_helper() {
 }
 
 char* G2_whyEntities_helper(const long long entityID1,
-        const long long entityID2) {
+    const long long entityID2) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_whyEntities(entityID1, entityID2, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -705,12 +705,12 @@ char* G2_whyEntities_helper(const long long entityID1,
 }
 
 char* G2_whyEntities_V2_helper(const long long entityID1,
-        const long long entityID2, const long long flags) {
+    const long long entityID2, const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_whyEntities_V2(entityID1, entityID2, flags, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -719,10 +719,10 @@ char* G2_whyEntities_V2_helper(const long long entityID1,
 
 char* G2_whyEntityByEntityID_helper(const long long entityID1) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_whyEntityByEntityID(entityID1, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -730,12 +730,12 @@ char* G2_whyEntityByEntityID_helper(const long long entityID1) {
 }
 
 char* G2_whyEntityByEntityID_V2_helper(const long long entityID1,
-        const long long flags) {
+    const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_whyEntityByEntityID_V2(entityID1, flags, &charBuffer,
-            &charBufferSize, resizeFuncPointer);
+        &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -743,12 +743,12 @@ char* G2_whyEntityByEntityID_V2_helper(const long long entityID1,
 }
 
 char* G2_whyEntityByRecordID_helper(const char* dataSourceCode,
-        const char* recordID) {
+    const char* recordID) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_whyEntityByRecordID(dataSourceCode, recordID,
-            &charBuffer, &charBufferSize, resizeFuncPointer);
+        &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -756,12 +756,12 @@ char* G2_whyEntityByRecordID_helper(const char* dataSourceCode,
 }
 
 char* G2_whyEntityByRecordID_V2_helper(const char* dataSourceCode,
-        const char* recordID, const long long flags) {
+    const char* recordID, const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_whyEntityByRecordID_V2(dataSourceCode, recordID, flags,
-            &charBuffer, &charBufferSize, resizeFuncPointer);
+        &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -769,12 +769,12 @@ char* G2_whyEntityByRecordID_V2_helper(const char* dataSourceCode,
 }
 
 char* G2_whyRecords_helper(const char* dataSourceCode1, const char* recordID1,
-        const char* dataSourceCode2, const char* recordID2) {
+    const char* dataSourceCode2, const char* recordID2) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_whyRecords(dataSourceCode1, recordID1, dataSourceCode2,
-            recordID2, &charBuffer, &charBufferSize, resizeFuncPointer);
+        recordID2, &charBuffer, &charBufferSize, resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
@@ -782,14 +782,14 @@ char* G2_whyRecords_helper(const char* dataSourceCode1, const char* recordID1,
 }
 
 char* G2_whyRecords_V2_helper(const char* dataSourceCode1,
-        const char* recordID1, const char* dataSourceCode2,
-        const char* recordID2, const long long flags) {
+    const char* recordID1, const char* dataSourceCode2,
+    const char* recordID2, const long long flags) {
     size_t charBufferSize = 1;
-    char *charBuffer = (char *) malloc(charBufferSize);
+    char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_whyRecords_V2(dataSourceCode1, recordID1,
-            dataSourceCode2, recordID2, flags, &charBuffer, &charBufferSize,
-            resizeFuncPointer);
+        dataSourceCode2, recordID2, flags, &charBuffer, &charBufferSize,
+        resizeFuncPointer);
     if (returnCode != 0) {
         return "";
     }
