@@ -49,8 +49,8 @@ int G2_closeExport_helper(uintptr_t responseHandle);
 char* G2_deleteRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const char *loadID, const long long flags);
 struct G2_exportConfigAndConfigID_result G2_exportConfigAndConfigID_helper();
 char* G2_exportConfig_helper();
-struct G2_exportCSVEntityReport_result G2_exportCSVEntityReport_helper(const char* csvColumnList, const long long flags);
-struct G2_exportJSONEntityReport_result G2_exportJSONEntityReport_helper(const long long flags);
+struct G2_exportCSVEntityReport_result G2_exportCSVEntityReport_helper( const char* csvColumnList, const long long flags);
+struct G2_exportJSONEntityReport_result G2_exportJSONEntityReport_helper( const long long flags);
 char* G2_findInterestingEntitiesByEntityID_helper(long long entityID, long long flags);
 char* G2_findInterestingEntitiesByRecordID_helper(const char* dataSourceCode, const char* recordID, long long flags);
 char* G2_findNetworkByEntityID_helper(const char* entityList, const int maxDegree, const int buildOutDegree, const int maxEntities);
@@ -100,7 +100,5 @@ char* G2_whyEntityByEntityID_helper(const long long entityID1);
 char* G2_whyEntityByEntityID_V2_helper(const long long entityID1, const long long flags);
 char* G2_whyEntityByRecordID_helper(const char* dataSourceCode, const char* recordID);
 char* G2_whyEntityByRecordID_V2_helper(const char* dataSourceCode, const char* recordID, const long long flags);
-char* G2_whyRecords_helper(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2,  const char* recordID2);
-char* G2_whyRecords_V2_helper(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2,  const char* recordID2, const long long flags);
-
-
+char* G2_whyRecords_helper(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2);
+char* G2_whyRecords_V2_helper(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const long long flags);
