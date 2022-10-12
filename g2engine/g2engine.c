@@ -90,8 +90,7 @@ char* G2_exportConfig_helper() {
 
 struct G2_exportCSVEntityReport_result G2_exportCSVEntityReport_helper(const char* csvColumnList, const long long flags) {
     ExportHandle exportHandle;
-    int returnCode = G2_exportCSVEntityReport(csvColumnList, flags,
-        &exportHandle);
+    int returnCode = G2_exportCSVEntityReport(csvColumnList, flags, &exportHandle);
     struct G2_exportCSVEntityReport_result result;
     result.exportHandle = exportHandle;
     result.returnCode = returnCode;
