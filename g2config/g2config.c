@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "libg2config.h"
 #include "g2config.h"
 
 void* G2config_resizeStringBuffer(void* ptr, size_t size) {
