@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"log"
 	"testing"
+	"time"
 
+	"github.com/docktermj/g2-sdk-go/g2config"
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
 	"github.com/docktermj/go-xyzzy-helpers/logger"
 	"github.com/stretchr/testify/assert"
@@ -15,6 +17,7 @@ import (
 
 var (
 	g2configmgr G2configmgr
+	g2configX   g2config.G2config
 )
 
 // ----------------------------------------------------------------------------
@@ -39,6 +42,26 @@ func getTestObject(ctx context.Context) G2configmgr {
 		}
 	}
 	return g2configmgr
+}
+
+func getG2Config(ctx context.Context) g2config.G2config {
+
+	if g2configX == nil {
+		g2configX = &g2config.G2configImpl{}
+
+		moduleName := "Test module name"
+		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+		iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
+		if jsonErr != nil {
+			logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
+		}
+
+		initErr := g2configX.Init(ctx, moduleName, iniParams, verboseLogging)
+		if initErr != nil {
+			logger.Fatalf("Cannot Init: %v", initErr)
+		}
+	}
+	return g2configX
 }
 
 func truncate(aString string) string {
@@ -96,17 +119,38 @@ func TestLogger(test *testing.T) {
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
+func TestAddConfig(test *testing.T) {
+	ctx := context.TODO()
+	g2configmgr := getTestObject(ctx)
+
+	g2config := getG2Config(ctx)
+	configHandle, err1 := g2config.Create(ctx)
+	if err1 != nil {
+		test.Log("Error:", err1.Error())
+		assert.FailNow(test, "g2config.Create()")
+	}
+	configStr, err2 := g2config.Save(ctx, configHandle)
+	if err2 != nil {
+		test.Log("Error:", err2.Error())
+		assert.FailNow(test, configStr)
+	}
+	configComments := fmt.Sprintf("g2configmgr_test at %s", time.Now().UTC())
+	actual, err := g2configmgr.AddConfig(ctx, configStr, configComments)
+	testError(test, ctx, g2configmgr, err)
+	printActual(test, actual)
+}
+
 func TestClearLastException(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
-	err := g2config.ClearLastException(ctx)
-	testError(test, ctx, g2config, err)
+	g2configmgr := getTestObject(ctx)
+	err := g2configmgr.ClearLastException(ctx)
+	testError(test, ctx, g2configmgr, err)
 }
 
 func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
-	actual, err := g2config.GetLastException(ctx)
+	g2configmgr := getTestObject(ctx)
+	actual, err := g2configmgr.GetLastException(ctx)
 	if err != nil {
 		test.Log("Error:", err.Error())
 	} else {
@@ -116,28 +160,28 @@ func TestGetLastException(test *testing.T) {
 
 func TestGetLastExceptionCode(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
-	actual, err := g2config.GetLastExceptionCode(ctx)
-	testError(test, ctx, g2config, err)
+	g2configmgr := getTestObject(ctx)
+	actual, err := g2configmgr.GetLastExceptionCode(ctx)
+	testError(test, ctx, g2configmgr, err)
 	printActual(test, actual)
 }
 
 func TestInit(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
+	g2configmgr := getTestObject(ctx)
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
 	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
 	if jsonErr != nil {
 		logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
 	}
-	err := g2config.Init(ctx, moduleName, iniParams, verboseLogging)
-	testError(test, ctx, g2config, err)
+	err := g2configmgr.Init(ctx, moduleName, iniParams, verboseLogging)
+	testError(test, ctx, g2configmgr, err)
 }
 
 func TestDestroy(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
-	err := g2config.Destroy(ctx)
-	testError(test, ctx, g2config, err)
+	g2configmgr := getTestObject(ctx)
+	err := g2configmgr.Destroy(ctx)
+	testError(test, ctx, g2configmgr, err)
 }

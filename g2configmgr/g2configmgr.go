@@ -51,6 +51,22 @@ func (g2configmgr *G2configmgrImpl) getError(ctx context.Context, errorNumber in
 // Interface methods
 // ----------------------------------------------------------------------------
 
+func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr string, configComments string) (int64, error) {
+	// _DLEXPORT int G2ConfigMgr_addConfig(const char* configStr, const char* configComments, long long* configID);
+	var err error = nil
+	configStrForC := C.CString(configStr)
+	defer C.free(unsafe.Pointer(configStrForC))
+	configCommentsForC := C.CString(configComments)
+	defer C.free(unsafe.Pointer(configCommentsForC))
+	result := C.G2ConfigMgr_addConfig_helper(configStrForC, configCommentsForC)
+	configID := int64(C.longlong(result.configID))
+	returnCode := result.returnCode
+	if returnCode != 0 {
+		err = g2configmgr.getError(ctx, 33)
+	}
+	return configID, err
+}
+
 // ClearLastException returns the available memory, in bytes, on the host system.
 func (g2configmgr *G2configmgrImpl) ClearLastException(ctx context.Context) error {
 	// _DLEXPORT void G2Config_clearLastException();
