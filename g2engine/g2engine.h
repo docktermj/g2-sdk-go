@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "libg2.h"
 
-typedef void*(*resize_buffer_type)(void *, size_t);
+typedef void* (*resize_buffer_type)(void*, size_t);
 
 struct G2_addRecordWithInfoWithReturnedRecordID_result {
     char* recordID;
@@ -41,16 +41,16 @@ struct G2_processRedoRecordWithInfo_result {
     int returnCode;
 };
 
-void* G2_resizeStringBuffer(void *ptr, size_t size);
-char* G2_addRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags);
-struct G2_addRecordWithInfoWithReturnedRecordID_result G2_addRecordWithInfoWithReturnedRecordID_helper(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags);
+void* G2_resizeStringBuffer(void* ptr, size_t size);
+char* G2_addRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const char* jsonData, const char* loadID, const long long flags);
+struct G2_addRecordWithInfoWithReturnedRecordID_result G2_addRecordWithInfoWithReturnedRecordID_helper(const char* dataSourceCode, const char* jsonData, const char* loadID, const long long flags);
 char* G2_checkRecord_helper(const char* record, const char* recordQueryList);
 int G2_closeExport_helper(uintptr_t responseHandle);
-char* G2_deleteRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const char *loadID, const long long flags);
+char* G2_deleteRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const char* loadID, const long long flags);
 struct G2_exportConfigAndConfigID_result G2_exportConfigAndConfigID_helper();
 char* G2_exportConfig_helper();
-struct G2_exportCSVEntityReport_result G2_exportCSVEntityReport_helper( const char* csvColumnList, const long long flags);
-struct G2_exportJSONEntityReport_result G2_exportJSONEntityReport_helper( const long long flags);
+struct G2_exportCSVEntityReport_result G2_exportCSVEntityReport_helper(const char* csvColumnList, const long long flags);
+struct G2_exportJSONEntityReport_result G2_exportJSONEntityReport_helper(const long long flags);
 char* G2_findInterestingEntitiesByEntityID_helper(long long entityID, long long flags);
 char* G2_findInterestingEntitiesByRecordID_helper(const char* dataSourceCode, const char* recordID, long long flags);
 char* G2_findNetworkByEntityID_helper(const char* entityList, const int maxDegree, const int buildOutDegree, const int maxEntities);
@@ -90,7 +90,7 @@ char* G2_processWithResponse_helper(const char* record);
 char* G2_processWithResponseResize_helper(const char* record);
 char* G2_reevaluateEntityWithInfo_helper(const long long entityID, const long long flags);
 char* G2_reevaluateRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const long long flags);
-char* G2_replaceRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags);
+char* G2_replaceRecordWithInfo_helper(const char* dataSourceCode, const char* recordID, const char* jsonData, const char* loadID, const long long flags);
 char* G2_searchByAttributes_helper(const char* jsonData);
 char* G2_searchByAttributes_V2_helper(const char* jsonData, const long long flags);
 char* G2_stats_helper();

@@ -103,7 +103,6 @@
     make -e test
     ```
 
-
 ## Error prefixes
 
 1. `6010` - g2config
