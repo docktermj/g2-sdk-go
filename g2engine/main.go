@@ -27,7 +27,7 @@ type FlagMask int64
 // Constants
 // ----------------------------------------------------------------------------
 
-const MessageIdFormat = "senzing-6012%04d"
+const MessageIdFormat = "senzing-6004%04d"
 
 const (
 	G2_EXPORT_INCLUDE_RESOLVED         FlagMask = 0         // 0 we should include entities with "resolved" relationships

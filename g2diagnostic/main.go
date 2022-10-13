@@ -26,7 +26,7 @@ type G2diagnosticImpl struct{}
 // Constants
 // ----------------------------------------------------------------------------
 
-const MessageIdFormat = "senzing-6013%04d"
+const MessageIdFormat = "senzing-6003%04d"
 
 // ----------------------------------------------------------------------------
 // Interfaces
