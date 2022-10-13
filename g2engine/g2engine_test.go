@@ -3,6 +3,7 @@ package g2engine
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
 
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
@@ -77,6 +78,17 @@ func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
 func TestGetObject(test *testing.T) {
 	ctx := context.TODO()
 	getTestObject(ctx)
+}
+
+func TestLogger(test *testing.T) {
+	// Configure the "log" standard library.
+
+	log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
+	logger.SetLevel(logger.LevelInfo)
+
+	// Test logger.
+
+	logger.LogMessage(MessageIdFormat, 99, "Test message 1", "Variable1", "Variable2")
 }
 
 // ----------------------------------------------------------------------------
