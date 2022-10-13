@@ -37,7 +37,7 @@ func (g2engine *G2engineImpl) getByteArray(size int) []byte {
 }
 
 // TODO: Document.
-func (g2engine *G2engineImpl) getError(ctx context.Context, errorNumber int, details ...string) error {
+func (g2engine *G2engineImpl) getError(ctx context.Context, errorNumber int, details ...interface{}) error {
 	lastException, err := g2engine.GetLastException(ctx)
 	defer g2engine.ClearLastException(ctx)
 	message := lastException

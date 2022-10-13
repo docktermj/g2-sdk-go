@@ -37,7 +37,7 @@ func (g2diagnostic *G2diagnosticImpl) getByteArray(size int) []byte {
 }
 
 // TODO: Document.
-func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber int, details ...string) error {
+func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber int, details ...interface{}) error {
 	lastException, err := g2diagnostic.GetLastException(ctx)
 	defer g2diagnostic.ClearLastException(ctx)
 	message := lastException

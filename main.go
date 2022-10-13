@@ -116,10 +116,5 @@ func main() {
 		logger.LogMessage(MessageIdFormat, 5, withInfoErr.Error())
 	}
 
-	logger.LogMessage(MessageIdFormat, 5, "Bob was here")
-
 	fmt.Printf("WithInfo: %s\n)", withInfo)
-
-	logger.LogMessage(MessageIdFormat, 5, "Bob was here again")
-
 }
