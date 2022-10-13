@@ -74,7 +74,13 @@ func main() {
 
 	// Test logger.
 
-	logger.LogMessage(MessageIdFormat, 2000, "Test message 1", "Variable1", "Variable2")
+	programmMetadataMap := map[string]interface{}{
+		"ProgramName":    programName,
+		"BuildVersion":   buildVersion,
+		"BuildIteration": buildIteration,
+	}
+
+	logger.LogMessageUsingMap(MessageIdFormat, 99, "Program information", programmMetadataMap)
 
 	// Work with G2diagnostic.
 
