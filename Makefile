@@ -132,7 +132,6 @@ dependencies:
 	@go get -u ./...
 	@go get -t -u ./...
 	@go mod tidy
-	@go get -u github.com/jstemmer/go-junit-report
 
 
 .PHONY: build
