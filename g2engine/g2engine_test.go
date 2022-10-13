@@ -6,11 +6,10 @@ import (
 	"log"
 	"testing"
 
+	truncator "github.com/aquilax/truncate"
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
 	"github.com/docktermj/go-xyzzy-helpers/logger"
 	"github.com/stretchr/testify/assert"
-
-	truncator "github.com/aquilax/truncate"
 )
 
 var (
@@ -46,8 +45,9 @@ func truncate(aString string) string {
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
-	fmt.Sprintf("%s: %v", title, truncate(fmt.Sprintf("%v", result)))
-	//  test.Log(fmt.Sprintf("%s: %v", title, truncate(fmt.Sprintf("%v", result))))
+	if 1 == 0 {
+		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result)))
+	}
 }
 
 func printActual(test *testing.T, actual interface{}) {

@@ -46,8 +46,9 @@ func truncate(aString string) string {
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
-	fmt.Sprintf("%s: %v", title, truncate(fmt.Sprintf("%v", result)))
-	//  test.Log(fmt.Sprintf("%s: %v", title, truncate(fmt.Sprintf("%v", result))))
+	if 1 == 0 {
+		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result)))
+	}
 }
 
 func printActual(test *testing.T, actual interface{}) {
@@ -144,7 +145,7 @@ func TestDeleteDataSource(test *testing.T) {
 	printResult(test, "Original", actual)
 
 	inputJson := `{"DSRC_CODE": "GO_TEST"}`
-	actual, err = g2config.AddDataSource(ctx, aHandle, inputJson)
+	_, err = g2config.AddDataSource(ctx, aHandle, inputJson)
 	testError(test, ctx, g2config, err)
 
 	actual, err = g2config.ListDataSources(ctx, aHandle)
