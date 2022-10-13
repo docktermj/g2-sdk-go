@@ -72,6 +72,10 @@ func main() {
 	log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
 	logger.SetLevel(logger.LevelInfo)
 
+	// Test logger.
+
+	logger.LogMessage(MessageIdFormat, 2000, "Test message 1", "Variable1", "Variable2")
+
 	// Work with G2diagnostic.
 
 	g2diagnostic, g2diagnosticErr := getG2diagnostic(ctx)
