@@ -184,10 +184,11 @@ build-windows:
 .PHONY: test
 test:
 #	@go test -v $(GO_PACKAGE_NAME)/...
+#	@go test -v $(GO_PACKAGE_NAME)/g2config
+#	@go test -v $(GO_PACKAGE_NAME)/g2configmgr
 #	@go test -v $(GO_PACKAGE_NAME)/g2diagnostic
 #	@go test -v $(GO_PACKAGE_NAME)/g2engine
-#	@go test -v $(GO_PACKAGE_NAME)/g2config
-	@go test -v $(GO_PACKAGE_NAME)/g2configmgr
+	@go test -v $(GO_PACKAGE_NAME)/g2product
 
 # -----------------------------------------------------------------------------
 # Run
