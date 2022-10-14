@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/aquilax/truncate v1.0.0
-	github.com/docktermj/go-xyzzy-helpers v0.0.0-20221012203621-bfbcafc2a455
+	github.com/docktermj/go-xyzzy-helpers v0.0.0-20221014193822-49fb90a714ae
 	github.com/stretchr/testify v1.8.0
 )
 

@@ -5,6 +5,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/docktermj/go-xyzzy-helpers v0.0.0-20221012203621-bfbcafc2a455 h1:BWAtVVh6/q54nLnZugCaIttkIReavQz5uC7AK4J3CTM=
 github.com/docktermj/go-xyzzy-helpers v0.0.0-20221012203621-bfbcafc2a455/go.mod h1:CRQInbEvBA+vzjS+y5Cll/1/F+oGSq9FWcDYUf8zmOc=
+github.com/docktermj/go-xyzzy-helpers v0.0.0-20221014193822-49fb90a714ae h1:vNkTZdUoR2Sp71qQ5xYk11VIGdCoDjxxhmnQEvcKloI=
+github.com/docktermj/go-xyzzy-helpers v0.0.0-20221014193822-49fb90a714ae/go.mod h1:CRQInbEvBA+vzjS+y5Cll/1/F+oGSq9FWcDYUf8zmOc=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
