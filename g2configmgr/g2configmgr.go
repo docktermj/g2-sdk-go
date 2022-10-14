@@ -88,16 +88,25 @@ func (g2configmgr *G2configmgrImpl) Destroy(ctx context.Context) error {
 }
 
 // TODO:
+func (g2configmgr *G2configmgrImpl) GetConfig(ctx context.Context, configID int64) (string, error) {
+	// _DLEXPORT int G2ConfigMgr_getConfig(const long long configID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	var err error = nil
+	result := C.G2ConfigMgr_getConfig_helper(C.longlong(configID))
+	if result.returnCode != 0 {
+		err = g2configmgr.getError(ctx, 50, result)
+	}
+	return C.GoString(result.config), err
+}
+
+// TODO:
 func (g2configmgr *G2configmgrImpl) GetConfigList(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2ConfigMgr_getConfigList(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
 	result := C.G2ConfigMgr_getConfigList_helper()
-	configList := C.GoString(result.configList)
-	returnCode := result.returnCode
-	if returnCode != 0 {
+	if result.returnCode != 0 {
 		err = g2configmgr.getError(ctx, 50, result)
 	}
-	return configList, err
+	return C.GoString(result.configList), err
 }
 
 // TODO:
@@ -105,12 +114,10 @@ func (g2configmgr *G2configmgrImpl) GetDefaultConfigID(ctx context.Context) (int
 	//  _DLEXPORT int G2ConfigMgr_getDefaultConfigID(long long* configID);
 	var err error = nil
 	result := C.G2ConfigMgr_getDefaultConfigID_helper()
-	configID := int64(C.longlong(result.configID))
-	returnCode := result.returnCode
-	if returnCode != 0 {
+	if result.returnCode != 0 {
 		err = g2configmgr.getError(ctx, 50, result)
 	}
-	return configID, err
+	return int64(C.longlong(result.configID)), err
 }
 
 // GetLastException returns the last exception encountered in the Senzing Engine.

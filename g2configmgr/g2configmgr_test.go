@@ -66,7 +66,7 @@ func getG2Config(ctx context.Context) g2config.G2config {
 }
 
 func truncate(aString string) string {
-	return truncator.Truncate(aString, 30, "...", truncator.PositionEnd)
+	return truncator.Truncate(aString, 50, "...", truncator.PositionEnd)
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
@@ -77,10 +77,6 @@ func printResult(test *testing.T, title string, result interface{}) {
 
 func printActual(test *testing.T, actual interface{}) {
 	printResult(test, "Actual", actual)
-}
-
-func printActualEntirely(test *testing.T, actual interface{}) {
-	test.Logf("%s: %v", "Actual", fmt.Sprintf("%v", actual))
 }
 
 func testError(test *testing.T, ctx context.Context, g2configmgr G2configmgr, err error) {
@@ -169,6 +165,23 @@ func TestClearLastException(test *testing.T) {
 	g2configmgr := getTestObject(ctx)
 	err := g2configmgr.ClearLastException(ctx)
 	testError(test, ctx, g2configmgr, err)
+}
+
+func TestGetConfig(test *testing.T) {
+	ctx := context.TODO()
+	g2configmgr := getTestObject(ctx)
+
+	// Get a ConfigID.
+
+	configID, err1 := g2configmgr.GetDefaultConfigID(ctx)
+	if err1 != nil {
+		test.Log("Error:", err1.Error())
+		assert.FailNow(test, "g2configmgr.GetDefaultConfigID()")
+	}
+
+	actual, err := g2configmgr.GetConfig(ctx, configID)
+	testError(test, ctx, g2configmgr, err)
+	printActual(test, actual)
 }
 
 func TestGetConfigList(test *testing.T) {
