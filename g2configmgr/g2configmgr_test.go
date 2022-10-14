@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"testing"
 	"time"
 
@@ -122,6 +123,9 @@ func TestLogger(test *testing.T) {
 func TestAddConfig(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx)
+	now := time.Now()
+
+	// Create an in-memory configuration.
 
 	g2config := getG2Config(ctx)
 	configHandle, err1 := g2config.Create(ctx)
@@ -129,12 +133,28 @@ func TestAddConfig(test *testing.T) {
 		test.Log("Error:", err1.Error())
 		assert.FailNow(test, "g2config.Create()")
 	}
-	configStr, err2 := g2config.Save(ctx, configHandle)
+
+	// Modify the in-memory configuration so it is different from the created configuration.
+	// If not, on Save Senzing will detect that it is the same and no Save occurs.
+
+	inputJson := `{"DSRC_CODE": "GO_TEST_` + strconv.FormatInt(now.Unix(), 10) + `"}`
+	_, err2 := g2config.AddDataSource(ctx, configHandle, inputJson)
 	if err2 != nil {
+		test.Log("Error:", err2.Error())
+		assert.FailNow(test, "g2config.AddDataSource()")
+	}
+
+	// Create a JSON string from the in-memory version of the configuration.
+
+	configStr, err3 := g2config.Save(ctx, configHandle)
+	if err3 != nil {
 		test.Log("Error:", err2.Error())
 		assert.FailNow(test, configStr)
 	}
-	configComments := fmt.Sprintf("g2configmgr_test at %s", time.Now().UTC())
+
+	// Perform the test.
+
+	configComments := fmt.Sprintf("g2configmgr_test at %s", now.UTC())
 	actual, err := g2configmgr.AddConfig(ctx, configStr, configComments)
 	testError(test, ctx, g2configmgr, err)
 	printActual(test, actual)
