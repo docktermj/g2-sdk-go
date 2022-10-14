@@ -4,7 +4,7 @@
 #include "libg2configmgr.h"
 #include "g2configmgr.h"
 
-void* G2configmgr_resizeStringBuffer(void* ptr, size_t size) {
+void* G2ConfigMgr_resizeStringBuffer(void* ptr, size_t size) {
     //deallocate old buffer
     if (ptr != 0)
         free(ptr);
@@ -18,6 +18,19 @@ struct G2ConfigMgr_addConfig_result G2ConfigMgr_addConfig_helper(const char* con
     int returnCode = G2ConfigMgr_addConfig(configStr, configComments, &configID);
     struct G2ConfigMgr_addConfig_result result;
     result.configID = configID;
+    result.returnCode = returnCode;
+    return result;
+}
+
+// _DLEXPORT int G2ConfigMgr_getConfigList(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+
+struct G2ConfigMgr_getConfigList_result G2ConfigMgr_getConfigList_helper() {
+    size_t charBufferSize = 1;
+    char* charBuffer = (char*)malloc(charBufferSize);
+    resize_buffer_type resizeFuncPointer = &G2ConfigMgr_resizeStringBuffer;
+    int returnCode = G2ConfigMgr_getConfigList(&charBuffer, &charBufferSize, resizeFuncPointer);
+    struct G2ConfigMgr_getConfigList_result result;
+    result.configList = charBuffer;
     result.returnCode = returnCode;
     return result;
 }

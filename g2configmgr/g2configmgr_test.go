@@ -79,6 +79,10 @@ func printActual(test *testing.T, actual interface{}) {
 	printResult(test, "Actual", actual)
 }
 
+func printActualEntirely(test *testing.T, actual interface{}) {
+	test.Logf("%s: %v", "Actual", fmt.Sprintf("%v", actual))
+}
+
 func testError(test *testing.T, ctx context.Context, g2configmgr G2configmgr, err error) {
 	if err != nil {
 		test.Log("Error:", err.Error())
@@ -165,6 +169,14 @@ func TestClearLastException(test *testing.T) {
 	g2configmgr := getTestObject(ctx)
 	err := g2configmgr.ClearLastException(ctx)
 	testError(test, ctx, g2configmgr, err)
+}
+
+func TestGetConfigList(test *testing.T) {
+	ctx := context.TODO()
+	g2configmgr := getTestObject(ctx)
+	actual, err := g2configmgr.GetConfigList(ctx)
+	testError(test, ctx, g2configmgr, err)
+	printActual(test, actual)
 }
 
 func TestGetLastException(test *testing.T) {
