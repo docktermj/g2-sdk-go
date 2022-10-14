@@ -1,16 +1,16 @@
-// The Senzing G2config Package is a Go wrapper over
-// Senzing's G2Config C binding.
+// The Senzing G2configmgr Package is a Go wrapper over
+// Senzing's G2Configmgr C binding.
 //
-// The purpose of a g2config object is:
+// The purpose of a g2configmgr object is:
 //   - ...
 //   - ...
 //   - ...
 //
-// To use g2config, the LD_LIBRARY_PATH environment variable must include
+// To use g2configmgr, the LD_LIBRARY_PATH environment variable must include
 // a path to Senzing's libraries.  Example:
 //
 //	export LD_LIBRARY_PATH=/opt/senzing/g2/lib
-package g2config
+package g2configmgr
 
 import (
 	"context"
@@ -20,29 +20,28 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-type G2configImpl struct{}
+type G2configmgrImpl struct{}
 
 // ----------------------------------------------------------------------------
 // Constants
 // ----------------------------------------------------------------------------
 
-const MessageIdFormat = "senzing-6001%04d"
+const MessageIdFormat = "senzing-6002%04d"
 
 // ----------------------------------------------------------------------------
 // Interfaces
 // ----------------------------------------------------------------------------
 
-type G2config interface {
-	AddDataSource(ctx context.Context, configHandle uintptr, inputJson string) (string, error)
+type G2configmgr interface {
+	AddConfig(ctx context.Context, configStr string, configComments string) (int64, error)
 	ClearLastException(ctx context.Context) error
-	Close(ctx context.Context, configHandle uintptr) error
-	Create(ctx context.Context) (uintptr, error)
-	DeleteDataSource(ctx context.Context, configHandle uintptr, inputJson string) error
 	Destroy(ctx context.Context) error
+	GetConfig(ctx context.Context, configID int64) (string, error)
+	GetConfigList(ctx context.Context) (string, error)
+	GetDefaultConfigID(ctx context.Context) (int64, error)
 	GetLastException(ctx context.Context) (string, error)
 	GetLastExceptionCode(ctx context.Context) (int, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
-	ListDataSources(ctx context.Context, configHandle uintptr) (string, error)
-	Load(ctx context.Context, configHandle uintptr, jsonConfig string) error
-	Save(ctx context.Context, configHandle uintptr) (string, error)
+	ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error
+	SetDefaultConfigID(ctx context.Context, configID int64) error
 }
