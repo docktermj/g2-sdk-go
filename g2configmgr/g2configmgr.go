@@ -13,7 +13,6 @@ import "C"
 import (
 	"bytes"
 	"context"
-	"strconv"
 	"unsafe"
 
 	"github.com/docktermj/go-xyzzy-helpers/logger"
@@ -60,12 +59,10 @@ func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr str
 	configCommentsForC := C.CString(configComments)
 	defer C.free(unsafe.Pointer(configCommentsForC))
 	result := C.G2ConfigMgr_addConfig_helper(configStrForC, configCommentsForC)
-	configID := int64(C.longlong(result.configID))
-	returnCode := result.returnCode
-	if returnCode != 0 {
-		err = g2configmgr.getError(ctx, 33, configStr, configComments, returnCode)
+	if result.returnCode != 0 {
+		err = g2configmgr.getError(ctx, 33, configStr, configComments, result)
 	}
-	return configID, err
+	return int64(C.longlong(result.configID)), err
 }
 
 // ClearLastException returns the available memory, in bytes, on the host system.
@@ -151,7 +148,30 @@ func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string,
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2ConfigMgr_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
-		err = g2configmgr.getError(ctx, 6, moduleName, iniParams, strconv.Itoa(verboseLogging), strconv.Itoa(int(result)))
+		err = g2configmgr.getError(ctx, 6, moduleName, iniParams, verboseLogging, result)
+	}
+	return err
+}
+
+// TODO:
+// Very much like a "compare-and-swap" instruction to serialize concurrent editing of configuration.
+// To simply set the default configuration ID, use SetDefaultConfigID().
+func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error {
+	// _DLEXPORT int G2ConfigMgr_replaceDefaultConfigID(const long long oldConfigID, const long long newConfigID);
+	var err error = nil
+	result := C.G2ConfigMgr_replaceDefaultConfigID(C.longlong(oldConfigID), C.longlong(newConfigID))
+	if result != 0 {
+		err = g2configmgr.getError(ctx, 50, result)
+	}
+	return err
+}
+
+func (g2configmgr *G2configmgrImpl) SetDefaultConfigID(ctx context.Context, configID int64) error {
+	// _DLEXPORT int G2ConfigMgr_setDefaultConfigID(const long long configID);
+	var err error = nil
+	result := C.G2ConfigMgr_setDefaultConfigID(C.longlong(configID))
+	if result != 0 {
+		err = g2configmgr.getError(ctx, 50, result)
 	}
 	return err
 }

@@ -232,6 +232,41 @@ func TestInit(test *testing.T) {
 	testError(test, ctx, g2configmgr, err)
 }
 
+func TestReplaceDefaultConfigID(test *testing.T) {
+	ctx := context.TODO()
+	g2configmgr := getTestObject(ctx)
+
+	oldConfigID, err1 := g2configmgr.GetDefaultConfigID(ctx)
+	if err1 != nil {
+		test.Log("Error:", err1.Error())
+		assert.FailNow(test, "g2configmgr.GetDefaultConfigID()")
+	}
+
+	// FIXME: This is kind of a cheeter.
+
+	newConfigID, err2 := g2configmgr.GetDefaultConfigID(ctx)
+	if err2 != nil {
+		test.Log("Error:", err2.Error())
+		assert.FailNow(test, "g2configmgr.GetDefaultConfigID()-2")
+	}
+
+	err := g2configmgr.ReplaceDefaultConfigID(ctx, oldConfigID, newConfigID)
+	testError(test, ctx, g2configmgr, err)
+}
+
+func TestSetDefaultConfigID(test *testing.T) {
+	ctx := context.TODO()
+	g2configmgr := getTestObject(ctx)
+
+	configID, err1 := g2configmgr.GetDefaultConfigID(ctx)
+	if err1 != nil {
+		test.Log("Error:", err1.Error())
+		assert.FailNow(test, "g2configmgr.GetDefaultConfigID()")
+	}
+	err := g2configmgr.SetDefaultConfigID(ctx, configID)
+	testError(test, ctx, g2configmgr, err)
+}
+
 func TestDestroy(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx)

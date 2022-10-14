@@ -42,6 +42,6 @@ type G2configmgr interface {
 	GetLastException(ctx context.Context) (string, error)
 	GetLastExceptionCode(ctx context.Context) (int, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
-	// ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error
-	// SetDefaultConfigID(ctx context.Context, configID int64) error
+	ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error
+	SetDefaultConfigID(ctx context.Context, configID int64) error
 }
