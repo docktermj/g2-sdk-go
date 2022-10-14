@@ -38,9 +38,8 @@ type G2product interface {
 	GetLastException(ctx context.Context) (string, error)
 	GetLastExceptionCode(ctx context.Context) (int, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
-
-	// License() (string, error)
-	// ValidateLicenseFile(licenseFilePath string) (string, error)
-	// ValidateLicenseStringBase64(licenseString string) (string, error)
-	// Version() (string, error)
+	License(ctx context.Context) (string, error)
+	ValidateLicenseFile(ctx context.Context, licenseFilePath string) (string, error)
+	ValidateLicenseStringBase64(ctx context.Context, licenseString string) (string, error)
+	Version(ctx context.Context) (string, error)
 }

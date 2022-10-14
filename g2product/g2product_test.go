@@ -3,7 +3,6 @@ package g2product
 import (
 	"context"
 	"fmt"
-	"log"
 	"testing"
 
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
@@ -81,17 +80,6 @@ func TestGetObject(test *testing.T) {
 	getTestObject(ctx)
 }
 
-func TestLogger(test *testing.T) {
-	// Configure the "log" standard library.
-
-	log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
-	logger.SetLevel(logger.LevelInfo)
-
-	// Test logger.
-
-	logger.LogMessage(MessageIdFormat, 99, "Test message 1", "Variable1", "Variable2")
-}
-
 // ----------------------------------------------------------------------------
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
@@ -106,9 +94,7 @@ func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx)
 	actual, err := g2product.GetLastException(ctx)
-	if err != nil {
-		test.Log("Error:", err.Error())
-	} else {
+	if err == nil {
 		printActual(test, actual)
 	}
 }
@@ -130,6 +116,40 @@ func TestInit(test *testing.T) {
 	testError(test, ctx, g2product, jsonErr)
 	err := g2product.Init(ctx, moduleName, iniParams, verboseLogging)
 	testError(test, ctx, g2product, err)
+}
+
+func TestLicense(test *testing.T) {
+	ctx := context.TODO()
+	g2product := getTestObject(ctx)
+	actual, err := g2product.License(ctx)
+	testError(test, ctx, g2product, err)
+	printActual(test, actual)
+}
+
+func TestValidateLicenseFile(test *testing.T) {
+	ctx := context.TODO()
+	g2product := getTestObject(ctx)
+	licenseFilePath := ""
+	actual, _ := g2product.ValidateLicenseFile(ctx, licenseFilePath)
+	// testError(test, ctx, g2product, err)
+	printActual(test, actual)
+}
+
+func TestValidateLicenseStringBase64(test *testing.T) {
+	ctx := context.TODO()
+	g2product := getTestObject(ctx)
+	licenseString := ""
+	actual, _ := g2product.ValidateLicenseStringBase64(ctx, licenseString)
+	// testError(test, ctx, g2product, err)
+	printActual(test, actual)
+}
+
+func TestVersion(test *testing.T) {
+	ctx := context.TODO()
+	g2product := getTestObject(ctx)
+	actual, err := g2product.Version(ctx)
+	testError(test, ctx, g2product, err)
+	printActual(test, actual)
 }
 
 func TestDestroy(test *testing.T) {

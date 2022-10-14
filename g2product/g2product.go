@@ -104,3 +104,41 @@ func (g2product *G2productImpl) Init(ctx context.Context, moduleName string, ini
 	}
 	return err
 }
+
+func (g2product *G2productImpl) License(ctx context.Context) (string, error) {
+	// _DLEXPORT char* G2Product_license();
+	var err error = nil
+	result := C.G2Product_license()
+	return C.GoString(result), err
+}
+
+func (g2product *G2productImpl) ValidateLicenseFile(ctx context.Context, licenseFilePath string) (string, error) {
+	// _DLEXPORT int G2Product_validateLicenseFile(const char* licenseFilePath, char **errorBuf, size_t *errorBufSize, void *(*resizeFunc)(void *ptr,size_t newSize));
+	var err error = nil
+	licenseFilePathForC := C.CString(licenseFilePath)
+	defer C.free(unsafe.Pointer(licenseFilePathForC))
+	result := C.G2Product_validateLicenseFile_helper(licenseFilePathForC)
+	if result.returnCode != 0 {
+		err = g2product.getError(ctx, 50, licenseFilePath, C.GoString(result.response), result)
+	}
+	return C.GoString(result.response), err
+}
+
+func (g2product *G2productImpl) ValidateLicenseStringBase64(ctx context.Context, licenseString string) (string, error) {
+	// _DLEXPORT int G2Product_validateLicenseStringBase64(const char* licenseString, char **errorBuf, size_t *errorBufSize, void *(*resizeFunc)(void *ptr,size_t newSize));
+	var err error = nil
+	licenseStringForC := C.CString(licenseString)
+	defer C.free(unsafe.Pointer(licenseStringForC))
+	result := C.G2Product_validateLicenseStringBase64_helper(licenseStringForC)
+	if result.returnCode != 0 {
+		err = g2product.getError(ctx, 50, licenseString, C.GoString(result.response), result)
+	}
+	return C.GoString(result.response), err
+}
+
+func (g2product *G2productImpl) Version(ctx context.Context) (string, error) {
+	// _DLEXPORT char* G2Product_license();
+	var err error = nil
+	result := C.G2Product_version()
+	return C.GoString(result), err
+}

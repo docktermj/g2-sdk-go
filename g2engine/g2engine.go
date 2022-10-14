@@ -683,11 +683,12 @@ func (g2engine *G2engineImpl) GetRecord_V2(ctx context.Context, dataSourceCode s
 func (g2engine *G2engineImpl) GetRedoRecord(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_getRedoRecord(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-	stringBuffer := C.GoString(C.G2_getRedoRecord_helper())
-	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 40)
+	result := C.G2_getRedoRecord_helper()
+	if result.returnCode != 0 {
+		err = g2engine.getError(ctx, 40, result)
 	}
-	return stringBuffer, err
+	return C.GoString(result.response), err
+
 }
 
 // TODO: Document.
@@ -804,11 +805,12 @@ func (g2engine *G2engineImpl) Process(ctx context.Context, record string) error 
 func (g2engine *G2engineImpl) ProcessRedoRecord(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_processRedoRecord(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
-	stringBuffer := C.GoString(C.G2_processRedoRecord_helper())
-	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 49)
+	result := C.G2_processRedoRecord_helper()
+	if result.returnCode != 0 {
+		err = g2engine.getError(ctx, 49, result)
 	}
-	return stringBuffer, err
+	return C.GoString(result.response), err
+
 }
 
 // TODO: Document.

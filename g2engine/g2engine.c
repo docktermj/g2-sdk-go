@@ -389,15 +389,15 @@ char* G2_getRecord_V2_helper(const char* dataSourceCode, const char* recordID, c
     return charBuffer;
 }
 
-char* G2_getRedoRecord_helper() {
+struct G2_getRedoRecord_result G2_getRedoRecord_helper() {
     size_t charBufferSize = 1;
     char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_getRedoRecord(&charBuffer, &charBufferSize, resizeFuncPointer);
-    if (returnCode != 0) {
-        return "";
-    }
-    return charBuffer;
+    struct G2_getRedoRecord_result result;
+    result.response = charBuffer;
+    result.returnCode = returnCode;
+    return result;
 }
 
 long long G2_getRepositoryLastModifiedTime_helper() {
@@ -450,15 +450,15 @@ char* G2_howEntityByEntityID_V2_helper(const long long entityID, const long long
     return charBuffer;
 }
 
-char* G2_processRedoRecord_helper() {
+struct G2_processRedoRecord_result G2_processRedoRecord_helper() {
     size_t charBufferSize = 1;
     char* charBuffer = (char*)malloc(charBufferSize);
     resize_buffer_type resizeFuncPointer = &G2_resizeStringBuffer;
     int returnCode = G2_processRedoRecord(&charBuffer, &charBufferSize, resizeFuncPointer);
-    if (returnCode != 0) {
-        return "";
-    }
-    return charBuffer;
+    struct G2_processRedoRecord_result result;
+    result.response = charBuffer;
+    result.returnCode = returnCode;
+    return result;
 }
 
 struct G2_processRedoRecordWithInfo_result G2_processRedoRecordWithInfo_helper(const long long flags) {

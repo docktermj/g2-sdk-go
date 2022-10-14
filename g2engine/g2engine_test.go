@@ -3,7 +3,6 @@ package g2engine
 import (
 	"context"
 	"fmt"
-	"log"
 	"testing"
 
 	truncator "github.com/aquilax/truncate"
@@ -41,7 +40,7 @@ func getTestObject(ctx context.Context) G2engine {
 }
 
 func truncate(aString string) string {
-	return truncator.Truncate(aString, 30, "...", truncator.PositionEnd)
+	return truncator.Truncate(aString, 50, "...", truncator.PositionEnd)
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
@@ -78,17 +77,6 @@ func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
 func TestGetObject(test *testing.T) {
 	ctx := context.TODO()
 	getTestObject(ctx)
-}
-
-func TestLogger(test *testing.T) {
-	// Configure the "log" standard library.
-
-	log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
-	logger.SetLevel(logger.LevelInfo)
-
-	// Test logger.
-
-	logger.LogMessage(MessageIdFormat, 99, "Test message 1", "Variable1", "Variable2")
 }
 
 // ----------------------------------------------------------------------------
@@ -501,9 +489,7 @@ func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx)
 	actual, err := g2engine.GetLastException(ctx)
-	if err != nil {
-		test.Log("Error:", err.Error())
-	} else {
+	if err == nil {
 		printActual(test, actual)
 	}
 }

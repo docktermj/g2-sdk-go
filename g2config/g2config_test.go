@@ -42,7 +42,7 @@ func getTestObject(ctx context.Context) G2config {
 }
 
 func truncate(aString string) string {
-	return truncator.Truncate(aString, 30, "...", truncator.PositionEnd)
+	return truncator.Truncate(aString, 50, "...", truncator.PositionEnd)
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
