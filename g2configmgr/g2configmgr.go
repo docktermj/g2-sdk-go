@@ -100,6 +100,19 @@ func (g2configmgr *G2configmgrImpl) GetConfigList(ctx context.Context) (string, 
 	return configList, err
 }
 
+// TODO:
+func (g2configmgr *G2configmgrImpl) GetDefaultConfigID(ctx context.Context) (int64, error) {
+	//  _DLEXPORT int G2ConfigMgr_getDefaultConfigID(long long* configID);
+	var err error = nil
+	result := C.G2ConfigMgr_getDefaultConfigID_helper()
+	configID := int64(C.longlong(result.configID))
+	returnCode := result.returnCode
+	if returnCode != 0 {
+		err = g2configmgr.getError(ctx, 50, result)
+	}
+	return configID, err
+}
+
 // GetLastException returns the last exception encountered in the Senzing Engine.
 func (g2configmgr *G2configmgrImpl) GetLastException(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2Config_getLastException(char *buffer, const size_t bufSize);

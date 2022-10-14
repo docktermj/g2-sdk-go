@@ -38,7 +38,7 @@ type G2configmgr interface {
 	Destroy(ctx context.Context) error
 	// GetConfig(ctx context.Context, configID int64) (string, error)
 	GetConfigList(ctx context.Context) (string, error)
-	// GetDefaultConfigID(ctx context.Context) (int64, error)
+	GetDefaultConfigID(ctx context.Context) (int64, error)
 	GetLastException(ctx context.Context) (string, error)
 	GetLastExceptionCode(ctx context.Context) (int, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error

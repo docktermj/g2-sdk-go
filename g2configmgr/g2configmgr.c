@@ -22,8 +22,6 @@ struct G2ConfigMgr_addConfig_result G2ConfigMgr_addConfig_helper(const char* con
     return result;
 }
 
-// _DLEXPORT int G2ConfigMgr_getConfigList(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
-
 struct G2ConfigMgr_getConfigList_result G2ConfigMgr_getConfigList_helper() {
     size_t charBufferSize = 1;
     char* charBuffer = (char*)malloc(charBufferSize);
@@ -31,6 +29,15 @@ struct G2ConfigMgr_getConfigList_result G2ConfigMgr_getConfigList_helper() {
     int returnCode = G2ConfigMgr_getConfigList(&charBuffer, &charBufferSize, resizeFuncPointer);
     struct G2ConfigMgr_getConfigList_result result;
     result.configList = charBuffer;
+    result.returnCode = returnCode;
+    return result;
+}
+
+struct G2ConfigMgr_getDefaultConfigID_result G2ConfigMgr_getDefaultConfigID_helper() {
+    long long configID;
+    int returnCode = G2ConfigMgr_getDefaultConfigID(&configID);
+    struct G2ConfigMgr_getDefaultConfigID_result result;
+    result.configID = configID;
     result.returnCode = returnCode;
     return result;
 }

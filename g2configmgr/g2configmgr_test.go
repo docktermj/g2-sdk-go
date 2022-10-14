@@ -179,6 +179,14 @@ func TestGetConfigList(test *testing.T) {
 	printActual(test, actual)
 }
 
+func TestGetDefaultConfigID(test *testing.T) {
+	ctx := context.TODO()
+	g2configmgr := getTestObject(ctx)
+	actual, err := g2configmgr.GetDefaultConfigID(ctx)
+	testError(test, ctx, g2configmgr, err)
+	printActual(test, actual)
+}
+
 func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx)

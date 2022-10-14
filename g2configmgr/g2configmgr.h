@@ -15,5 +15,11 @@ struct G2ConfigMgr_getConfigList_result {
     int returnCode;
 };
 
+struct G2ConfigMgr_getDefaultConfigID_result {
+    long long configID;
+    int returnCode;
+};
+
 struct G2ConfigMgr_addConfig_result G2ConfigMgr_addConfig_helper(const char* configStr, const char* configComments);
 struct G2ConfigMgr_getConfigList_result G2ConfigMgr_getConfigList_helper();
+struct G2ConfigMgr_getDefaultConfigID_result G2ConfigMgr_getDefaultConfigID_helper();
