@@ -60,3 +60,12 @@ type G2diagnostic interface {
 	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error
 	Reinit(ctx context.Context, initConfigID int64) error
 }
+
+// ----------------------------------------------------------------------------
+// Variables
+// ----------------------------------------------------------------------------
+
+var Messages = map[int]string{
+	1:  "Call to G2Diagnostic_checkDBPerf(%d) failed.",
+	19: "Call to G2Diagnostic_reinit(%d) failed.",
+}

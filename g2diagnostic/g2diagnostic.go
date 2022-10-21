@@ -13,10 +13,12 @@ import "C"
 import (
 	"bytes"
 	"context"
+	"errors"
 	"strconv"
 	"unsafe"
 
 	"github.com/docktermj/go-xyzzy-helpers/logger"
+	"github.com/senzing/go-logging/messagelogger"
 )
 
 const initialByteArraySize = 65535
@@ -44,7 +46,20 @@ func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber 
 	if err != nil {
 		message = err.Error()
 	}
-	return logger.BuildError(MessageIdFormat, errorNumber, message, details...)
+
+	var newDetails []interface{}
+	newDetails = append(newDetails, details...)
+	newDetails = append(newDetails, message)
+	errorMessage, err := messagelogger.Message(errorNumber, newDetails...)
+	if err != nil {
+		errorMessage = err.Error()
+	}
+
+	return errors.New(errorMessage)
+}
+func (g2diagnostic *G2diagnosticImpl) initLogger(ctx context.Context) {
+	messagelogger.GetMessageLogger().Messages = Messages
+	messagelogger.GetMessageLogger().IdTemplate = MessageIdFormat
 }
 
 // ----------------------------------------------------------------------------
@@ -57,7 +72,7 @@ func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsTo
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_checkDBPerf_helper(C.int(secondsToRun)))
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 1, strconv.Itoa(secondsToRun))
+		err = g2diagnostic.getError(ctx, 1, secondsToRun)
 	}
 	return stringBuffer, err
 }
@@ -298,6 +313,8 @@ func (g2diagnostic *G2diagnosticImpl) GetTotalSystemMemory(ctx context.Context) 
 func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Diagnostic_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	var err error = nil
+
+	g2diagnostic.initLogger(ctx)
 	moduleNameForC := C.CString(moduleName)
 	defer C.free(unsafe.Pointer(moduleNameForC))
 	iniParamsForC := C.CString(iniParams)
@@ -337,7 +354,7 @@ func (g2diagnostic *G2diagnosticImpl) Reinit(ctx context.Context, initConfigID i
 	var err error = nil
 	result := C.G2Diagnostic_reinit(C.longlong(initConfigID))
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 19, strconv.FormatInt(initConfigID, 10), strconv.Itoa(int(result)))
+		err = g2diagnostic.getError(ctx, 19, initConfigID, result)
 	}
 	return err
 }
