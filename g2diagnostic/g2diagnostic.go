@@ -14,10 +14,8 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"strconv"
 	"unsafe"
 
-	"github.com/docktermj/go-xyzzy-helpers/logger"
 	"github.com/senzing/go-logging/messagelogger"
 )
 
@@ -49,7 +47,7 @@ func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber 
 
 	var newDetails []interface{}
 	newDetails = append(newDetails, details...)
-	newDetails = append(newDetails, message)
+	newDetails = append(newDetails, errors.New(message))
 	errorMessage, err := messagelogger.Message(errorNumber, newDetails...)
 	if err != nil {
 		errorMessage = err.Error()
@@ -57,9 +55,9 @@ func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber 
 
 	return errors.New(errorMessage)
 }
+
 func (g2diagnostic *G2diagnosticImpl) initLogger(ctx context.Context) {
-	messagelogger.GetMessageLogger().Messages = Messages
-	messagelogger.GetMessageLogger().IdTemplate = MessageIdFormat
+	messagelogger.GetMessageLogger().SetMessages(Messages).SetMessageIdTemplate(MessageIdFormat)
 }
 
 // ----------------------------------------------------------------------------
@@ -91,7 +89,7 @@ func (g2diagnostic *G2diagnosticImpl) CloseEntityListBySize(ctx context.Context,
 	var err error = nil
 	result := C.G2Diagnostic_closeEntityListBySize_helper(C.uintptr_t(entityListBySizeHandle))
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 2, strconv.Itoa(int(result)))
+		err = g2diagnostic.getError(ctx, 2, result)
 	}
 	return err
 }
@@ -102,7 +100,7 @@ func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
 	var err error = nil
 	result := C.G2Diagnostic_destroy()
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 3, strconv.Itoa(int(result)))
+		err = g2diagnostic.getError(ctx, 3, result)
 	}
 	return err
 }
@@ -114,7 +112,7 @@ func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context,
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
 	result := C.G2Diagnostic_fetchNextEntityBySize_helper(C.uintptr_t(entityListBySizeHandle), (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 4, strconv.Itoa(int(result)))
+		err = g2diagnostic.getError(ctx, 4, result)
 	}
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	return string(stringBuffer), err
@@ -169,7 +167,7 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, enti
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getEntityDetails_helper(C.longlong(entityID), C.int(includeInternalFeatures)))
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 8, strconv.FormatInt(entityID, 10), strconv.Itoa(includeInternalFeatures))
+		err = g2diagnostic.getError(ctx, 8, entityID, includeInternalFeatures)
 	}
 	return stringBuffer, err
 }
@@ -180,7 +178,7 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context, e
 	var err error = nil
 	result := C.G2Diagnostic_getEntityListBySize_helper(C.size_t(entitySize))
 	if result == nil {
-		err = g2diagnostic.getError(ctx, 9, strconv.Itoa(entitySize))
+		err = g2diagnostic.getError(ctx, 9, entitySize)
 	}
 	return (uintptr)(result), err
 }
@@ -191,7 +189,7 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityResume(ctx context.Context, entit
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getEntityResume_helper(C.longlong(entityID)))
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 10, strconv.FormatInt(entityID, 10))
+		err = g2diagnostic.getError(ctx, 10, entityID)
 	}
 	return stringBuffer, err
 }
@@ -202,7 +200,7 @@ func (g2diagnostic *G2diagnosticImpl) GetEntitySizeBreakdown(ctx context.Context
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getEntitySizeBreakdown_helper(C.size_t(minimumEntitySize), C.int(includeInternalFeatures)))
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 11, strconv.Itoa(minimumEntitySize), strconv.Itoa(includeInternalFeatures))
+		err = g2diagnostic.getError(ctx, 11, minimumEntitySize, includeInternalFeatures)
 	}
 	return stringBuffer, err
 }
@@ -213,7 +211,7 @@ func (g2diagnostic *G2diagnosticImpl) GetFeature(ctx context.Context, libFeatID 
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getFeature_helper(C.longlong(libFeatID)))
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 12, strconv.FormatInt(libFeatID, 10))
+		err = g2diagnostic.getError(ctx, 12, libFeatID)
 	}
 	return stringBuffer, err
 }
@@ -226,7 +224,7 @@ func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, fe
 	defer C.free(unsafe.Pointer(featureTypeForC))
 	stringBuffer := C.GoString(C.G2Diagnostic_getGenericFeatures_helper(featureTypeForC, C.size_t(maximumEstimatedCount)))
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 13, featureType, strconv.Itoa(maximumEstimatedCount))
+		err = g2diagnostic.getError(ctx, 13, featureType, maximumEstimatedCount)
 	}
 	return stringBuffer, err
 }
@@ -239,7 +237,11 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 	C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		err = logger.BuildError(MessageIdFormat, 2999, "Cannot retrieve last error message.")
+		errorMessage, err := messagelogger.Message(2999, "Cannot retrieve last error message.")
+		if err != nil {
+			return "", err
+		}
+		return "", errors.New(errorMessage)
 	}
 	return string(stringBuffer), err
 }
@@ -266,7 +268,7 @@ func (g2diagnostic *G2diagnosticImpl) GetMappingStatistics(ctx context.Context, 
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getMappingStatistics_helper(C.int(includeInternalFeatures)))
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 14, strconv.Itoa(includeInternalFeatures))
+		err = g2diagnostic.getError(ctx, 14, includeInternalFeatures)
 	}
 	return stringBuffer, err
 }
@@ -285,7 +287,7 @@ func (g2diagnostic *G2diagnosticImpl) GetRelationshipDetails(ctx context.Context
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getRelationshipDetails_helper(C.longlong(relationshipID), C.int(includeInternalFeatures)))
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 15, strconv.FormatInt(relationshipID, 10), strconv.Itoa(includeInternalFeatures))
+		err = g2diagnostic.getError(ctx, 15, relationshipID, includeInternalFeatures)
 	}
 	return stringBuffer, err
 }
@@ -321,7 +323,7 @@ func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName strin
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2Diagnostic_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 17, moduleName, iniParams, strconv.Itoa(verboseLogging), strconv.Itoa(int(result)))
+		err = g2diagnostic.getError(ctx, 17, moduleName, iniParams, verboseLogging, result)
 	}
 	return err
 }
@@ -336,7 +338,7 @@ func (g2diagnostic *G2diagnosticImpl) InitWithConfigID(ctx context.Context, modu
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2Diagnostic_initWithConfigID(moduleNameForC, iniParamsForC, C.longlong(initConfigID), C.int(verboseLogging))
 	if result != 0 {
-		err = g2diagnostic.getError(ctx, 18, moduleName, iniParams, strconv.FormatInt(initConfigID, 10), strconv.Itoa(verboseLogging), strconv.Itoa(int(result)))
+		err = g2diagnostic.getError(ctx, 18, moduleName, iniParams, initConfigID, verboseLogging, result)
 	}
 	return err
 }

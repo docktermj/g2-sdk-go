@@ -67,5 +67,22 @@ type G2diagnostic interface {
 
 var Messages = map[int]string{
 	1:  "Call to G2Diagnostic_checkDBPerf(%d) failed.",
-	19: "Call to G2Diagnostic_reinit(%d) failed.",
+	2:  "Call to G2Diagnostic_closeEntityListBySize() failed. Return code: %d",
+	3:  "Call to G2Diagnostic_destroy() failed.  Return code: %d",
+	4:  "Call to G2Diagnostic_fetchNextEntityBySize() failed.  Return code: %d",
+	5:  "Call to G2Diagnostic_findEntitiesByFeatureIDs(%s) failed.",
+	6:  "Call to G2Diagnostic_getDataSourceCounts() failed.",
+	7:  "Call to G2Diagnostic_getDBInfo() failed.",
+	8:  "Call to G2Diagnostic_getEntityDetails(%d, %d) failed.",
+	9:  "Call to G2Diagnostic_getEntityListBySize(%d) failed.",
+	10: "Call to G2Diagnostic_getEntityResume(%d) failed.",
+	11: "Call to G2Diagnostic_getEntitySizeBreakdown(%d, %d) failed.",
+	12: "Call to G2Diagnostic_getFeature(%d) failed.",
+	13: "Call to G2Diagnostic_getGenericFeatures(%s, %d) failed.",
+	14: "Call to G2Diagnostic_getMappingStatistics(%d) failed.",
+	15: "Call to G2Diagnostic_getRelationshipDetails(%d, %d) failed.",
+	16: "Call to G2Diagnostic_getResolutionStatistics() failed.",
+	17: "Call to G2Diagnostic_init(%s, %s, %d) failed.",
+	18: "Call to G2Diagnostic_initWithConfigID(%s, %s, %d, %d) failed.",
+	19: "Call to G2Diagnostic_reinit(%d) failed. Return Code: %d",
 }
