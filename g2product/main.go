@@ -32,12 +32,13 @@ type G2product interface {
 // Constants
 // ----------------------------------------------------------------------------
 
-const MessageIdFormat = "senzing-6002%04d"
+const MessageIdFormat = "senzing-6006%04d"
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
 var Messages = map[int]string{
-	1: "Call to G2Product_xxx(%d) failed.",
+	1:    "Call to G2Product_xxxxx(%d) failed.",
+	2999: "Cannot retrieve last error message.",
 }

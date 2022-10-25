@@ -1,5 +1,5 @@
 /*
-Package g2configmgr ...
+The G2configmgrImpl implementation...
 */
 package g2configmgr
 
@@ -13,10 +13,23 @@ import "C"
 import (
 	"bytes"
 	"context"
+	"errors"
 	"unsafe"
 
-	"github.com/docktermj/go-xyzzy-helpers/logger"
+	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-logging/messageloglevel"
+	"github.com/senzing/go-logging/messagestatus"
 )
+
+// ----------------------------------------------------------------------------
+// Types
+// ----------------------------------------------------------------------------
+
+type G2configmgrImpl struct{}
+
+// ----------------------------------------------------------------------------
+// Constants
+// ----------------------------------------------------------------------------
 
 const initialByteArraySize = 65535
 
@@ -30,12 +43,10 @@ func (g2configmgr *G2configmgrImpl) getByteArrayC(size int) *C.char {
 	return (*C.char)(bytes)
 }
 
-// TODO: Document.
 func (g2configmgr *G2configmgrImpl) getByteArray(size int) []byte {
 	return make([]byte, size)
 }
 
-// TODO: Document.
 func (g2configmgr *G2configmgrImpl) getError(ctx context.Context, errorNumber int, details ...interface{}) error {
 	lastException, err := g2configmgr.GetLastException(ctx)
 	defer g2configmgr.ClearLastException(ctx)
@@ -43,14 +54,34 @@ func (g2configmgr *G2configmgrImpl) getError(ctx context.Context, errorNumber in
 	if err != nil {
 		message = err.Error()
 	}
-	return logger.BuildError(MessageIdFormat, errorNumber, message, details...)
+
+	var newDetails []interface{}
+	newDetails = append(newDetails, details...)
+	newDetails = append(newDetails, errors.New(message))
+	errorMessage, err := messagelogger.Message(errorNumber, newDetails...)
+	if err != nil {
+		errorMessage = err.Error()
+	}
+
+	return errors.New(errorMessage)
+}
+
+func (g2configmgr *G2configmgrImpl) initLogger(ctx context.Context) {
+
+	messageStatus := &messagestatus.MessageStatusSenzingApi{}
+	messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{}
+
+	messagelogger.
+		SetMessageStatus(messageStatus).
+		SetMessageLogLevel(messageLogLevel).
+		SetTextTemplates(Messages).
+		SetIdTemplate(MessageIdFormat)
 }
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// TODO: Document.
 func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr string, configComments string) (int64, error) {
 	// _DLEXPORT int G2ConfigMgr_addConfig(const char* configStr, const char* configComments, long long* configID);
 	var err error = nil
@@ -60,7 +91,7 @@ func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr str
 	defer C.free(unsafe.Pointer(configCommentsForC))
 	result := C.G2ConfigMgr_addConfig_helper(configStrForC, configCommentsForC)
 	if result.returnCode != 0 {
-		err = g2configmgr.getError(ctx, 33, configStr, configComments, result)
+		err = g2configmgr.getError(ctx, 1, configStr, configComments, result)
 	}
 	return int64(C.longlong(result.configID)), err
 }
@@ -73,46 +104,42 @@ func (g2configmgr *G2configmgrImpl) ClearLastException(ctx context.Context) erro
 	return err
 }
 
-// TODO: Document.
 func (g2configmgr *G2configmgrImpl) Destroy(ctx context.Context) error {
 	// _DLEXPORT int G2Config_destroy();
 	var err error = nil
 	result := C.G2ConfigMgr_destroy()
 	if result != 0 {
-		err = g2configmgr.getError(ctx, 5, result)
+		err = g2configmgr.getError(ctx, 2, result)
 	}
 	return err
 }
 
-// TODO:
 func (g2configmgr *G2configmgrImpl) GetConfig(ctx context.Context, configID int64) (string, error) {
 	// _DLEXPORT int G2ConfigMgr_getConfig(const long long configID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
 	result := C.G2ConfigMgr_getConfig_helper(C.longlong(configID))
 	if result.returnCode != 0 {
-		err = g2configmgr.getError(ctx, 50, result)
+		err = g2configmgr.getError(ctx, 3, configID, result)
 	}
 	return C.GoString(result.config), err
 }
 
-// TODO:
 func (g2configmgr *G2configmgrImpl) GetConfigList(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2ConfigMgr_getConfigList(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
 	result := C.G2ConfigMgr_getConfigList_helper()
 	if result.returnCode != 0 {
-		err = g2configmgr.getError(ctx, 50, result)
+		err = g2configmgr.getError(ctx, 4, result)
 	}
 	return C.GoString(result.configList), err
 }
 
-// TODO:
 func (g2configmgr *G2configmgrImpl) GetDefaultConfigID(ctx context.Context) (int64, error) {
 	//  _DLEXPORT int G2ConfigMgr_getDefaultConfigID(long long* configID);
 	var err error = nil
 	result := C.G2ConfigMgr_getDefaultConfigID_helper()
 	if result.returnCode != 0 {
-		err = g2configmgr.getError(ctx, 50, result)
+		err = g2configmgr.getError(ctx, 5, result)
 	}
 	return int64(C.longlong(result.configID)), err
 }
@@ -125,12 +152,11 @@ func (g2configmgr *G2configmgrImpl) GetLastException(ctx context.Context) (strin
 	C.G2ConfigMgr_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		err = logger.BuildError(MessageIdFormat, 2999, "Cannot retrieve last error message.")
+		err = messagelogger.Error(2999)
 	}
 	return string(stringBuffer), err
 }
 
-// TODO: Document.
 func (g2configmgr *G2configmgrImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
 	//  _DLEXPORT int G2Config_getLastExceptionCode();
 	var err error = nil
@@ -138,7 +164,6 @@ func (g2configmgr *G2configmgrImpl) GetLastExceptionCode(ctx context.Context) (i
 	return int(result), err
 }
 
-// TODO: Document.
 func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Config_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	var err error = nil
@@ -153,7 +178,6 @@ func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string,
 	return err
 }
 
-// TODO:
 // Very much like a "compare-and-swap" instruction to serialize concurrent editing of configuration.
 // To simply set the default configuration ID, use SetDefaultConfigID().
 func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error {
@@ -161,17 +185,17 @@ func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, 
 	var err error = nil
 	result := C.G2ConfigMgr_replaceDefaultConfigID(C.longlong(oldConfigID), C.longlong(newConfigID))
 	if result != 0 {
-		err = g2configmgr.getError(ctx, 50, result)
+		err = g2configmgr.getError(ctx, 7, oldConfigID, newConfigID, result)
 	}
 	return err
 }
 
 func (g2configmgr *G2configmgrImpl) SetDefaultConfigID(ctx context.Context, configID int64) error {
-	// _DLEXPORT int G2ConfigMgr_setDefaultConfigID(const long long configID);
+	// _DLEXPORT int (const long long configID);
 	var err error = nil
 	result := C.G2ConfigMgr_setDefaultConfigID(C.longlong(configID))
 	if result != 0 {
-		err = g2configmgr.getError(ctx, 50, result)
+		err = g2configmgr.getError(ctx, 8, configID, result)
 	}
 	return err
 }

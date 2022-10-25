@@ -1,5 +1,5 @@
 /*
-Package g2diagnostic ...
+The G2diagnosticImpl implementation...
 */
 package g2diagnostic
 
@@ -101,7 +101,6 @@ func (g2diagnostic *G2diagnosticImpl) ClearLastException(ctx context.Context) er
 	return err
 }
 
-// TODO: Document.
 func (g2diagnostic *G2diagnosticImpl) CloseEntityListBySize(ctx context.Context, entityListBySizeHandle uintptr) error {
 	//  _DLEXPORT int G2Diagnostic_closeEntityListBySize(EntityListBySizeHandle entityListBySizeHandle);
 	var err error = nil
