@@ -1,5 +1,5 @@
 /*
-Package g2engine ...
+The G2productImpl implementation...
 */
 package g2engine
 

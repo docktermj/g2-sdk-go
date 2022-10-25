@@ -8,7 +8,7 @@ import (
 
 	truncator "github.com/aquilax/truncate"
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
-	"github.com/docktermj/go-xyzzy-helpers/logger"
+	"github.com/senzing/go-logging/messagelogger"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -28,12 +28,12 @@ func getTestObject(ctx context.Context) G2diagnostic {
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
 		iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
-			logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
+			messagelogger.Log(1001, "Cannot construct system configuration: %v", jsonErr)
 		}
 
 		initErr := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
-			logger.Fatalf("Cannot Init: %v", initErr)
+			messagelogger.Log(1002, "Cannot Init: %v", initErr)
 		}
 	}
 	return g2diagnostic
@@ -92,12 +92,13 @@ func TestGetObject(test *testing.T) {
 func TestLogger(test *testing.T) {
 	// Configure the "log" standard library.
 
-	log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
-	logger.SetLevel(logger.LevelInfo)
+	// log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
+	log.SetFlags(log.LstdFlags)
+	// messagelogger.SetLevel(messagelogger.LevelInfo)
 
-	// Test logger.
+	// Test messagelogger.
 
-	logger.LogMessage(MessageIdFormat, 99, "Test message 1", "Variable1", "Variable2")
+	messagelogger.Log(1003, "Test message 1", "Variable1", "Variable2")
 }
 
 // ----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /*
-Package g2product ...
+The G2productImpl implementation...
 */
 package g2product
 
@@ -18,6 +18,16 @@ import (
 	"github.com/docktermj/go-xyzzy-helpers/logger"
 )
 
+// ----------------------------------------------------------------------------
+// Types
+// ----------------------------------------------------------------------------
+
+type G2productImpl struct{}
+
+// ----------------------------------------------------------------------------
+// Constants
+// ----------------------------------------------------------------------------
+
 const initialByteArraySize = 65535
 
 // ----------------------------------------------------------------------------
@@ -30,12 +40,10 @@ func (g2product *G2productImpl) getByteArrayC(size int) *C.char {
 	return (*C.char)(bytes)
 }
 
-// TODO: Document.
 func (g2product *G2productImpl) getByteArray(size int) []byte {
 	return make([]byte, size)
 }
 
-// TODO: Document.
 func (g2product *G2productImpl) getError(ctx context.Context, errorNumber int, details ...interface{}) error {
 	lastException, err := g2product.GetLastException(ctx)
 	defer g2product.ClearLastException(ctx)
@@ -58,7 +66,6 @@ func (g2product *G2productImpl) ClearLastException(ctx context.Context) error {
 	return err
 }
 
-// TODO: Document.
 func (g2product *G2productImpl) Destroy(ctx context.Context) error {
 	// _DLEXPORT int G2Config_destroy();
 	var err error = nil
@@ -82,7 +89,6 @@ func (g2product *G2productImpl) GetLastException(ctx context.Context) (string, e
 	return string(stringBuffer), err
 }
 
-// TODO: Document.
 func (g2product *G2productImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
 	//  _DLEXPORT int G2Config_getLastExceptionCode();
 	var err error = nil
@@ -90,7 +96,6 @@ func (g2product *G2productImpl) GetLastExceptionCode(ctx context.Context) (int, 
 	return int(result), err
 }
 
-// TODO: Document.
 func (g2product *G2productImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Config_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	var err error = nil

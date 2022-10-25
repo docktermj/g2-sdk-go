@@ -1,15 +1,11 @@
-// The Senzing G2product Package is a Go wrapper over
-// Senzing's G2product C binding.
-//
-// The purpose of a G2product object is:
-//   - ...
-//   - ...
-//   - ...
-//
-// To use G2product, the LD_LIBRARY_PATH environment variable must include
-// a path to Senzing's libraries.  Example:
-//
-//	export LD_LIBRARY_PATH=/opt/senzing/g2/lib
+/*
+Package g2product is a Go wrapper over Senzing's G2product C binding.
+
+To use G2product, the LD_LIBRARY_PATH environment variable must include
+a path to Senzing's libraries.  Example:
+
+	export LD_LIBRARY_PATH=/opt/senzing/g2/lib
+*/
 package g2product
 
 import (
@@ -18,18 +14,6 @@ import (
 
 // ----------------------------------------------------------------------------
 // Types
-// ----------------------------------------------------------------------------
-
-type G2productImpl struct{}
-
-// ----------------------------------------------------------------------------
-// Constants
-// ----------------------------------------------------------------------------
-
-const MessageIdFormat = "senzing-6002%04d"
-
-// ----------------------------------------------------------------------------
-// Interfaces
 // ----------------------------------------------------------------------------
 
 type G2product interface {
@@ -42,4 +26,18 @@ type G2product interface {
 	ValidateLicenseFile(ctx context.Context, licenseFilePath string) (string, error)
 	ValidateLicenseStringBase64(ctx context.Context, licenseString string) (string, error)
 	Version(ctx context.Context) (string, error)
+}
+
+// ----------------------------------------------------------------------------
+// Constants
+// ----------------------------------------------------------------------------
+
+const MessageIdFormat = "senzing-6002%04d"
+
+// ----------------------------------------------------------------------------
+// Variables
+// ----------------------------------------------------------------------------
+
+var Messages = map[int]string{
+	1: "Call to G2Product_xxx(%d) failed.",
 }
