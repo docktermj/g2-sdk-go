@@ -254,7 +254,7 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 	C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		errorMessage, err := messagelogger.Message(2999, "Cannot retrieve last error message.")
+		errorMessage, err := messagelogger.Message(2999)
 		if err != nil {
 			return "", err
 		}

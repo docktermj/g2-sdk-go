@@ -11,16 +11,36 @@ import (
 	"github.com/docktermj/g2-sdk-go/g2diagnostic"
 	"github.com/docktermj/g2-sdk-go/g2engine"
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
-	"github.com/docktermj/go-xyzzy-helpers/logger"
+	baselogger "github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/messageformat"
+	"github.com/senzing/go-logging/messageid"
+	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-logging/messageloglevel"
+	"github.com/senzing/go-logging/messagestatus"
+	"github.com/senzing/go-logging/messagetext"
 )
+
+// ----------------------------------------------------------------------------
+// Constants
+// ----------------------------------------------------------------------------
+
+const MessageIdFormat = "senzing-6012%04d"
+
+// ----------------------------------------------------------------------------
+// Variables
+// ----------------------------------------------------------------------------
+
+var Messages = map[int]string{
+	1:    "%s",
+	2:    "WithInfo: %s",
+	2999: "Cannot retrieve last error message.",
+}
 
 // Values updated via "go install -ldflags" parameters.
 
 var programName string = "unknown"
 var buildVersion string = "0.0.0"
 var buildIteration string = "0"
-
-const MessageIdFormat = "senzing-6012%04d"
 
 // ----------------------------------------------------------------------------
 // Internal methods - names begin with lower case
@@ -69,8 +89,24 @@ func main() {
 
 	// Configure the "log" standard library.
 
-	log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
-	logger.SetLevel(logger.LevelInfo)
+	// log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
+	log.SetFlags(log.LstdFlags)
+
+	// Configure messagelogger
+
+	logger := &messagelogger.MessageLoggerDefault{
+		Logger:        &baselogger.LoggerDefault{},
+		MessageFormat: &messageformat.MessageFormatJson{},
+		MessageId: &messageid.MessageIdDefault{
+			IdTemplate: MessageIdFormat,
+		},
+		MessageLogLevel: &messageloglevel.MessageLogLevelDefault{},
+		MessageStatus:   &messagestatus.MessageStatusById{},
+		MessageText: &messagetext.MessageTextDefault{
+			TextTemplates: Messages,
+		},
+	}
+	logger.SetLogLevel(messagelogger.LevelInfo)
 
 	// Test logger.
 
@@ -80,13 +116,13 @@ func main() {
 		"BuildIteration": buildIteration,
 	}
 
-	logger.LogMessageUsingMap(MessageIdFormat, 99, "Program information", programmMetadataMap)
+	logger.Log(1, "Just a test of logging", programmMetadataMap)
 
 	// Work with G2diagnostic.
 
-	g2diagnostic, g2diagnosticErr := getG2diagnostic(ctx)
-	if g2diagnosticErr != nil {
-		logger.LogMessage(MessageIdFormat, 5, g2diagnosticErr.Error())
+	g2diagnostic, err := getG2diagnostic(ctx)
+	if err != nil {
+		logger.Log(1000, err)
 	}
 
 	// g2diagnostic.CheckDBPerf
@@ -94,15 +130,15 @@ func main() {
 	secondsToRun := 1
 	actual, err := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
 	if err != nil {
-		logger.LogMessage(MessageIdFormat, 5, err.Error())
+		logger.Log(1001, err)
 	}
 	fmt.Println(actual)
 
 	// Work with G2engine.
 
-	g2engine, g2engineErr := getG2engine(ctx)
-	if g2engineErr != nil {
-		logger.LogMessage(MessageIdFormat, 5, g2engineErr.Error())
+	g2engine, err := getG2engine(ctx)
+	if err != nil {
+		logger.Log(1002, err)
 	}
 
 	// g2engine.AddRecordWithInfo
@@ -117,10 +153,10 @@ func main() {
 	loadID := dataSourceCode
 	var flags int64 = 0
 
-	withInfo, withInfoErr := g2engine.AddRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
-	if withInfoErr != nil {
-		logger.LogMessage(MessageIdFormat, 5, withInfoErr.Error())
+	withInfo, err := g2engine.AddRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
+	if err != nil {
+		logger.Log(1003, err)
 	}
 
-	fmt.Printf("WithInfo: %s\n)", withInfo)
+	logger.Log(2, withInfo)
 }
