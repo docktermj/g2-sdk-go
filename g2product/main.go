@@ -39,6 +39,9 @@ const MessageIdFormat = "senzing-6006%04d"
 // ----------------------------------------------------------------------------
 
 var Messages = map[int]string{
-	1:    "Call to G2Product_xxxxx(%d) failed.",
+	1:    "Call to G2Config_destroy() failed. Return code: %d",
+	2:    "Call to G2Config_init(%s, %s, %s) failed. Return code: %d",
+	3:    "Call to G2Product_validateLicenseFile(%s) failed. Return code: %d",
+	4:    "Call to G2Product_validateLicenseStringBase64(%s) failed. Return code: %d",
 	2999: "Cannot retrieve last error message.",
 }

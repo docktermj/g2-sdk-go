@@ -13,9 +13,12 @@ import "C"
 import (
 	"bytes"
 	"context"
+	"errors"
 	"unsafe"
 
-	"github.com/docktermj/go-xyzzy-helpers/logger"
+	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-logging/messageloglevel"
+	"github.com/senzing/go-logging/messagestatus"
 )
 
 // ----------------------------------------------------------------------------
@@ -51,7 +54,28 @@ func (g2product *G2productImpl) getError(ctx context.Context, errorNumber int, d
 	if err != nil {
 		message = err.Error()
 	}
-	return logger.BuildError(MessageIdFormat, errorNumber, message, details...)
+
+	var newDetails []interface{}
+	newDetails = append(newDetails, details...)
+	newDetails = append(newDetails, errors.New(message))
+	errorMessage, err := messagelogger.Message(errorNumber, newDetails...)
+	if err != nil {
+		errorMessage = err.Error()
+	}
+
+	return errors.New(errorMessage)
+}
+
+func (g2product *G2productImpl) initLogger(ctx context.Context) {
+
+	messageStatus := &messagestatus.MessageStatusSenzingApi{}
+	messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{}
+
+	messagelogger.
+		SetMessageStatus(messageStatus).
+		SetMessageLogLevel(messageLogLevel).
+		SetTextTemplates(Messages).
+		SetIdTemplate(MessageIdFormat)
 }
 
 // ----------------------------------------------------------------------------
@@ -71,7 +95,7 @@ func (g2product *G2productImpl) Destroy(ctx context.Context) error {
 	var err error = nil
 	result := C.G2Product_destroy()
 	if result != 0 {
-		err = g2product.getError(ctx, 5, result)
+		err = g2product.getError(ctx, 1, result)
 	}
 	return err
 }
@@ -84,7 +108,7 @@ func (g2product *G2productImpl) GetLastException(ctx context.Context) (string, e
 	C.G2Product_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		err = logger.BuildError(MessageIdFormat, 2999, "Cannot retrieve last error message.")
+		err = messagelogger.Error(2999)
 	}
 	return string(stringBuffer), err
 }
@@ -105,7 +129,7 @@ func (g2product *G2productImpl) Init(ctx context.Context, moduleName string, ini
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2Product_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
-		err = g2product.getError(ctx, 6, moduleName, iniParams, verboseLogging, result)
+		err = g2product.getError(ctx, 2, moduleName, iniParams, verboseLogging, result)
 	}
 	return err
 }
@@ -124,7 +148,7 @@ func (g2product *G2productImpl) ValidateLicenseFile(ctx context.Context, license
 	defer C.free(unsafe.Pointer(licenseFilePathForC))
 	result := C.G2Product_validateLicenseFile_helper(licenseFilePathForC)
 	if result.returnCode != 0 {
-		err = g2product.getError(ctx, 50, licenseFilePath, C.GoString(result.response), result)
+		err = g2product.getError(ctx, 3, licenseFilePath, result.returnCode, result)
 	}
 	return C.GoString(result.response), err
 }
@@ -136,7 +160,7 @@ func (g2product *G2productImpl) ValidateLicenseStringBase64(ctx context.Context,
 	defer C.free(unsafe.Pointer(licenseStringForC))
 	result := C.G2Product_validateLicenseStringBase64_helper(licenseStringForC)
 	if result.returnCode != 0 {
-		err = g2product.getError(ctx, 50, licenseString, C.GoString(result.response), result)
+		err = g2product.getError(ctx, 4, licenseString, result.returnCode, result)
 	}
 	return C.GoString(result.response), err
 }

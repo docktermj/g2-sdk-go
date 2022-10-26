@@ -87,8 +87,9 @@ func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsTo
 	// _DLEXPORT int G2Diagnostic_checkDBPerf(int secondsToRun, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_checkDBPerf_helper(C.int(secondsToRun)))
+	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 1, secondsToRun)
+		err = g2diagnostic.getError(ctx, 1, secondsToRun, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -139,8 +140,9 @@ func (g2diagnostic *G2diagnosticImpl) FindEntitiesByFeatureIDs(ctx context.Conte
 	featuresForC := C.CString(features)
 	defer C.free(unsafe.Pointer(featuresForC))
 	stringBuffer := C.GoString(C.G2Diagnostic_findEntitiesByFeatureIDs_helper(featuresForC))
+	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 5, features)
+		err = g2diagnostic.getError(ctx, 5, features, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -157,8 +159,9 @@ func (g2diagnostic *G2diagnosticImpl) GetDataSourceCounts(ctx context.Context) (
 	//  _DLEXPORT int G2Diagnostic_getDataSourceCounts(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getDataSourceCounts_helper())
+	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 6)
+		err = g2diagnostic.getError(ctx, 6, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -168,8 +171,9 @@ func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, er
 	// _DLEXPORT int G2Diagnostic_getDBInfo(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getDBInfo_helper())
+	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 7)
+		err = g2diagnostic.getError(ctx, 7, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -178,8 +182,9 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, enti
 	//  _DLEXPORT int G2Diagnostic_getEntityDetails(const long long entityID, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getEntityDetails_helper(C.longlong(entityID), C.int(includeInternalFeatures)))
+	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 8, entityID, includeInternalFeatures)
+		err = g2diagnostic.getError(ctx, 8, entityID, includeInternalFeatures, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -188,8 +193,9 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context, e
 	//  _DLEXPORT int G2Diagnostic_getEntityListBySize(const size_t entitySize, EntityListBySizeHandle* entityListBySizeHandle);
 	var err error = nil
 	result := C.G2Diagnostic_getEntityListBySize_helper(C.size_t(entitySize))
+	returnCode := 0 // FIXME:
 	if result == nil {
-		err = g2diagnostic.getError(ctx, 9, entitySize)
+		err = g2diagnostic.getError(ctx, 9, entitySize, returnCode)
 	}
 	return (uintptr)(result), err
 }
@@ -198,8 +204,9 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityResume(ctx context.Context, entit
 	//  _DLEXPORT int G2Diagnostic_getEntityResume(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getEntityResume_helper(C.longlong(entityID)))
+	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 10, entityID)
+		err = g2diagnostic.getError(ctx, 10, entityID, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -208,8 +215,9 @@ func (g2diagnostic *G2diagnosticImpl) GetEntitySizeBreakdown(ctx context.Context
 	//  _DLEXPORT int G2Diagnostic_getEntitySizeBreakdown(const size_t minimumEntitySize, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getEntitySizeBreakdown_helper(C.size_t(minimumEntitySize), C.int(includeInternalFeatures)))
+	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 11, minimumEntitySize, includeInternalFeatures)
+		err = g2diagnostic.getError(ctx, 11, minimumEntitySize, includeInternalFeatures, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -218,8 +226,9 @@ func (g2diagnostic *G2diagnosticImpl) GetFeature(ctx context.Context, libFeatID 
 	//  _DLEXPORT int G2Diagnostic_getFeature(const long long libFeatID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getFeature_helper(C.longlong(libFeatID)))
+	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 12, libFeatID)
+		err = g2diagnostic.getError(ctx, 12, libFeatID, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -230,8 +239,9 @@ func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, fe
 	featureTypeForC := C.CString(featureType)
 	defer C.free(unsafe.Pointer(featureTypeForC))
 	stringBuffer := C.GoString(C.G2Diagnostic_getGenericFeatures_helper(featureTypeForC, C.size_t(maximumEstimatedCount)))
+	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 13, featureType, maximumEstimatedCount)
+		err = g2diagnostic.getError(ctx, 13, featureType, maximumEstimatedCount, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -272,8 +282,9 @@ func (g2diagnostic *G2diagnosticImpl) GetMappingStatistics(ctx context.Context, 
 	//  _DLEXPORT int G2Diagnostic_getMappingStatistics(const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getMappingStatistics_helper(C.int(includeInternalFeatures)))
+	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 14, includeInternalFeatures)
+		err = g2diagnostic.getError(ctx, 14, includeInternalFeatures, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -290,8 +301,9 @@ func (g2diagnostic *G2diagnosticImpl) GetRelationshipDetails(ctx context.Context
 	//  _DLEXPORT int G2Diagnostic_getRelationshipDetails(const long long relationshipID, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getRelationshipDetails_helper(C.longlong(relationshipID), C.int(includeInternalFeatures)))
+	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 15, relationshipID, includeInternalFeatures)
+		err = g2diagnostic.getError(ctx, 15, relationshipID, includeInternalFeatures, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -300,8 +312,9 @@ func (g2diagnostic *G2diagnosticImpl) GetResolutionStatistics(ctx context.Contex
 	//  _DLEXPORT int G2Diagnostic_getResolutionStatistics(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getResolutionStatistics_helper())
+	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 16)
+		err = g2diagnostic.getError(ctx, 16, returnCode)
 	}
 	return stringBuffer, err
 }

@@ -44,7 +44,7 @@ const MessageIdFormat = "senzing-6001%04d"
 var Messages = map[int]string{
 	1:    "Call to G2Config_addDataSource(%s) failed. Return code: %d",
 	2:    "Call to G2Config_close() failed. Return code: %d",
-	3:    "Call to G2Config_create() failed.",
+	3:    "Call to G2Config_create() failed. Return code: %d",
 	4:    "Call to G2Config_deleteDataSource(%s) failed. Return code: %d",
 	5:    "Call to G2Config_destroy() failed. Return code: %d",
 	6:    "Call to G2Config_init(%s, %s, %d) failed. Return code: %d",

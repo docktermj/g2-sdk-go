@@ -91,7 +91,7 @@ func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr str
 	defer C.free(unsafe.Pointer(configCommentsForC))
 	result := C.G2ConfigMgr_addConfig_helper(configStrForC, configCommentsForC)
 	if result.returnCode != 0 {
-		err = g2configmgr.getError(ctx, 1, configStr, configComments, result)
+		err = g2configmgr.getError(ctx, 1, configStr, configComments, result.returnCode, result)
 	}
 	return int64(C.longlong(result.configID)), err
 }
@@ -119,7 +119,7 @@ func (g2configmgr *G2configmgrImpl) GetConfig(ctx context.Context, configID int6
 	var err error = nil
 	result := C.G2ConfigMgr_getConfig_helper(C.longlong(configID))
 	if result.returnCode != 0 {
-		err = g2configmgr.getError(ctx, 3, configID, result)
+		err = g2configmgr.getError(ctx, 3, configID, result.returnCode, result)
 	}
 	return C.GoString(result.config), err
 }
@@ -129,7 +129,7 @@ func (g2configmgr *G2configmgrImpl) GetConfigList(ctx context.Context) (string, 
 	var err error = nil
 	result := C.G2ConfigMgr_getConfigList_helper()
 	if result.returnCode != 0 {
-		err = g2configmgr.getError(ctx, 4, result)
+		err = g2configmgr.getError(ctx, 4, result.returnCode, result)
 	}
 	return C.GoString(result.configList), err
 }
@@ -139,7 +139,7 @@ func (g2configmgr *G2configmgrImpl) GetDefaultConfigID(ctx context.Context) (int
 	var err error = nil
 	result := C.G2ConfigMgr_getDefaultConfigID_helper()
 	if result.returnCode != 0 {
-		err = g2configmgr.getError(ctx, 5, result)
+		err = g2configmgr.getError(ctx, 5, result.returnCode, result)
 	}
 	return int64(C.longlong(result.configID)), err
 }
@@ -191,7 +191,7 @@ func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, 
 }
 
 func (g2configmgr *G2configmgrImpl) SetDefaultConfigID(ctx context.Context, configID int64) error {
-	// _DLEXPORT int (const long long configID);
+	// _DLEXPORT int G2ConfigMgr_setDefaultConfigID(const long long configID);
 	var err error = nil
 	result := C.G2ConfigMgr_setDefaultConfigID(C.longlong(configID))
 	if result != 0 {

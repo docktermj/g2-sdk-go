@@ -88,12 +88,10 @@ func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle ui
 	inputJsonForC := C.CString(inputJson)
 	defer C.free(unsafe.Pointer(inputJsonForC))
 	result := C.G2Config_addDataSource_helper(C.uintptr_t(configHandle), inputJsonForC)
-	response := C.GoString(result.response)
-	returnCode := result.returnCode
-	if returnCode != 0 {
-		err = g2config.getError(ctx, 1, inputJson, returnCode)
+	if result.returnCode != 0 {
+		err = g2config.getError(ctx, 1, inputJson, result.returnCode, result)
 	}
-	return response, err
+	return C.GoString(result.response), err
 }
 
 // ClearLastException returns the available memory, in bytes, on the host system.
@@ -118,8 +116,9 @@ func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 	// _DLEXPORT int G2Config_create(ConfigHandle* configHandle);
 	var err error = nil
 	result := C.G2config_create_helper()
+	returnCode := 0 // FIXME:
 	if result == nil {
-		err = g2config.getError(ctx, 3)
+		err = g2config.getError(ctx, 3, returnCode)
 	}
 	return (uintptr)(result), err
 }
@@ -184,12 +183,10 @@ func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle 
 	// _DLEXPORT int G2Config_listDataSources(ConfigHandle configHandle, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
 	result := C.G2Config_listDataSources_helper(C.uintptr_t(configHandle))
-	response := C.GoString(result.response)
-	returnCode := result.returnCode
-	if returnCode != 0 {
-		err = g2config.getError(ctx, 7, returnCode)
+	if result.returnCode != 0 {
+		err = g2config.getError(ctx, 7, result.returnCode, result)
 	}
-	return response, err
+	return C.GoString(result.response), err
 }
 
 func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, jsonConfig string) error {
@@ -208,10 +205,8 @@ func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (s
 	// _DLEXPORT int G2Config_save(ConfigHandle configHandle, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	var err error = nil
 	result := C.G2Config_save_helper(C.uintptr_t(configHandle))
-	response := C.GoString(result.response)
-	returnCode := result.returnCode
-	if returnCode != 0 {
-		err = g2config.getError(ctx, 9, returnCode)
+	if result.returnCode != 0 {
+		err = g2config.getError(ctx, 9, result.returnCode, result)
 	}
-	return response, err
+	return C.GoString(result.response), err
 }

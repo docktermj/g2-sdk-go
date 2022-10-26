@@ -13,10 +13,12 @@ import "C"
 import (
 	"bytes"
 	"context"
+	"errors"
 	"unsafe"
 
-	"github.com/docktermj/go-xyzzy-helpers/logger"
 	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-logging/messageloglevel"
+	"github.com/senzing/go-logging/messagestatus"
 )
 
 // ----------------------------------------------------------------------------
@@ -52,7 +54,28 @@ func (g2engine *G2engineImpl) getError(ctx context.Context, errorNumber int, det
 	if err != nil {
 		message = err.Error()
 	}
-	return logger.BuildError(MessageIdFormat, errorNumber, message, details...)
+
+	var newDetails []interface{}
+	newDetails = append(newDetails, details...)
+	newDetails = append(newDetails, errors.New(message))
+	errorMessage, err := messagelogger.Message(errorNumber, newDetails...)
+	if err != nil {
+		errorMessage = err.Error()
+	}
+
+	return errors.New(errorMessage)
+}
+
+func (g2engine *G2engineImpl) initLogger(ctx context.Context) {
+
+	messageStatus := &messagestatus.MessageStatusSenzingApi{}
+	messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{}
+
+	messagelogger.
+		SetMessageStatus(messageStatus).
+		SetMessageLogLevel(messageLogLevel).
+		SetTextTemplates(Messages).
+		SetIdTemplate(MessageIdFormat)
 }
 
 // ----------------------------------------------------------------------------
@@ -106,13 +129,10 @@ func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID(ctx context.
 	loadIDForC := C.CString(loadID)
 	defer C.free(unsafe.Pointer(loadIDForC))
 	result := C.G2_addRecordWithInfoWithReturnedRecordID_helper(dataSourceCodeForC, jsonDataForC, loadIDForC, C.longlong(flags))
-	recordID := C.GoString(result.recordID)
-	withInfo := C.GoString(result.withInfo)
-	returnCode := result.returnCode
-	if returnCode != 0 {
-		err = g2engine.getError(ctx, 3, dataSourceCode, jsonData, loadID, flags, recordID, withInfo, returnCode)
+	if result.returnCode != 0 {
+		err = g2engine.getError(ctx, 3, dataSourceCode, jsonData, loadID, flags, result.returnCode, result)
 	}
-	return withInfo, recordID, err
+	return C.GoString(result.withInfo), C.GoString(result.recordID), err
 }
 
 func (g2engine *G2engineImpl) AddRecordWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string) (string, error) {
@@ -220,13 +240,10 @@ func (g2engine *G2engineImpl) ExportConfigAndConfigID(ctx context.Context) (stri
 	//  _DLEXPORT int G2_exportConfigAndConfigID(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize), long long* configID );
 	var err error = nil
 	result := C.G2_exportConfigAndConfigID_helper()
-	configID := int64(C.longlong(result.configID))
-	config := C.GoString(result.config)
-	returnCode := result.returnCode
-	if returnCode != 0 {
-		err = g2engine.getError(ctx, 10, configID, config, returnCode)
+	if result.returnCode != 0 {
+		err = g2engine.getError(ctx, 10, result.returnCode, result)
 	}
-	return config, configID, err
+	return C.GoString(result.config), int64(C.longlong(result.configID)), err
 }
 
 func (g2engine *G2engineImpl) ExportConfig(ctx context.Context) (string, error) {
@@ -246,37 +263,31 @@ func (g2engine *G2engineImpl) ExportCSVEntityReport(ctx context.Context, csvColu
 	csvColumnListForC := C.CString(csvColumnList)
 	defer C.free(unsafe.Pointer(csvColumnListForC))
 	result := C.G2_exportCSVEntityReport_helper(csvColumnListForC, C.longlong(flags))
-	exportHandle := result.exportHandle
-	returnCode := result.returnCode
-	if returnCode != 0 {
-		err = g2engine.getError(ctx, 12, csvColumnList, flags, returnCode)
+	if result.returnCode != 0 {
+		err = g2engine.getError(ctx, 12, csvColumnList, flags, result.returnCode, result)
 	}
-	return (uintptr)(exportHandle), err
+	return (uintptr)(result.exportHandle), err
 }
 
 func (g2engine *G2engineImpl) ExportJSONEntityReport(ctx context.Context, flags int64) (uintptr, error) {
 	//  _DLEXPORT int G2_exportJSONEntityReport(const long long flags, ExportHandle* responseHandle);
 	var err error = nil
 	result := C.G2_exportJSONEntityReport_helper(C.longlong(flags))
-	exportHandle := result.exportHandle
-	returnCode := result.returnCode
-	if returnCode != 0 {
-		err = g2engine.getError(ctx, 13, flags, returnCode)
+	if result.returnCode != 0 {
+		err = g2engine.getError(ctx, 13, flags, result.returnCode, result)
 	}
-	return (uintptr)(exportHandle), err
+	return (uintptr)(result.exportHandle), err
 }
 
 func (g2engine *G2engineImpl) FetchNext(ctx context.Context, responseHandle uintptr) (string, error) {
 	//  _DLEXPORT int G2_fetchNext(ExportHandle responseHandle, char *responseBuf, const size_t bufSize);
 	var err error = nil
 	result := C.G2_fetchNext_helper(C.uintptr_t(responseHandle))
-	returnCode := result.returnCode
-	response := result.response
-	if returnCode != 0 {
-		err = g2engine.getError(ctx, 14, returnCode)
+	if result.returnCode != 0 {
+		err = g2engine.getError(ctx, 14, result.returnCode, result)
 	}
 	//    response = bytes.Trim(response, "\x00")
-	return C.GoString(response), err
+	return C.GoString(result.response), err
 }
 
 func (g2engine *G2engineImpl) FindInterestingEntitiesByEntityID(ctx context.Context, entityID int64, flags int64) (string, error) {
@@ -339,7 +350,7 @@ func (g2engine *G2engineImpl) FindNetworkByRecordID(ctx context.Context, recordL
 	stringBuffer := C.GoString(C.G2_findNetworkByRecordID_helper(recordListForC, C.int(maxDegree), C.int(buildOutDegree), C.int(maxEntities)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 19, recordList, maxDegree, buildOutDegree, maxEntities, recordList)
+		err = g2engine.getError(ctx, 19, recordList, maxDegree, buildOutDegree, maxEntities, recordList, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -565,12 +576,10 @@ func (g2engine *G2engineImpl) GetActiveConfigID(ctx context.Context) (int64, err
 	//  _DLEXPORT int G2_getActiveConfigID(long long* configID);
 	var err error = nil
 	result := C.G2_getActiveConfigID_helper()
-	configID := int64(C.longlong(result.configID))
-	returnCode := result.returnCode
-	if returnCode != 0 {
-		err = g2engine.getError(ctx, 33, returnCode)
+	if result.returnCode != 0 {
+		err = g2engine.getError(ctx, 33, result.returnCode, result)
 	}
-	return configID, err
+	return int64(C.longlong(result.configID)), err
 }
 
 func (g2engine *G2engineImpl) GetEntityByEntityID(ctx context.Context, entityID int64) (string, error) {
@@ -680,7 +689,7 @@ func (g2engine *G2engineImpl) GetRedoRecord(ctx context.Context) (string, error)
 	var err error = nil
 	result := C.G2_getRedoRecord_helper()
 	if result.returnCode != 0 {
-		err = g2engine.getError(ctx, 40, result)
+		err = g2engine.getError(ctx, 40, result.returnCode, result)
 	}
 	return C.GoString(result.response), err
 
@@ -690,6 +699,10 @@ func (g2engine *G2engineImpl) GetRepositoryLastModifiedTime(ctx context.Context)
 	//  _DLEXPORT int G2_getRepositoryLastModifiedTime(long long* lastModifiedTime);
 	var err error = nil
 	result := C.G2_getRepositoryLastModifiedTime_helper()
+	// FIXME:
+	// if result.returnCode != 0 {
+	// 	err = g2engine.getError(ctx, 41, result.returnCode, result)
+	// }
 	return int64(result), err
 }
 
@@ -701,7 +714,7 @@ func (g2engine *G2engineImpl) GetVirtualEntityByRecordID(ctx context.Context, re
 	stringBuffer := C.GoString(C.G2_getVirtualEntityByRecordID_helper(recordListForC))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 41, recordList, returnCode)
+		err = g2engine.getError(ctx, 42, recordList, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -714,7 +727,7 @@ func (g2engine *G2engineImpl) GetVirtualEntityByRecordID_V2(ctx context.Context,
 	stringBuffer := C.GoString(C.G2_getVirtualEntityByRecordID_V2_helper(recordListForC, C.longlong(flags)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 42, recordList, flags, returnCode)
+		err = g2engine.getError(ctx, 43, recordList, flags, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -725,7 +738,7 @@ func (g2engine *G2engineImpl) HowEntityByEntityID(ctx context.Context, entityID 
 	stringBuffer := C.GoString(C.G2_howEntityByEntityID_helper(C.longlong(entityID)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 43, entityID, returnCode)
+		err = g2engine.getError(ctx, 44, entityID, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -736,7 +749,7 @@ func (g2engine *G2engineImpl) HowEntityByEntityID_V2(ctx context.Context, entity
 	stringBuffer := C.GoString(C.G2_howEntityByEntityID_V2_helper(C.longlong(entityID), C.longlong(flags)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 44, entityID, flags, returnCode)
+		err = g2engine.getError(ctx, 45, entityID, flags, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -751,7 +764,7 @@ func (g2engine *G2engineImpl) Init(ctx context.Context, moduleName string, iniPa
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
-		err = g2engine.getError(ctx, 45, moduleName, iniParams, verboseLogging, result)
+		err = g2engine.getError(ctx, 46, moduleName, iniParams, verboseLogging, result)
 	}
 	return err
 }
@@ -765,7 +778,7 @@ func (g2engine *G2engineImpl) InitWithConfigID(ctx context.Context, moduleName s
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2_initWithConfigID(moduleNameForC, iniParamsForC, C.longlong(initConfigID), C.int(verboseLogging))
 	if result != 0 {
-		err = g2engine.getError(ctx, 46, moduleName, iniParams, initConfigID, verboseLogging, result)
+		err = g2engine.getError(ctx, 47, moduleName, iniParams, initConfigID, verboseLogging, result)
 	}
 	return err
 }
@@ -775,7 +788,7 @@ func (g2engine *G2engineImpl) PrimeEngine(ctx context.Context) error {
 	var err error = nil
 	result := C.G2_primeEngine()
 	if result != 0 {
-		err = g2engine.getError(ctx, 47, result)
+		err = g2engine.getError(ctx, 48, result)
 	}
 	return err
 }
@@ -787,7 +800,7 @@ func (g2engine *G2engineImpl) Process(ctx context.Context, record string) error 
 	defer C.free(unsafe.Pointer(recordForC))
 	result := C.G2_process(recordForC)
 	if result != 0 {
-		err = g2engine.getError(ctx, 48, record, result)
+		err = g2engine.getError(ctx, 49, record, result)
 	}
 	return err
 }
@@ -797,7 +810,7 @@ func (g2engine *G2engineImpl) ProcessRedoRecord(ctx context.Context) (string, er
 	var err error = nil
 	result := C.G2_processRedoRecord_helper()
 	if result.returnCode != 0 {
-		err = g2engine.getError(ctx, 49, result.returnCode)
+		err = g2engine.getError(ctx, 50, result.returnCode, result)
 	}
 	return C.GoString(result.response), err
 
@@ -807,13 +820,10 @@ func (g2engine *G2engineImpl) ProcessRedoRecordWithInfo(ctx context.Context, fla
 	//  _DLEXPORT int G2_processRedoRecordWithInfo(const long long flags, char **responseBuf, size_t *bufSize, char **infoBuf, size_t *infoBufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	var err error = nil
 	result := C.G2_processRedoRecordWithInfo_helper(C.longlong(flags))
-	response := C.GoString(result.response)
-	withInfo := C.GoString(result.withInfo)
-	returnCode := result.returnCode
-	if returnCode != 0 {
-		err = g2engine.getError(ctx, 50, flags, returnCode)
+	if result.returnCode != 0 {
+		err = g2engine.getError(ctx, 51, flags, result.returnCode, result)
 	}
-	return response, withInfo, err
+	return C.GoString(result.response), C.GoString(result.withInfo), err
 }
 
 func (g2engine *G2engineImpl) ProcessWithInfo(ctx context.Context, record string, flags int64) (string, error) {
@@ -824,7 +834,7 @@ func (g2engine *G2engineImpl) ProcessWithInfo(ctx context.Context, record string
 	stringBuffer := C.GoString(C.G2_processWithInfo_helper(recordForC, C.longlong(flags)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 51, record, flags, returnCode)
+		err = g2engine.getError(ctx, 52, record, flags, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -837,7 +847,7 @@ func (g2engine *G2engineImpl) ProcessWithResponse(ctx context.Context, record st
 	stringBuffer := C.GoString(C.G2_processWithResponse_helper(recordForC))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 52, record, returnCode)
+		err = g2engine.getError(ctx, 53, record, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -850,7 +860,7 @@ func (g2engine *G2engineImpl) ProcessWithResponseResize(ctx context.Context, rec
 	stringBuffer := C.GoString(C.G2_processWithResponseResize_helper(recordForC))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 53, record, returnCode)
+		err = g2engine.getError(ctx, 54, record, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -860,7 +870,7 @@ func (g2engine *G2engineImpl) PurgeRepository(ctx context.Context) error {
 	var err error = nil
 	result := C.G2_purgeRepository()
 	if result != 0 {
-		err = g2engine.getError(ctx, 54, result)
+		err = g2engine.getError(ctx, 55, result)
 	}
 	return err
 }
@@ -870,7 +880,7 @@ func (g2engine *G2engineImpl) ReevaluateEntity(ctx context.Context, entityID int
 	var err error = nil
 	result := C.G2_reevaluateEntity(C.longlong(entityID), C.longlong(flags))
 	if result != 0 {
-		err = g2engine.getError(ctx, 55, entityID, flags, result)
+		err = g2engine.getError(ctx, 56, entityID, flags, result)
 	}
 	return err
 }
@@ -881,7 +891,7 @@ func (g2engine *G2engineImpl) ReevaluateEntityWithInfo(ctx context.Context, enti
 	stringBuffer := C.GoString(C.G2_reevaluateEntityWithInfo_helper(C.longlong(entityID), C.longlong(flags)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 56, entityID, flags, returnCode)
+		err = g2engine.getError(ctx, 57, entityID, flags, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -895,7 +905,7 @@ func (g2engine *G2engineImpl) ReevaluateRecord(ctx context.Context, dataSourceCo
 	defer C.free(unsafe.Pointer(recordIDForC))
 	result := C.G2_reevaluateRecord(dataSourceCodeForC, recordIDForC, C.longlong(flags))
 	if result != 0 {
-		err = g2engine.getError(ctx, 57, dataSourceCode, recordID, flags, result)
+		err = g2engine.getError(ctx, 58, dataSourceCode, recordID, flags, result)
 	}
 	return err
 }
@@ -910,7 +920,7 @@ func (g2engine *G2engineImpl) ReevaluateRecordWithInfo(ctx context.Context, data
 	stringBuffer := C.GoString(C.G2_reevaluateRecordWithInfo_helper(dataSourceCodeForC, recordIDForC, C.longlong(flags)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 58, dataSourceCode, recordID, flags, returnCode)
+		err = g2engine.getError(ctx, 59, dataSourceCode, recordID, flags, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -920,7 +930,7 @@ func (g2engine *G2engineImpl) Reinit(ctx context.Context, initConfigID int64) er
 	var err error = nil
 	result := C.G2_reinit(C.longlong(initConfigID))
 	if result != 0 {
-		err = g2engine.getError(ctx, 59, initConfigID, result)
+		err = g2engine.getError(ctx, 60, initConfigID, result)
 	}
 	return err
 }
@@ -938,7 +948,7 @@ func (g2engine *G2engineImpl) ReplaceRecord(ctx context.Context, dataSourceCode 
 	defer C.free(unsafe.Pointer(loadIDForC))
 	result := C.G2_replaceRecord(dataSourceCodeForC, recordIDForC, jsonDataForC, loadIDForC)
 	if result != 0 {
-		err = g2engine.getError(ctx, 60, dataSourceCode, recordID, jsonData, loadID, result)
+		err = g2engine.getError(ctx, 61, dataSourceCode, recordID, jsonData, loadID, result)
 	}
 	return err
 }
@@ -957,7 +967,7 @@ func (g2engine *G2engineImpl) ReplaceRecordWithInfo(ctx context.Context, dataSou
 	stringBuffer := C.GoString(C.G2_replaceRecordWithInfo_helper(dataSourceCodeForC, recordIDForC, jsonDataForC, loadIDForC, C.longlong(flags)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 61, dataSourceCode, recordID, jsonData, loadID, flags, returnCode)
+		err = g2engine.getError(ctx, 62, dataSourceCode, recordID, jsonData, loadID, flags, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -970,7 +980,7 @@ func (g2engine *G2engineImpl) SearchByAttributes(ctx context.Context, jsonData s
 	stringBuffer := C.GoString(C.G2_searchByAttributes_helper(jsonDataForC))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 62, jsonData, returnCode)
+		err = g2engine.getError(ctx, 63, jsonData, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -983,7 +993,7 @@ func (g2engine *G2engineImpl) SearchByAttributes_V2(ctx context.Context, jsonDat
 	stringBuffer := C.GoString(C.G2_searchByAttributes_V2_helper(jsonDataForC, C.longlong(flags)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 63, jsonData, flags, returnCode)
+		err = g2engine.getError(ctx, 64, jsonData, flags, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -994,7 +1004,7 @@ func (g2engine *G2engineImpl) Stats(ctx context.Context) (string, error) {
 	stringBuffer := C.GoString(C.G2_stats_helper())
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 64, returnCode)
+		err = g2engine.getError(ctx, 65, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -1005,7 +1015,7 @@ func (g2engine *G2engineImpl) WhyEntities(ctx context.Context, entityID1 int64, 
 	stringBuffer := C.GoString(C.G2_whyEntities_helper(C.longlong(entityID1), C.longlong(entityID2)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 65, entityID1, entityID2, returnCode)
+		err = g2engine.getError(ctx, 66, entityID1, entityID2, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -1016,7 +1026,7 @@ func (g2engine *G2engineImpl) WhyEntities_V2(ctx context.Context, entityID1 int6
 	stringBuffer := C.GoString(C.G2_whyEntities_V2_helper(C.longlong(entityID1), C.longlong(entityID2), C.longlong(flags)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 66, entityID1, entityID2, flags, returnCode)
+		err = g2engine.getError(ctx, 67, entityID1, entityID2, flags, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -1027,7 +1037,7 @@ func (g2engine *G2engineImpl) WhyEntityByEntityID(ctx context.Context, entityID 
 	stringBuffer := C.GoString(C.G2_whyEntityByEntityID_helper(C.longlong(entityID)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 67, entityID, returnCode)
+		err = g2engine.getError(ctx, 68, entityID, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -1038,7 +1048,7 @@ func (g2engine *G2engineImpl) WhyEntityByEntityID_V2(ctx context.Context, entity
 	stringBuffer := C.GoString(C.G2_whyEntityByEntityID_V2_helper(C.longlong(entityID), C.longlong(flags)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 68, entityID, flags, returnCode)
+		err = g2engine.getError(ctx, 69, entityID, flags, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -1053,7 +1063,7 @@ func (g2engine *G2engineImpl) WhyEntityByRecordID(ctx context.Context, dataSourc
 	stringBuffer := C.GoString(C.G2_whyEntityByRecordID_helper(dataSourceCodeForC, recordIDForC))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 69, dataSourceCode, recordID, returnCode)
+		err = g2engine.getError(ctx, 70, dataSourceCode, recordID, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -1068,7 +1078,7 @@ func (g2engine *G2engineImpl) WhyEntityByRecordID_V2(ctx context.Context, dataSo
 	stringBuffer := C.GoString(C.G2_whyEntityByRecordID_V2_helper(dataSourceCodeForC, recordIDForC, C.longlong(flags)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 70, dataSourceCode, recordID, flags, returnCode)
+		err = g2engine.getError(ctx, 71, dataSourceCode, recordID, flags, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -1087,7 +1097,7 @@ func (g2engine *G2engineImpl) WhyRecords(ctx context.Context, dataSourceCode1 st
 	stringBuffer := C.GoString(C.G2_whyRecords_helper(dataSource1CodeForC, recordID1ForC, dataSource2CodeForC, recordID2ForC))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 71, dataSourceCode1, recordID1, dataSourceCode2, recordID2, returnCode)
+		err = g2engine.getError(ctx, 72, dataSourceCode1, recordID1, dataSourceCode2, recordID2, returnCode)
 	}
 	return stringBuffer, err
 }
@@ -1106,7 +1116,7 @@ func (g2engine *G2engineImpl) WhyRecords_V2(ctx context.Context, dataSourceCode1
 	stringBuffer := C.GoString(C.G2_whyRecords_V2_helper(dataSource1CodeForC, recordID1ForC, dataSource2CodeForC, recordID2ForC, C.longlong(flags)))
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
-		err = g2engine.getError(ctx, 72, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags, returnCode)
+		err = g2engine.getError(ctx, 73, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags, returnCode)
 	}
 	return stringBuffer, err
 }
