@@ -16,16 +16,21 @@ import (
 	"errors"
 	"unsafe"
 
+	"github.com/senzing/go-logging/messageformat"
+	"github.com/senzing/go-logging/messageid"
 	"github.com/senzing/go-logging/messagelogger"
 	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
+	"github.com/senzing/go-logging/messagetext"
 )
 
 // ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
 
-type G2diagnosticImpl struct{}
+type G2diagnosticImpl struct {
+	logger messagelogger.MessageLoggerInterface
+}
 
 // ----------------------------------------------------------------------------
 // Constants
@@ -58,7 +63,8 @@ func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber 
 	var newDetails []interface{}
 	newDetails = append(newDetails, details...)
 	newDetails = append(newDetails, errors.New(message))
-	errorMessage, err := messagelogger.Message(errorNumber, newDetails...)
+	logger := g2diagnostic.getLogger(ctx)
+	errorMessage, err := logger.Message(errorNumber, newDetails...)
 	if err != nil {
 		errorMessage = err.Error()
 	}
@@ -66,16 +72,20 @@ func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber 
 	return errors.New(errorMessage)
 }
 
-func (g2diagnostic *G2diagnosticImpl) initLogger(ctx context.Context) {
-
-	messageStatus := &messagestatus.MessageStatusSenzingApi{}
-	messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{}
-
-	messagelogger.
-		SetMessageStatus(messageStatus).
-		SetMessageLogLevel(messageLogLevel).
-		SetTextTemplates(Messages).
-		SetIdTemplate(MessageIdFormat)
+func (g2diagnostic *G2diagnosticImpl) getLogger(ctx context.Context) messagelogger.MessageLoggerInterface {
+	if g2diagnostic.logger == nil {
+		messageFormat := &messageformat.MessageFormatJson{}
+		messageId := &messageid.MessageIdTemplated{
+			IdTemplate: MessageIdFormat,
+		}
+		messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{}
+		messageStatus := &messagestatus.MessageStatusSenzingApi{}
+		messageText := &messagetext.MessageTextTemplated{
+			TextTemplates: Messages,
+		}
+		g2diagnostic.logger, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+	}
+	return g2diagnostic.logger
 }
 
 // ----------------------------------------------------------------------------
@@ -254,7 +264,8 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 	C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		errorMessage, err := messagelogger.Message(2999)
+		logger := g2diagnostic.getLogger(ctx)
+		errorMessage, err := logger.Message(2999)
 		if err != nil {
 			return "", err
 		}
@@ -331,8 +342,6 @@ func (g2diagnostic *G2diagnosticImpl) GetTotalSystemMemory(ctx context.Context) 
 func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Diagnostic_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	var err error = nil
-
-	g2diagnostic.initLogger(ctx)
 	moduleNameForC := C.CString(moduleName)
 	defer C.free(unsafe.Pointer(moduleNameForC))
 	iniParamsForC := C.CString(iniParams)

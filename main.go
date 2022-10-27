@@ -11,7 +11,7 @@ import (
 	"github.com/docktermj/g2-sdk-go/g2diagnostic"
 	"github.com/docktermj/g2-sdk-go/g2engine"
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
-	baselogger "github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
 	"github.com/senzing/go-logging/messagelogger"
@@ -94,19 +94,36 @@ func main() {
 
 	// Configure messagelogger
 
-	logger := &messagelogger.MessageLoggerDefault{
-		Logger:        &baselogger.LoggerDefault{},
-		MessageFormat: &messageformat.MessageFormatJson{},
-		MessageId: &messageid.MessageIdDefault{
-			IdTemplate: MessageIdFormat,
-		},
-		MessageLogLevel: &messageloglevel.MessageLogLevelDefault{},
-		MessageStatus:   &messagestatus.MessageStatusById{},
-		MessageText: &messagetext.MessageTextDefault{
-			TextTemplates: Messages,
+	messageFormat := &messageformat.MessageFormatJson{}
+	messageId := &messageid.MessageIdTemplated{
+		IdTemplate: MessageIdFormat,
+	}
+	messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
+		IdRanges: map[int]logger.Level{
+			0000: logger.LevelInfo,
+			1000: logger.LevelWarn,
+			2000: logger.LevelError,
+			3000: logger.LevelDebug,
+			4000: logger.LevelTrace,
+			5000: logger.LevelFatal,
+			6000: logger.LevelPanic,
 		},
 	}
-	logger.SetLogLevel(messagelogger.LevelInfo)
+	messageStatus := &messagestatus.MessageStatusByIdRange{
+		IdRanges: map[int]string{
+			0000: logger.LevelInfoName,
+			1000: logger.LevelWarnName,
+			2000: logger.LevelErrorName,
+			3000: logger.LevelDebugName,
+			4000: logger.LevelTraceName,
+			5000: logger.LevelFatalName,
+			6000: logger.LevelPanicName,
+		},
+	}
+	messageText := &messagetext.MessageTextTemplated{
+		TextTemplates: Messages,
+	}
+	logger := messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
 
 	// Test logger.
 

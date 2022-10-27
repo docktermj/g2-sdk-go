@@ -13,7 +13,8 @@ import (
 )
 
 var (
-	g2diagnostic G2diagnostic
+	g2diagnostic    G2diagnostic
+	loggerSingleton messagelogger.MessageLoggerInterface
 )
 
 // ----------------------------------------------------------------------------
@@ -23,20 +24,29 @@ var (
 func getTestObject(ctx context.Context) G2diagnostic {
 	if g2diagnostic == nil {
 		g2diagnostic = &G2diagnosticImpl{}
+		logger := getLogger(ctx)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
 		iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
-			messagelogger.Log(1001, "Cannot construct system configuration: %v", jsonErr)
+			logger.Log(1001, "Cannot construct system configuration: %v", jsonErr)
 		}
 
 		initErr := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
-			messagelogger.Log(1002, "Cannot Init: %v", initErr)
+			logger.Log(1002, "Cannot Init: %v", initErr)
 		}
 	}
 	return g2diagnostic
+}
+
+func getLogger(ctx context.Context) messagelogger.MessageLoggerInterface {
+	if loggerSingleton == nil {
+		log.SetFlags(log.LstdFlags)
+		loggerSingleton, _ = messagelogger.New()
+	}
+	return loggerSingleton
 }
 
 func truncate(aString string) string {
@@ -90,15 +100,9 @@ func TestGetObject(test *testing.T) {
 }
 
 func TestLogger(test *testing.T) {
-	// Configure the "log" standard library.
-
-	// log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
-	log.SetFlags(log.LstdFlags)
-	// messagelogger.SetLevel(messagelogger.LevelInfo)
-
-	// Test messagelogger.
-
-	messagelogger.Log(1003, "Test message 1", "Variable1", "Variable2")
+	ctx := context.TODO()
+	logger := getLogger(ctx)
+	logger.Log(1003, "Test message 1", "Variable1", "Variable2")
 }
 
 // ----------------------------------------------------------------------------
