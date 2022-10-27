@@ -3,16 +3,19 @@ package g2engine
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
 
 	truncator "github.com/aquilax/truncate"
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
 	"github.com/docktermj/go-xyzzy-helpers/logger"
+	"github.com/senzing/go-logging/messagelogger"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-	g2engine G2engine
+	g2engine        G2engine
+	loggerSingleton messagelogger.MessageLoggerInterface
 )
 
 // ----------------------------------------------------------------------------
@@ -23,20 +26,29 @@ func getTestObject(ctx context.Context) G2engine {
 
 	if g2engine == nil {
 		g2engine = &G2engineImpl{}
+		logger := getLogger(ctx)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
 		iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
-			logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
+			logger.Log(1001, "Cannot construct system configuration: %v", jsonErr)
 		}
 
 		initErr := g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
-			logger.Fatalf("Cannot Init: %v", initErr)
+			logger.Log(1002, "Cannot Init: %v", initErr)
 		}
 	}
 	return g2engine
+}
+
+func getLogger(ctx context.Context) messagelogger.MessageLoggerInterface {
+	if loggerSingleton == nil {
+		log.SetFlags(log.LstdFlags)
+		loggerSingleton, _ = messagelogger.New()
+	}
+	return loggerSingleton
 }
 
 func truncate(aString string) string {

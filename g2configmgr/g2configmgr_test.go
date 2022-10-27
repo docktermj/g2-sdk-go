@@ -11,14 +11,16 @@ import (
 	"github.com/docktermj/g2-sdk-go/g2config"
 	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
 	"github.com/docktermj/go-xyzzy-helpers/logger"
+	"github.com/senzing/go-logging/messagelogger"
 	"github.com/stretchr/testify/assert"
 
 	truncator "github.com/aquilax/truncate"
 )
 
 var (
-	g2configmgr G2configmgr
-	g2configX   g2config.G2config
+	g2configmgr     G2configmgr
+	g2configX       g2config.G2config
+	loggerSingleton messagelogger.MessageLoggerInterface
 )
 
 // ----------------------------------------------------------------------------
@@ -29,17 +31,18 @@ func getTestObject(ctx context.Context) G2configmgr {
 
 	if g2configmgr == nil {
 		g2configmgr = &G2configmgrImpl{}
+		logger := getLogger(ctx)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
 		iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
-			logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
+			logger.Log(1001, "Cannot construct system configuration: %v", jsonErr)
 		}
 
 		initErr := g2configmgr.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
-			logger.Fatalf("Cannot Init: %v", initErr)
+			logger.Log(1002, "Cannot Init: %v", initErr)
 		}
 	}
 	return g2configmgr
@@ -49,20 +52,29 @@ func getG2Config(ctx context.Context) g2config.G2config {
 
 	if g2configX == nil {
 		g2configX = &g2config.G2configImpl{}
+		logger := getLogger(ctx)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
 		iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
-			logger.Fatalf("Cannot construct system configuration: %v", jsonErr)
+			logger.Log(1001, "Cannot construct system configuration: %v", jsonErr)
 		}
 
 		initErr := g2configX.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
-			logger.Fatalf("Cannot Init: %v", initErr)
+			logger.Log(1002, "Cannot Init: %v", initErr)
 		}
 	}
 	return g2configX
+}
+
+func getLogger(ctx context.Context) messagelogger.MessageLoggerInterface {
+	if loggerSingleton == nil {
+		log.SetFlags(log.LstdFlags)
+		loggerSingleton, _ = messagelogger.New()
+	}
+	return loggerSingleton
 }
 
 func truncate(aString string) string {
@@ -106,14 +118,9 @@ func TestGetObject(test *testing.T) {
 }
 
 func TestLogger(test *testing.T) {
-	// Configure the "log" standard library.
-
-	log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
-	logger.SetLevel(logger.LevelInfo)
-
-	// Test logger.
-
-	logger.LogMessage(MessageIdFormat, 99, "Test message 1", "Variable1", "Variable2")
+	ctx := context.TODO()
+	logger := getLogger(ctx)
+	logger.Log(1003, "Test message 1", "Variable1", "Variable2")
 }
 
 // ----------------------------------------------------------------------------

@@ -16,16 +16,21 @@ import (
 	"errors"
 	"unsafe"
 
+	"github.com/senzing/go-logging/messageformat"
+	"github.com/senzing/go-logging/messageid"
 	"github.com/senzing/go-logging/messagelogger"
 	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
+	"github.com/senzing/go-logging/messagetext"
 )
 
 // ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
 
-type G2engineImpl struct{}
+type G2engineImpl struct {
+	logger messagelogger.MessageLoggerInterface
+}
 
 // ----------------------------------------------------------------------------
 // Constants
@@ -58,7 +63,8 @@ func (g2engine *G2engineImpl) getError(ctx context.Context, errorNumber int, det
 	var newDetails []interface{}
 	newDetails = append(newDetails, details...)
 	newDetails = append(newDetails, errors.New(message))
-	errorMessage, err := messagelogger.Message(errorNumber, newDetails...)
+	logger := g2engine.getLogger(ctx)
+	errorMessage, err := logger.Message(errorNumber, newDetails...)
 	if err != nil {
 		errorMessage = err.Error()
 	}
@@ -66,16 +72,20 @@ func (g2engine *G2engineImpl) getError(ctx context.Context, errorNumber int, det
 	return errors.New(errorMessage)
 }
 
-func (g2engine *G2engineImpl) initLogger(ctx context.Context) {
-
-	messageStatus := &messagestatus.MessageStatusSenzingApi{}
-	messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{}
-
-	messagelogger.
-		SetMessageStatus(messageStatus).
-		SetMessageLogLevel(messageLogLevel).
-		SetTextTemplates(Messages).
-		SetIdTemplate(MessageIdFormat)
+func (g2engine *G2engineImpl) getLogger(ctx context.Context) messagelogger.MessageLoggerInterface {
+	if g2engine.logger == nil {
+		messageFormat := &messageformat.MessageFormatJson{}
+		messageId := &messageid.MessageIdTemplated{
+			IdTemplate: MessageIdFormat,
+		}
+		messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{}
+		messageStatus := &messagestatus.MessageStatusSenzingApi{}
+		messageText := &messagetext.MessageTextTemplated{
+			TextTemplates: Messages,
+		}
+		g2engine.logger, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+	}
+	return g2engine.logger
 }
 
 // ----------------------------------------------------------------------------
@@ -641,8 +651,9 @@ func (g2engine *G2engineImpl) GetLastException(ctx context.Context) (string, err
 	stringBuffer := g2engine.getByteArray(initialByteArraySize)
 	C.G2_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
+	logger := g2engine.getLogger(ctx)
 	if len(stringBuffer) == 0 {
-		err = messagelogger.Error(2999)
+		err = logger.Error(2999)
 	}
 	return string(stringBuffer), err
 }
