@@ -123,7 +123,7 @@ func main() {
 	messageText := &messagetext.MessageTextTemplated{
 		TextTemplates: Messages,
 	}
-	logger := messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+	logger, _ := messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
 
 	// Test logger.
 
