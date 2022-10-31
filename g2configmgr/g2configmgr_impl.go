@@ -161,9 +161,8 @@ func (g2configmgr *G2configmgrImpl) GetLastException(ctx context.Context) (strin
 	stringBuffer := g2configmgr.getByteArray(initialByteArraySize)
 	C.G2ConfigMgr_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
-	logger := g2configmgr.getLogger(ctx)
 	if len(stringBuffer) == 0 {
-		err = logger.Error(2999)
+		err = g2configmgr.getError(ctx, 2999)
 	}
 	return string(stringBuffer), err
 }

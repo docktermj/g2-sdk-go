@@ -651,9 +651,8 @@ func (g2engine *G2engineImpl) GetLastException(ctx context.Context) (string, err
 	stringBuffer := g2engine.getByteArray(initialByteArraySize)
 	C.G2_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
-	logger := g2engine.getLogger(ctx)
 	if len(stringBuffer) == 0 {
-		err = logger.Error(2999)
+		err = g2engine.getError(ctx, 2999)
 	}
 	return string(stringBuffer), err
 }

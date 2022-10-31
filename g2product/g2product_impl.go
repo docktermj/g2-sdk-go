@@ -117,9 +117,8 @@ func (g2product *G2productImpl) GetLastException(ctx context.Context) (string, e
 	stringBuffer := g2product.getByteArray(initialByteArraySize)
 	C.G2Product_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
-	logger := g2product.getLogger(ctx)
 	if len(stringBuffer) == 0 {
-		err = logger.Error(2999)
+		err = g2product.getError(ctx, 2999)
 	}
 	return string(stringBuffer), err
 }

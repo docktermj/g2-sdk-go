@@ -7,12 +7,10 @@ import (
 	"testing"
 	"time"
 
+	truncator "github.com/aquilax/truncate"
 	"github.com/docktermj/g2-sdk-go/g2config"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
-
 	"github.com/stretchr/testify/assert"
-
-	truncator "github.com/aquilax/truncate"
 )
 
 var (
@@ -33,12 +31,12 @@ func getTestObject(ctx context.Context, test *testing.T) G2configmgr {
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
 		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
-			test.Log(1001, "Cannot construct system configuration: %v", jsonErr)
+			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
 
 		initErr := g2configmgr.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
-			test.Log(1002, "Cannot Init: %v", initErr)
+			test.Logf("Cannot Init. Error: %v", initErr)
 		}
 	}
 	return g2configmgr
@@ -53,12 +51,12 @@ func getG2Config(ctx context.Context, test *testing.T) g2config.G2config {
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
 		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
-			test.Log(1001, "Cannot construct system configuration: %v", jsonErr)
+			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
 
 		initErr := g2configX.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
-			test.Log(1002, "Cannot Init: %v", initErr)
+			test.Logf("Cannot Init. Error: %v", initErr)
 		}
 	}
 	return g2configX
@@ -69,7 +67,7 @@ func truncate(aString string) string {
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
-	if 1 == 0 {
+	if 1 == 1 {
 		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result)))
 	}
 }

@@ -3,51 +3,39 @@ package g2config
 import (
 	"context"
 	"fmt"
-	"log"
 	"testing"
 
 	truncator "github.com/aquilax/truncate"
-	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
-	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-helpers/g2engineconfigurationjson"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-	g2config        G2config
-	loggerSingleton messagelogger.MessageLoggerInterface
+	g2config G2config
 )
 
 // ----------------------------------------------------------------------------
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
 
-func getTestObject(ctx context.Context) G2config {
+func getTestObject(ctx context.Context, test *testing.T) G2config {
 
 	if g2config == nil {
 		g2config = &G2configImpl{}
-		logger := getLogger(ctx)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-		iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
+		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
-			logger.Log(1001, "Cannot construct system configuration: %v", jsonErr)
+			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
 
 		initErr := g2config.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
-			logger.Log(1002, "Cannot Init: %v", initErr)
+			test.Logf("Cannot Init. Error: %v", initErr)
 		}
 	}
 	return g2config
-}
-
-func getLogger(ctx context.Context) messagelogger.MessageLoggerInterface {
-	if loggerSingleton == nil {
-		log.SetFlags(log.LstdFlags)
-		loggerSingleton, _ = messagelogger.New()
-	}
-	return loggerSingleton
 }
 
 func truncate(aString string) string {
@@ -73,36 +61,12 @@ func testError(test *testing.T, ctx context.Context, g2config G2config, err erro
 }
 
 // ----------------------------------------------------------------------------
-// Test harness
-// ----------------------------------------------------------------------------
-
-func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
-	actual, err := g2configuration.BuildSimpleSystemConfigurationJson("")
-	if err != nil {
-		test.Log("Error:", err.Error())
-		assert.FailNow(test, actual)
-	}
-	printActual(test, actual)
-}
-
-func TestGetObject(test *testing.T) {
-	ctx := context.TODO()
-	getTestObject(ctx)
-}
-
-func TestLogger(test *testing.T) {
-	ctx := context.TODO()
-	logger := getLogger(ctx)
-	logger.Log(1003, "Test message 1", "Variable1", "Variable2")
-}
-
-// ----------------------------------------------------------------------------
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
 func TestAddDataSource(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
+	g2config := getTestObject(ctx, test)
 	aHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
 	inputJson := `{"DSRC_CODE": "GO_TEST"}`
@@ -115,14 +79,14 @@ func TestAddDataSource(test *testing.T) {
 
 func TestClearLastException(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
+	g2config := getTestObject(ctx, test)
 	err := g2config.ClearLastException(ctx)
 	testError(test, ctx, g2config, err)
 }
 
 func TestClose(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
+	g2config := getTestObject(ctx, test)
 	aHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
 	err = g2config.Close(ctx, aHandle)
@@ -131,7 +95,7 @@ func TestClose(test *testing.T) {
 
 func TestCreate(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
+	g2config := getTestObject(ctx, test)
 	actual, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
 	printActual(test, actual)
@@ -140,7 +104,7 @@ func TestCreate(test *testing.T) {
 func TestDeleteDataSource(test *testing.T) {
 
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
+	g2config := getTestObject(ctx, test)
 	aHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
 
@@ -169,7 +133,7 @@ func TestDeleteDataSource(test *testing.T) {
 
 func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
+	g2config := getTestObject(ctx, test)
 	actual, err := g2config.GetLastException(ctx)
 	if err != nil {
 		test.Log("Error:", err.Error())
@@ -180,7 +144,7 @@ func TestGetLastException(test *testing.T) {
 
 func TestGetLastExceptionCode(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
+	g2config := getTestObject(ctx, test)
 	actual, err := g2config.GetLastExceptionCode(ctx)
 	testError(test, ctx, g2config, err)
 	printActual(test, actual)
@@ -188,10 +152,10 @@ func TestGetLastExceptionCode(test *testing.T) {
 
 func TestInit(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
+	g2config := getTestObject(ctx, test)
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
+	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	testError(test, ctx, g2config, jsonErr)
 	err := g2config.Init(ctx, moduleName, iniParams, verboseLogging)
 	testError(test, ctx, g2config, err)
@@ -199,7 +163,7 @@ func TestInit(test *testing.T) {
 
 func TestListDataSources(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
+	g2config := getTestObject(ctx, test)
 	aHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
 	actual, err := g2config.ListDataSources(ctx, aHandle)
@@ -211,7 +175,7 @@ func TestListDataSources(test *testing.T) {
 
 func TestLoad(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
+	g2config := getTestObject(ctx, test)
 
 	aHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
@@ -226,7 +190,7 @@ func TestLoad(test *testing.T) {
 
 func TestSave(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
+	g2config := getTestObject(ctx, test)
 	aHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
 	actual, err := g2config.Save(ctx, aHandle)
@@ -236,7 +200,7 @@ func TestSave(test *testing.T) {
 
 func TestDestroy(test *testing.T) {
 	ctx := context.TODO()
-	g2config := getTestObject(ctx)
+	g2config := getTestObject(ctx, test)
 	err := g2config.Destroy(ctx)
 	testError(test, ctx, g2config, err)
 }
