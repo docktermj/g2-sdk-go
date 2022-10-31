@@ -264,7 +264,8 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 	C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		err = g2diagnostic.getError(ctx, 2999)
+		logger := g2diagnostic.getLogger(ctx)
+		err = logger.Error(2999)
 	}
 	return string(stringBuffer), err
 }
