@@ -35,6 +35,16 @@ struct G2_getActiveConfigID_result {
     int returnCode;
 };
 
+struct G2_getRedoRecord_result {
+    char* response;
+    int returnCode;
+};
+
+struct G2_processRedoRecord_result {
+    char* response;
+    int returnCode;
+};
+
 struct G2_processRedoRecordWithInfo_result {
     char* response;
     char* withInfo;
@@ -77,13 +87,13 @@ char* G2_getEntityByRecordID_helper(const char* dataSourceCode, const char* reco
 char* G2_getEntityByRecordID_V2_helper(const char* dataSourceCode, const char* recordID, const long long flags);
 char* G2_getRecord_helper(const char* dataSourceCode, const char* recordID);
 char* G2_getRecord_V2_helper(const char* dataSourceCode, const char* recordID, const long long flags);
-char* G2_getRedoRecord_helper();
+struct G2_getRedoRecord_result G2_getRedoRecord_helper();
 long long G2_getRepositoryLastModifiedTime_helper();
 char* G2_getVirtualEntityByRecordID_helper(const char* recordList);
 char* G2_getVirtualEntityByRecordID_V2_helper(const char* recordList, const long long flags);
 char* G2_howEntityByEntityID_helper(const long long entityID);
 char* G2_howEntityByEntityID_V2_helper(const long long entityID, const long long flags);
-char* G2_processRedoRecord_helper();
+struct G2_processRedoRecord_result G2_processRedoRecord_helper();
 struct G2_processRedoRecordWithInfo_result G2_processRedoRecordWithInfo_helper(const long long flags);
 char* G2_processWithInfo_helper(const char* record, const long long flags);
 char* G2_processWithResponse_helper(const char* record);

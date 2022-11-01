@@ -1,5 +1,8 @@
 # g2-sdk-go
 
+[![GoReportCard example](https://goreportcard.com/badge/github.com/docktermj/g2-sdk-go)](https://goreportcard.com/report/github.com/docktermj/g2-sdk-go)
+[![Go Reference](https://pkg.go.dev/badge/github.com/docktermj/g2-sdk-go.svg)](https://pkg.go.dev/github.com/docktermj/g2-sdk-go)
+
 ## Testable stack
 
 1. Build Senzing installer.
@@ -105,12 +108,10 @@
 
 ## Error prefixes
 
-1. `6010` - g2config
-1. `6011` - g2configmgr
-1. `6012` - g2engine
-1. `6013` - g2diagnostic
-1. `6014` - g2hasher
-1. `6015` - g2product
-1. `6510` - go-helpers/g2configuration
-1. `6511` - go-helpers/logger
-1. `6512` - go-helpers/logmessage
+1. `6001` - g2config
+1. `6002` - g2configmgr
+1. `6003` - g2diagnostic
+1. `6004` - g2engine
+1. `6005` - g2hasher
+1. `6006` - g2product
+1. `6007` - g2ssadm

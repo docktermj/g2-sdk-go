@@ -116,7 +116,7 @@ target/linux/go-hello-senzing-dynamicXX:
 				-X main.programName=${PROGRAM_NAME} \
 				-X main.buildVersion=${BUILD_VERSION} \
 				-X main.buildIteration=${BUILD_ITERATION} \
-	    	" \
+			" \
 			${GO_PACKAGE_NAME}
 	@mkdir -p $(TARGET_DIRECTORY)/linux || true
 	@mv $(PROGRAM_NAME) $(TARGET_DIRECTORY)/linux/go-hello-senzing-dynamic
@@ -151,13 +151,13 @@ build-macos:
 	@GOOS=darwin \
 	GOARCH=amd64 \
 	go build \
-	  -ldflags \
-	    "-X main.programName=${PROGRAM_NAME} \
-	     -X main.buildVersion=${BUILD_VERSION} \
-	     -X main.buildIteration=${BUILD_ITERATION} \
-	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
-	    " \
-	  -o $(GO_PACKAGE_NAME)
+		-ldflags \
+			"-X main.programName=${PROGRAM_NAME} \
+			-X main.buildVersion=${BUILD_VERSION} \
+			-X main.buildIteration=${BUILD_ITERATION} \
+			-X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
+			" \
+		-o $(GO_PACKAGE_NAME)
 	@mkdir -p $(TARGET_DIRECTORY)/darwin || true
 	@mv $(GO_PACKAGE_NAME) $(TARGET_DIRECTORY)/darwin
 
@@ -167,13 +167,13 @@ build-windows:
 	@GOOS=windows \
 	GOARCH=amd64 \
 	go build \
-	  -ldflags \
-	    "-X main.programName=${PROGRAM_NAME} \
-	     -X main.buildVersion=${BUILD_VERSION} \
-	     -X main.buildIteration=${BUILD_ITERATION} \
-	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
-	    " \
-	  -o $(GO_PACKAGE_NAME).exe
+		-ldflags \
+			"-X main.programName=${PROGRAM_NAME} \
+			-X main.buildVersion=${BUILD_VERSION} \
+			-X main.buildIteration=${BUILD_ITERATION} \
+			-X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
+			" \
+		-o $(GO_PACKAGE_NAME).exe
 	@mkdir -p $(TARGET_DIRECTORY)/windows || true
 	@mv $(GO_PACKAGE_NAME).exe $(TARGET_DIRECTORY)/windows
 
@@ -183,11 +183,13 @@ build-windows:
 
 .PHONY: test
 test:
-#	@go test -v $(GO_PACKAGE_NAME)/...
+	@go test -v $(GO_PACKAGE_NAME)/...
+#	@go test -v $(GO_PACKAGE_NAME)/.
+#	@go test -v $(GO_PACKAGE_NAME)/g2config
+#	@go test -v $(GO_PACKAGE_NAME)/g2configmgr
 #	@go test -v $(GO_PACKAGE_NAME)/g2diagnostic
 #	@go test -v $(GO_PACKAGE_NAME)/g2engine
-#	@go test -v $(GO_PACKAGE_NAME)/g2config
-	@go test -v $(GO_PACKAGE_NAME)/g2configmgr
+#	@go test -v $(GO_PACKAGE_NAME)/g2product
 
 # -----------------------------------------------------------------------------
 # Run
@@ -244,10 +246,10 @@ docker-build-package:
 .PHONY: docker-run
 docker-run:
 	@docker run \
-	    --interactive \
-	    --tty \
-	    --name $(DOCKER_CONTAINER_NAME) \
-	    $(DOCKER_IMAGE_NAME)
+		--interactive \
+		--tty \
+		--name $(DOCKER_CONTAINER_NAME) \
+		$(DOCKER_IMAGE_NAME)
 
 # -----------------------------------------------------------------------------
 # Package
@@ -284,8 +286,8 @@ clean:
 .PHONY: print-make-variables
 print-make-variables:
 	@$(foreach V,$(sort $(.VARIABLES)), \
-	   $(if $(filter-out environment% default automatic, \
-	   $(origin $V)),$(warning $V=$($V) ($(value $V)))))
+		$(if $(filter-out environment% default automatic, \
+		$(origin $V)),$(warning $V=$($V) ($(value $V)))))
 
 
 .PHONY: help

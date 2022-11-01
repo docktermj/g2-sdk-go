@@ -1,0 +1,9 @@
+  _DLEXPORT int G2Product_init(const char *moduleName, const char *iniParams, const int verboseLogging);
+  _DLEXPORT int G2Product_destroy();
+  _DLEXPORT char* G2Product_license();
+  _DLEXPORT int G2Product_validateLicenseFile(const char* licenseFilePath, char **errorBuf, size_t *errorBufSize, void *(*resizeFunc)(void *ptr,size_t newSize));
+  _DLEXPORT int G2Product_validateLicenseStringBase64(const char* licenseString, char **errorBuf, size_t *errorBufSize, void *(*resizeFunc)(void *ptr,size_t newSize));
+  _DLEXPORT char* G2Product_version();
+  _DLEXPORT int G2Product_getLastException(char *buffer, const size_t bufSize);
+  _DLEXPORT int G2Product_getLastExceptionCode();
+  _DLEXPORT void G2Product_clearLastException();
