@@ -10,7 +10,7 @@ import (
 
 	"github.com/docktermj/g2-sdk-go/g2diagnostic"
 	"github.com/docktermj/g2-sdk-go/g2engine"
-	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
+	"github.com/senzing/go-helpers/g2engineconfigurationjson"
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
@@ -52,9 +52,9 @@ func getG2diagnostic(ctx context.Context) (g2diagnostic.G2diagnostic, error) {
 
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
-	if jsonErr != nil {
-		return &g2diagnostic, jsonErr
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		return &g2diagnostic, err
 	}
 
 	err = g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
@@ -67,9 +67,9 @@ func getG2engine(ctx context.Context) (g2engine.G2engine, error) {
 
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
-	if jsonErr != nil {
-		return &g2engine, jsonErr
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		return &g2engine, err
 	}
 
 	err = g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
