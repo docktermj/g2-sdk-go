@@ -10,6 +10,8 @@ package g2product
 
 import (
 	"context"
+
+	"github.com/senzing/go-logging/logger"
 )
 
 // ----------------------------------------------------------------------------
@@ -32,16 +34,34 @@ type G2product interface {
 // Constants
 // ----------------------------------------------------------------------------
 
-const MessageIdFormat = "senzing-6006%04d"
+const MessageIdTemplate = "senzing-6006%04d"
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-var Messages = map[int]string{
+var IdMessages = map[int]string{
 	1:    "Call to G2Config_destroy() failed. Return code: %d",
 	2:    "Call to G2Config_init(%s, %s, %s) failed. Return code: %d",
 	3:    "Call to G2Product_validateLicenseFile(%s) failed. Return code: %d",
 	4:    "Call to G2Product_validateLicenseStringBase64(%s) failed. Return code: %d",
 	2999: "Cannot retrieve last error message.",
+}
+
+var IdRanges = map[int]string{
+	0000: logger.LevelInfoName,
+	1000: logger.LevelWarnName,
+	2000: logger.LevelErrorName,
+	3000: logger.LevelDebugName,
+	4000: logger.LevelTraceName,
+	5000: logger.LevelFatalName,
+	6000: logger.LevelPanicName,
+}
+
+var IdStatuses = map[int]string{
+	1:    logger.LevelErrorName,
+	2:    logger.LevelErrorName,
+	3:    logger.LevelErrorName,
+	4:    logger.LevelErrorName,
+	2999: logger.LevelErrorName,
 }

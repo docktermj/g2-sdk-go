@@ -76,12 +76,18 @@ func (g2diagnostic *G2diagnosticImpl) getLogger(ctx context.Context) messagelogg
 	if g2diagnostic.logger == nil {
 		messageFormat := &messageformat.MessageFormatJson{}
 		messageId := &messageid.MessageIdTemplated{
-			IdTemplate: MessageIdFormat,
+			MessageIdTemplate: MessageIdTemplate,
 		}
-		messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{}
-		messageStatus := &messagestatus.MessageStatusSenzingApi{}
+		messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{
+			IdRanges:   IdRanges,
+			IdStatuses: IdStatuses,
+		}
+		messageStatus := &messagestatus.MessageStatusSenzingApi{
+			IdRanges:   IdRanges,
+			IdStatuses: IdStatuses,
+		}
 		messageText := &messagetext.MessageTextTemplated{
-			TextTemplates: Messages,
+			IdMessages: IdMessages,
 		}
 		g2diagnostic.logger, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
 	}

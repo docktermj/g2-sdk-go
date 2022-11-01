@@ -24,7 +24,7 @@ import (
 // Constants
 // ----------------------------------------------------------------------------
 
-const MessageIdFormat = "senzing-6012%04d"
+const MessageIdTemplate = "senzing-9999%04d"
 
 // ----------------------------------------------------------------------------
 // Variables
@@ -95,8 +95,8 @@ func main() {
 	// Configure messagelogger
 
 	messageFormat := &messageformat.MessageFormatJson{}
-	messageId := &messageid.MessageIdTemplated{
-		IdTemplate: MessageIdFormat,
+	messageIdTemplate := &messageid.MessageIdTemplated{
+		MessageIdTemplate: MessageIdTemplate,
 	}
 	messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
 		IdRanges: map[int]logger.Level{
@@ -121,9 +121,9 @@ func main() {
 		},
 	}
 	messageText := &messagetext.MessageTextTemplated{
-		TextTemplates: Messages,
+		IdMessages: Messages,
 	}
-	logger, _ := messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+	logger, _ := messagelogger.New(messageFormat, messageIdTemplate, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
 
 	// Test logger.
 
@@ -139,7 +139,7 @@ func main() {
 
 	g2diagnostic, err := getG2diagnostic(ctx)
 	if err != nil {
-		logger.Log(1000, err)
+		logger.Log(2000, err)
 	}
 
 	// g2diagnostic.CheckDBPerf
@@ -147,7 +147,7 @@ func main() {
 	secondsToRun := 1
 	actual, err := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
 	if err != nil {
-		logger.Log(1001, err)
+		logger.Log(2001, err)
 	}
 	fmt.Println(actual)
 
@@ -155,7 +155,7 @@ func main() {
 
 	g2engine, err := getG2engine(ctx)
 	if err != nil {
-		logger.Log(1002, err)
+		logger.Log(2002, err)
 	}
 
 	// g2engine.AddRecordWithInfo
@@ -172,7 +172,7 @@ func main() {
 
 	withInfo, err := g2engine.AddRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
 	if err != nil {
-		logger.Log(1003, err)
+		logger.Log(2003, err)
 	}
 
 	logger.Log(2, withInfo)

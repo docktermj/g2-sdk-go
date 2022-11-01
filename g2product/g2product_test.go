@@ -3,52 +3,39 @@ package g2product
 import (
 	"context"
 	"fmt"
-	"log"
 	"testing"
 
-	"github.com/docktermj/go-xyzzy-helpers/g2configuration"
-	"github.com/senzing/go-logging/messagelogger"
-	"github.com/stretchr/testify/assert"
-
 	truncator "github.com/aquilax/truncate"
+	"github.com/senzing/go-helpers/g2engineconfigurationjson"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
-	g2product       G2product
-	loggerSingleton messagelogger.MessageLoggerInterface
+	g2product G2product
 )
 
 // ----------------------------------------------------------------------------
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
 
-func getTestObject(ctx context.Context) G2product {
+func getTestObject(ctx context.Context, test *testing.T) G2product {
 
 	if g2product == nil {
 		g2product = &G2productImpl{}
-		logger := getLogger(ctx)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-		iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
+		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
-			logger.Log(1001, "Cannot construct system configuration: %v", jsonErr)
+			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
 
 		initErr := g2product.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
-			logger.Log(1002, "Cannot Init: %v", initErr)
+			test.Logf("Cannot Init. Error: %v", initErr)
 		}
 	}
 	return g2product
-}
-
-func getLogger(ctx context.Context) messagelogger.MessageLoggerInterface {
-	if loggerSingleton == nil {
-		log.SetFlags(log.LstdFlags)
-		loggerSingleton, _ = messagelogger.New()
-	}
-	return loggerSingleton
 }
 
 func truncate(aString string) string {
@@ -78,7 +65,7 @@ func testError(test *testing.T, ctx context.Context, g2product G2product, err er
 // ----------------------------------------------------------------------------
 
 func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
-	actual, err := g2configuration.BuildSimpleSystemConfigurationJson("")
+	actual, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	if err != nil {
 		test.Log("Error:", err.Error())
 		assert.FailNow(test, actual)
@@ -88,7 +75,7 @@ func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
 
 func TestGetObject(test *testing.T) {
 	ctx := context.TODO()
-	getTestObject(ctx)
+	getTestObject(ctx, test)
 }
 
 // ----------------------------------------------------------------------------
@@ -97,13 +84,13 @@ func TestGetObject(test *testing.T) {
 
 func TestClearLastException(test *testing.T) {
 	ctx := context.TODO()
-	g2product := getTestObject(ctx)
+	g2product := getTestObject(ctx, test)
 	g2product.ClearLastException(ctx)
 }
 
 func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
-	g2product := getTestObject(ctx)
+	g2product := getTestObject(ctx, test)
 	actual, err := g2product.GetLastException(ctx)
 	if err == nil {
 		printActual(test, actual)
@@ -112,7 +99,7 @@ func TestGetLastException(test *testing.T) {
 
 func TestGetLastExceptionCode(test *testing.T) {
 	ctx := context.TODO()
-	g2product := getTestObject(ctx)
+	g2product := getTestObject(ctx, test)
 	actual, err := g2product.GetLastExceptionCode(ctx)
 	testError(test, ctx, g2product, err)
 	printActual(test, actual)
@@ -123,7 +110,7 @@ func TestInit(test *testing.T) {
 	g2product := &G2productImpl{}
 	moduleName := "Test module name"
 	verboseLogging := 0
-	iniParams, jsonErr := g2configuration.BuildSimpleSystemConfigurationJson("")
+	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	testError(test, ctx, g2product, jsonErr)
 	err := g2product.Init(ctx, moduleName, iniParams, verboseLogging)
 	testError(test, ctx, g2product, err)
@@ -131,7 +118,7 @@ func TestInit(test *testing.T) {
 
 func TestLicense(test *testing.T) {
 	ctx := context.TODO()
-	g2product := getTestObject(ctx)
+	g2product := getTestObject(ctx, test)
 	actual, err := g2product.License(ctx)
 	testError(test, ctx, g2product, err)
 	printActual(test, actual)
@@ -139,7 +126,7 @@ func TestLicense(test *testing.T) {
 
 func TestValidateLicenseFile(test *testing.T) {
 	ctx := context.TODO()
-	g2product := getTestObject(ctx)
+	g2product := getTestObject(ctx, test)
 	licenseFilePath := ""
 	actual, _ := g2product.ValidateLicenseFile(ctx, licenseFilePath)
 	// testError(test, ctx, g2product, err)
@@ -148,7 +135,7 @@ func TestValidateLicenseFile(test *testing.T) {
 
 func TestValidateLicenseStringBase64(test *testing.T) {
 	ctx := context.TODO()
-	g2product := getTestObject(ctx)
+	g2product := getTestObject(ctx, test)
 	licenseString := ""
 	actual, _ := g2product.ValidateLicenseStringBase64(ctx, licenseString)
 	// testError(test, ctx, g2product, err)
@@ -157,7 +144,7 @@ func TestValidateLicenseStringBase64(test *testing.T) {
 
 func TestVersion(test *testing.T) {
 	ctx := context.TODO()
-	g2product := getTestObject(ctx)
+	g2product := getTestObject(ctx, test)
 	actual, err := g2product.Version(ctx)
 	testError(test, ctx, g2product, err)
 	printActual(test, actual)
@@ -165,7 +152,7 @@ func TestVersion(test *testing.T) {
 
 func TestDestroy(test *testing.T) {
 	ctx := context.TODO()
-	g2product := getTestObject(ctx)
+	g2product := getTestObject(ctx, test)
 	err := g2product.Destroy(ctx)
 	testError(test, ctx, g2product, err)
 }

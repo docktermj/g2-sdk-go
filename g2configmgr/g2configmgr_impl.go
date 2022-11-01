@@ -76,12 +76,18 @@ func (g2configmgr *G2configmgrImpl) getLogger(ctx context.Context) messagelogger
 	if g2configmgr.logger == nil {
 		messageFormat := &messageformat.MessageFormatJson{}
 		messageId := &messageid.MessageIdTemplated{
-			IdTemplate: MessageIdFormat,
+			MessageIdTemplate: MessageIdTemplate,
 		}
-		messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{}
-		messageStatus := &messagestatus.MessageStatusSenzingApi{}
+		messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{
+			IdRanges:   IdRanges,
+			IdStatuses: IdStatuses,
+		}
+		messageStatus := &messagestatus.MessageStatusSenzingApi{
+			IdRanges:   IdRanges,
+			IdStatuses: IdStatuses,
+		}
 		messageText := &messagetext.MessageTextTemplated{
-			TextTemplates: Messages,
+			IdMessages: IdMessages,
 		}
 		g2configmgr.logger, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
 	}

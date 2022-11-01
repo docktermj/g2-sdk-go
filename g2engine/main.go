@@ -10,6 +10,8 @@ package g2engine
 
 import (
 	"context"
+
+	"github.com/senzing/go-logging/logger"
 )
 
 // ----------------------------------------------------------------------------
@@ -102,7 +104,7 @@ type G2engine interface {
 // Constants
 // ----------------------------------------------------------------------------
 
-const MessageIdFormat = "senzing-6004%04d"
+const MessageIdTemplate = "senzing-6004%04d"
 
 const (
 	G2_EXPORT_INCLUDE_RESOLVED         FlagMask = 0         // 0 we should include entities with "resolved" relationships
@@ -183,7 +185,7 @@ const (
 // Variables
 // ----------------------------------------------------------------------------
 
-var Messages = map[int]string{
+var IdMessages = map[int]string{
 	1:    "Call to G2_addRecord(%s, %s, %s, %s) failed. Return code: %d",
 	2:    "Call to G2_addRecordWithInfo(%s, %s, %s, %s, %d) failed. Return code: %d",
 	3:    "Call to G2_addRecordWithInfoWithReturnedRecordID(%s, %s, %s, %d) failed. Return code: %d",
@@ -258,4 +260,91 @@ var Messages = map[int]string{
 	72:   "Call to G2_whyRecords(%s, %s, %s, %s) failed. Return code: %d",
 	73:   "Call to G2_whyRecords_V2(%s, %s, %s, %s, %d) failed. Return code: %d",
 	2999: "Cannot retrieve last error message.",
+}
+
+var IdRanges = map[int]string{
+	0000: logger.LevelInfoName,
+	1000: logger.LevelWarnName,
+	2000: logger.LevelErrorName,
+	3000: logger.LevelDebugName,
+	4000: logger.LevelTraceName,
+	5000: logger.LevelFatalName,
+	6000: logger.LevelPanicName,
+}
+
+var IdStatuses = map[int]string{
+	1:    logger.LevelErrorName,
+	2:    logger.LevelErrorName,
+	3:    logger.LevelErrorName,
+	4:    logger.LevelErrorName,
+	5:    logger.LevelErrorName,
+	6:    logger.LevelErrorName,
+	7:    logger.LevelErrorName,
+	8:    logger.LevelErrorName,
+	9:    logger.LevelErrorName,
+	10:   logger.LevelErrorName,
+	11:   logger.LevelErrorName,
+	12:   logger.LevelErrorName,
+	13:   logger.LevelErrorName,
+	14:   logger.LevelErrorName,
+	15:   logger.LevelErrorName,
+	16:   logger.LevelErrorName,
+	17:   logger.LevelErrorName,
+	18:   logger.LevelErrorName,
+	19:   logger.LevelErrorName,
+	20:   logger.LevelErrorName,
+	21:   logger.LevelErrorName,
+	22:   logger.LevelErrorName,
+	23:   logger.LevelErrorName,
+	24:   logger.LevelErrorName,
+	25:   logger.LevelErrorName,
+	26:   logger.LevelErrorName,
+	27:   logger.LevelErrorName,
+	28:   logger.LevelErrorName,
+	29:   logger.LevelErrorName,
+	30:   logger.LevelErrorName,
+	31:   logger.LevelErrorName,
+	32:   logger.LevelErrorName,
+	33:   logger.LevelErrorName,
+	34:   logger.LevelErrorName,
+	35:   logger.LevelErrorName,
+	36:   logger.LevelErrorName,
+	37:   logger.LevelErrorName,
+	38:   logger.LevelErrorName,
+	39:   logger.LevelErrorName,
+	40:   logger.LevelErrorName,
+	41:   logger.LevelErrorName,
+	42:   logger.LevelErrorName,
+	43:   logger.LevelErrorName,
+	44:   logger.LevelErrorName,
+	45:   logger.LevelErrorName,
+	46:   logger.LevelErrorName,
+	47:   logger.LevelErrorName,
+	48:   logger.LevelErrorName,
+	49:   logger.LevelErrorName,
+	50:   logger.LevelErrorName,
+	51:   logger.LevelErrorName,
+	52:   logger.LevelErrorName,
+	53:   logger.LevelErrorName,
+	54:   logger.LevelErrorName,
+	55:   logger.LevelErrorName,
+	56:   logger.LevelErrorName,
+	57:   logger.LevelErrorName,
+	58:   logger.LevelErrorName,
+	59:   logger.LevelErrorName,
+	60:   logger.LevelErrorName,
+	61:   logger.LevelErrorName,
+	62:   logger.LevelErrorName,
+	63:   logger.LevelErrorName,
+	64:   logger.LevelErrorName,
+	65:   logger.LevelErrorName,
+	66:   logger.LevelErrorName,
+	67:   logger.LevelErrorName,
+	68:   logger.LevelErrorName,
+	69:   logger.LevelErrorName,
+	70:   logger.LevelErrorName,
+	71:   logger.LevelErrorName,
+	72:   logger.LevelErrorName,
+	73:   logger.LevelErrorName,
+	2999: logger.LevelErrorName,
 }

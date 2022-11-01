@@ -10,6 +10,8 @@ package g2diagnostic
 
 import (
 	"context"
+
+	"github.com/senzing/go-logging/logger"
 )
 
 // ----------------------------------------------------------------------------
@@ -49,13 +51,13 @@ type G2diagnostic interface {
 // Constants
 // ----------------------------------------------------------------------------
 
-const MessageIdFormat = "senzing-6003%04d"
+const MessageIdTemplate = "senzing-6003%04d"
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-var Messages = map[int]string{
+var IdMessages = map[int]string{
 	1:    "Call to G2Diagnostic_checkDBPerf(%d) failed. Return code: %d",
 	2:    "Call to G2Diagnostic_closeEntityListBySize() failed. Return code: %d",
 	3:    "Call to G2Diagnostic_destroy() failed.  Return code: %d",
@@ -76,4 +78,37 @@ var Messages = map[int]string{
 	18:   "Call to G2Diagnostic_initWithConfigID(%s, %s, %d, %d) failed. Return code: %d",
 	19:   "Call to G2Diagnostic_reinit(%d) failed. Return Code: %d",
 	2999: "Cannot retrieve last error message.",
+}
+
+var IdRanges = map[int]string{
+	0000: logger.LevelInfoName,
+	1000: logger.LevelWarnName,
+	2000: logger.LevelErrorName,
+	3000: logger.LevelDebugName,
+	4000: logger.LevelTraceName,
+	5000: logger.LevelFatalName,
+	6000: logger.LevelPanicName,
+}
+
+var IdStatuses = map[int]string{
+	1:    logger.LevelErrorName,
+	2:    logger.LevelErrorName,
+	3:    logger.LevelErrorName,
+	4:    logger.LevelErrorName,
+	5:    logger.LevelErrorName,
+	6:    logger.LevelErrorName,
+	7:    logger.LevelErrorName,
+	8:    logger.LevelErrorName,
+	9:    logger.LevelErrorName,
+	10:   logger.LevelErrorName,
+	11:   logger.LevelErrorName,
+	12:   logger.LevelErrorName,
+	13:   logger.LevelErrorName,
+	14:   logger.LevelErrorName,
+	15:   logger.LevelErrorName,
+	16:   logger.LevelErrorName,
+	17:   logger.LevelErrorName,
+	18:   logger.LevelErrorName,
+	19:   logger.LevelErrorName,
+	2999: logger.LevelErrorName,
 }
