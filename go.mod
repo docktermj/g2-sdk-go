@@ -6,7 +6,7 @@ require (
 	github.com/aquilax/truncate v1.0.0
 	github.com/docktermj/go-xyzzy-helpers v0.2.2
 	github.com/senzing/go-helpers v0.0.0-20221031150702-dd4ac3b82988
-	github.com/senzing/go-logging v0.0.0-20221101195237-71cc108bb46f
+	github.com/senzing/go-logging v1.0.0
 	github.com/stretchr/testify v1.8.1
 )
 
