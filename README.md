@@ -1,5 +1,8 @@
 # g2-sdk-go
 
+[![GoReportCard example](https://goreportcard.com/badge/github.com/docktermj/g2-sdk-go)](https://goreportcard.com/report/github.com/docktermj/g2-sdk-go)
+[![Go Reference](https://pkg.go.dev/badge/github.com/docktermj/g2-sdk-go.svg)](https://pkg.go.dev/github.com/docktermj/g2-sdk-go)
+
 ## Testable stack
 
 1. Build Senzing installer.
